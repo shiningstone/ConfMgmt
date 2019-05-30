@@ -1,0 +1,12 @@
+<Sample1>
+  <Function1>
+    <Item1>Value1</Item1>
+    <!-- comments -->
+    <Item2>Value2</Item2>
+  </Function1>
+  <Function2>
+    <!-- comments -->
+    <Item3>Value3</Item3>
+    <Item4>Value4</Item4>
+  </Function2>
+</Sample1>
