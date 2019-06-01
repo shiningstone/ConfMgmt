@@ -116,7 +116,7 @@ namespace ConfMgmt
             var tree = item as ConfTree;
             if(tree != null)
             {
-                Visit(executor, new ConfItem(item.Name));
+                executor(item, _depth);
 
                 foreach (var c in tree.Sons)
                 {
@@ -147,12 +147,15 @@ namespace ConfMgmt
             else
             {
                 string[] strs = name.Split('\\');
-                for (int i = 0; i < strs.Length; i++)
+
+                var item = Find(strs[0]);
+                var tree = item as ConfTree;
+                if(tree != null)
                 {
-                    var item = Find(strs[i]);
+                    item = tree.Find(strs[1]);
                     if (item != null)
                     {
-
+                        return item;
                     }
                 }
             }
@@ -167,7 +170,7 @@ namespace ConfMgmt
                 {
                     output += "--";
                 }
-                output += item.ToString();
+                output += $"{item.Name}:{(item.Value != null ? item.Value : Environment.NewLine)}{(item.Value == null ? "" : Environment.NewLine)}";
             });
             return output;
         }
