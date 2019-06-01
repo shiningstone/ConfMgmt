@@ -16,10 +16,7 @@ namespace TestConfMgmt
         [TestMethod]
         public void Test_Basic()
         {
-            var xml = new XmlDocument();
-            xml.Load($@"{SamplePath}\Basic.xml");
-            ConfTree conf = new ConfTree(xml.ChildNodes[0]);
-            conf.XmlFile = xml;
+            ConfTree conf = new ConfTree($@"{SamplePath}\Basic.xml");
             Debug.WriteLine(conf.ToString());
 
             Assert.IsTrue(conf["Item1"] == "Value1");
@@ -32,9 +29,7 @@ namespace TestConfMgmt
             conf.Save($@"{SamplePath}\BasicResult.xml");
             //conf.Save();
 
-            xml.Load($@"{SamplePath}\BasicResult.xml");
-            conf = new ConfTree(xml.ChildNodes[0]);
-
+            conf = new ConfTree($@"{SamplePath}\BasicResult.xml");
             Assert.IsTrue(conf["Item1"] == "Value5");
             Assert.IsTrue(conf["Item2"] == "Value2");
             Assert.IsTrue(conf["Item3"] == "Value3");
@@ -43,19 +38,15 @@ namespace TestConfMgmt
         [TestMethod]
         public void Test_BasicNoExist()
         {
-            var xml = new XmlDocument();
-            xml.Load($@"{SamplePath}\Basic.xml");
-            ConfTree conf = new ConfTree(xml.ChildNodes[0]);
+            ConfTree conf = new ConfTree($@"{SamplePath}\Basic.xml");
             Assert.ThrowsException<Exception>(() => { var result = conf["NonExisting"]; });
         }
         [TestMethod]
         public void Test_SameItemName()
         {
-            var xml = new XmlDocument();
-            xml.Load($@"{SamplePath}\SameItemName.xml");
-            ConfTree conf = new ConfTree(xml.ChildNodes[0]);
-            Debug.WriteLine(conf.ToString());
+            ConfTree conf = new ConfTree($@"{SamplePath}\SameItemName.xml");
 
+            Debug.WriteLine(conf.ToString());
             Assert.IsTrue(conf[@"Function1\Item1"] == "Value1");
             Assert.IsTrue(conf[@"Function2\Item1"] == "Func2-1");
             Assert.IsTrue(conf[@"Function3\Item1"] == "Func3-1");
@@ -67,8 +58,9 @@ namespace TestConfMgmt
             {
                 try
                 {
-                    var conf = new ConfTree(path);
-                    conf.Load(path);
+                    Debug.WriteLine(path);
+                    
+                    ConfTree conf = new ConfTree(path);
                     Debug.WriteLine(conf.ToString());
                 }
                 catch (Exception ex)
