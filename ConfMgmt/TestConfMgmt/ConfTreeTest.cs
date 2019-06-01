@@ -16,7 +16,7 @@ namespace TestConfMgmt
         [TestMethod]
         public void Test_Basic()
         {
-            ConfTree conf = new ConfTree($@"{SamplePath}\Basic.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{SamplePath}\Basic.xml");
             Debug.WriteLine(conf.ToString());
 
             Assert.IsTrue(conf["Item1"] == "Value1");
@@ -29,7 +29,7 @@ namespace TestConfMgmt
             conf.Save($@"{SamplePath}\BasicResult.xml");
             //conf.Save();
 
-            conf = new ConfTree($@"{SamplePath}\BasicResult.xml");
+            conf = XmlBuilder.Generate($@"{SamplePath}\BasicResult.xml");
             Assert.IsTrue(conf["Item1"] == "Value5");
             Assert.IsTrue(conf["Item2"] == "Value2");
             Assert.IsTrue(conf["Item3"] == "Value3");
@@ -38,13 +38,13 @@ namespace TestConfMgmt
         [TestMethod]
         public void Test_BasicNoExist()
         {
-            ConfTree conf = new ConfTree($@"{SamplePath}\Basic.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{SamplePath}\Basic.xml");
             Assert.ThrowsException<Exception>(() => { var result = conf["NonExisting"]; });
         }
         [TestMethod]
         public void Test_SameItemName()
         {
-            ConfTree conf = new ConfTree($@"{SamplePath}\SameItemName.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{SamplePath}\SameItemName.xml");
 
             Debug.WriteLine(conf.ToString());
             Assert.IsTrue(conf[@"Function1\Item1"] == "Value1");
@@ -60,7 +60,7 @@ namespace TestConfMgmt
                 {
                     Debug.WriteLine(path);
                     
-                    ConfTree conf = new ConfTree(path);
+                    ConfTree conf = XmlBuilder.Generate(path);
                     Debug.WriteLine(conf.ToString());
                 }
                 catch (Exception ex)
