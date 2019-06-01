@@ -8,10 +8,16 @@ namespace ConfMgmt
     {
         public string Name;
         public string Value;
+
         public ConfItem(string name, string value = null)
         {
             Name = name;
             Value = value;
+        }
+        public ConfItem(XmlNode node)
+        {
+            Name = node.Name;
+            Value = node.FirstChild.InnerText;
         }
         public bool IsNode()
         {
@@ -22,8 +28,10 @@ namespace ConfMgmt
             return $"{Name}:{(Value != null ? Value : Environment.NewLine)}{(Value == null ? "" : Environment.NewLine)}";
         }
     }
-    public class ConfTree
+    public class ConfTree : ConfItem
     {
+        public List<ConfItem> Sons;
+
         public static bool IsConfItem(XmlNode node)
         {
             XmlElement ele = node as XmlElement;
@@ -34,26 +42,45 @@ namespace ConfMgmt
             return (node.ChildNodes.Count == 1 && node.FirstChild.NodeType == XmlNodeType.Text);
         }
 
-        public List<object> Root;
         private int _depth = 0;
-        private XmlNode _origXml;
+        public XmlNode XmlFile;
 
-        public ConfTree(string path)
+        public ConfTree(string name = null) : base(name, null)
+        {
+            Name = name;
+        }
+        public ConfTree(XmlNode node) : base(node.Name, null)
+        {
+            Sons = new List<ConfItem>();
+
+            foreach (XmlNode n in node.ChildNodes)
+            {
+                if (IsLeaf(n))
+                {
+                    Sons.Add(new ConfItem(n));
+                }
+                else
+                {
+                    if (n.ChildNodes.Count > 1)
+                    {
+                        Sons.Add(new ConfTree(n));
+                    }
+                }
+            }
+        }
+
+        public void Load(string path)
         {
             var xml = new XmlDocument();
             xml.Load(path);
+            XmlFile = xml;
 
-            Root = Build(xml);
+            Build(xml);
         }
 
-        public List<object> Build(XmlNode node)
+        public ConfItem Build(XmlNode node)
         {
-            List<object> lists = new List<object>();
-            if (Root == null)
-            {
-                Root = lists;
-                _origXml = node;
-            }
+            Sons = new List<ConfItem>();
 
             XmlNodeList subNodes = node.ChildNodes;
             if (subNodes.Count == 0)/*comment*/
@@ -63,64 +90,72 @@ namespace ConfMgmt
             else if (IsLeaf(node))
             {
                 XmlElement ele = node as XmlElement;
-                lists.Add(new ConfItem(ele.Name, ele.InnerText));
+                Sons.Add(new ConfItem(ele.Name, ele.InnerText));
             }
             else/*others*/
             {
-                if (IsConfItem(node))
-                {
-                    lists.Add(new ConfItem(node.Name));
-                }
-
                 if (subNodes.Count >= 1)
                 {
                     foreach (var subNode in subNodes)
                     {
-                        lists.Add(Build((XmlNode)subNode));
+                        Sons.Add(Build((XmlNode)subNode));
                     }
                 }
             }
 
-            return lists;
+            return this;
         }
-        public void Visit(Action<ConfItem, int> executor, List<object> lists = null)
+        public void Visit(Action<ConfItem, int> executor, ConfItem item = null)
         {
-            if (lists == null)
+            if (item == null)
             {
-                lists = Root;
                 _depth = 0;
+                item = this;
             }
 
-            var curDepth = _depth;
-            foreach (var ele in lists)
+            var tree = item as ConfTree;
+            if(tree != null)
             {
-                List<object> list = ele as List<object>;
-                if (list != null)
+                Visit(executor, new ConfItem(item.Name));
+
+                foreach (var c in tree.Sons)
                 {
-                    Visit(executor, list);
-                }
-                else
-                {
-                    var item = ele as ConfItem;
-                    executor(item, _depth);
-                    if (item.IsNode())
-                    {
-                        _depth++;
-                    }
+                    _depth++;
+                    Visit(executor, c);
+                    _depth--;
                 }
             }
-            _depth = curDepth;
+            else
+            {
+                executor(item, _depth);
+            }
         }
         public ConfItem Find(string name)
         {
             ConfItem result = null;
-            Visit((item, level) =>
+
+            if (!name.Contains(@"\"))
             {
-                if (item.Name == name)
+                Visit((item, level) =>
                 {
-                    result = item;
+                    if (item.Name == name)
+                    {
+                        result = item;
+                    }
+                });
+            }
+            else
+            {
+                string[] strs = name.Split('\\');
+                for (int i = 0; i < strs.Length; i++)
+                {
+                    var item = Find(strs[i]);
+                    if (item != null)
+                    {
+
+                    }
                 }
-            });
+            }
             return result;
         }
         public override string ToString()
@@ -135,14 +170,6 @@ namespace ConfMgmt
                 output += item.ToString();
             });
             return output;
-        }
-
-        public string Name
-        {
-            get
-            {
-                return ((Root[0] as List<object>)[0] as ConfItem).Name;
-            }
         }
         public string this[string key]
         {
@@ -164,7 +191,7 @@ namespace ConfMgmt
                 if (item != null)
                 {
                     item.Value = value;
-                    var xmlNode = XmlOp.Find(_origXml, key);
+                    var xmlNode = XmlOp.Find(XmlFile, key);
                     xmlNode.InnerText = value;
                 }
                 else
@@ -176,7 +203,7 @@ namespace ConfMgmt
 
         public void Save(string path = null)
         {
-            var doc = _origXml as XmlDocument;
+            var doc = XmlFile as XmlDocument;
             path = path == null ? doc.BaseURI.Substring(@"file:///".Length) : path;
             doc.Save(path);
         }
