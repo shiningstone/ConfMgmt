@@ -129,7 +129,7 @@ namespace ConfMgmt
 
         public void Save(string path = null)
         {
-            XmlBuilder.Save(XmlFile, path);
+            XmlBuilder.Save(this, path);
         }
     }
 }

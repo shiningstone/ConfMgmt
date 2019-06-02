@@ -4,19 +4,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using ConfMgmt;
 using System.IO;
-using System.Xml;
 
 namespace TestConfMgmt
 {
     [TestClass]
-    public class ConfTreeTest
+    public class TestXmlBuild
     {
-        private static string SamplePath = @"D:\ConfMgmt\ConfMgmt\TestConfMgmt\TestSamples";
-        private static string RealConfPath = @"D:\TestSystem\Configurations\";
         [TestMethod]
-        public void Test_Basic()
+        public void TestXmlBuild_Basic()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{SamplePath}\Basic.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\Basic.xml");
             Debug.WriteLine(conf.ToString());
 
             Assert.IsTrue(conf["Item1"] == "Value1");
@@ -26,25 +23,25 @@ namespace TestConfMgmt
 
             conf["Item1"] = "Value5";
             Assert.IsTrue(conf["Item1"] == "Value5");
-            conf.Save($@"{SamplePath}\BasicResult.xml");
+            conf.Save($@"{GlobalVariables.SamplePath}\BasicResult.xml");
             //conf.Save();
 
-            conf = XmlBuilder.Generate($@"{SamplePath}\BasicResult.xml");
+            conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\BasicResult.xml");
             Assert.IsTrue(conf["Item1"] == "Value5");
             Assert.IsTrue(conf["Item2"] == "Value2");
             Assert.IsTrue(conf["Item3"] == "Value3");
             Assert.IsTrue(conf["Item4"] == "Value4");
         }
         [TestMethod]
-        public void Test_BasicNoExist()
+        public void TestXmlBuild_BasicNoExist()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{SamplePath}\Basic.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\Basic.xml");
             Assert.ThrowsException<Exception>(() => { var result = conf["NonExisting"]; });
         }
         [TestMethod]
-        public void Test_SameItemName()
+        public void TestXmlBuild_SameItemName()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{SamplePath}\SameItemName.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\SameItemName.xml");
 
             Debug.WriteLine(conf.ToString());
             Assert.IsTrue(conf[@"Function1\Item1"] == "Value1");
@@ -52,9 +49,9 @@ namespace TestConfMgmt
             Assert.IsTrue(conf[@"Function3\Item1"] == "Func3-1");
         }
         [TestMethod]
-        public void BuildRealConf()
+        public void TestXmlBuild_BuildRealConf()
         {
-            Traverse(RealConfPath, (path) =>
+            Traverse(GlobalVariables.RealConfPath, (path) =>
             {
                 try
                 {
