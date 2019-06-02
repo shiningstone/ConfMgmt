@@ -7,8 +7,8 @@
     <ProjectGuid>{AA627527-6A1A-4758-9117-BA3D41E1D6A8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConfMgmt</RootNamespace>
-    <AssemblyName>ConfMgmt</AssemblyName>
+    <RootNamespace>JbConf</RootNamespace>
+    <AssemblyName>JbConf</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfMgmt.cs" />
+    <Compile Include="DictionaryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConfTree.cs" />
     <Compile Include="XmlBuilder.cs" />

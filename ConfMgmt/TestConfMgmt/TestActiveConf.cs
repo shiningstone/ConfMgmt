@@ -7,12 +7,12 @@ using JbConf;
 namespace TestConfMgmt
 {
     /// <summary>
-    /// TestDictionaryBuild 的摘要说明
+    /// TestActiveConf 的摘要说明
     /// </summary>
     [TestClass]
-    public class TestDictionaryBuild
+    public class TestActiveConf
     {
-        public TestDictionaryBuild()
+        public TestActiveConf()
         {
             //
             //TODO:  在此处添加构造函数逻辑
@@ -60,16 +60,14 @@ namespace TestConfMgmt
         #endregion
 
         [TestMethod]
-        public void TestDictionaryBuild_Basic()
+        public void TestActive()
         {
-            ConfTree conf = DictionaryBuilder.Generate(new Dictionary<string, string> {
-                { "Item1", "Value1" },
-                { "Item2", "Value2" },
-            }, "Default");
+            var dictConf = DictionaryBuilder.Generate(new Dictionary<string, string>
+            {
+                { "Item1", "V1" },
+            }, "Basic");
 
-            Assert.IsTrue(conf["Item1"] == "Value1");
-            Assert.IsTrue(conf["Item2"] == "Value2");
-            conf.Save($@"{GlobalVariables.SamplePath}\DictionaryConf.xml");
+            Assert.IsTrue(ConfMgmt.GetItem("Basic", "Item1") == "V1");
         }
     }
 }

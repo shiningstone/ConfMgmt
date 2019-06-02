@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfMgmt", "ConfMgmt\ConfMgmt.csproj", "{AA627527-6A1A-4758-9117-BA3D41E1D6A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JbConf", "ConfMgmt\JbConf.csproj", "{AA627527-6A1A-4758-9117-BA3D41E1D6A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConfMgmt", "TestConfMgmt\TestConfMgmt.csproj", "{AB8C280B-9583-481A-9F83-B2AEE13145FD}"
 EndProject

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 
-namespace ConfMgmt
+namespace JbConf
 {
     public class XmlBuilder
     {
@@ -16,7 +16,25 @@ namespace ConfMgmt
 
             return result;
         }
-        public static ConfTree GenerateTree(XmlNode node)
+        public static void Modify(object xmlFile, string key, string value)
+        {
+            Find(xmlFile as XmlNode, key).InnerText = value;
+        }
+        public static void Save(ConfTree conf, string path)
+        {
+            var doc = conf.XmlFile as XmlDocument;
+            if (doc != null)
+            {
+                path = path == null ? doc.BaseURI.Substring(@"file:///".Length) : path;
+                doc.Save(path);
+            }
+            else
+            {
+                SaveDictionaryConf(conf, path);
+            }
+        }
+
+        private static ConfTree GenerateTree(XmlNode node)
         {
             var result = new ConfTree(node.Name);
 
@@ -39,15 +57,15 @@ namespace ConfMgmt
 
             return result;
         }
-        public static bool IsLeaf(XmlNode node)
+        private static bool IsLeaf(XmlNode node)
         {
             return (node.ChildNodes.Count == 1 && node.FirstChild.NodeType == XmlNodeType.Text);
         }
-        public static ConfItem GenerateLeaf(XmlNode node)
+        private static ConfItem GenerateLeaf(XmlNode node)
         {
             return new ConfItem(node.Name, node.FirstChild.InnerText);
         }
-        public static XmlNode Find(XmlNode node, string key)
+        private static XmlNode Find(XmlNode node, string key)
         {
             XmlNode result = null;
 
@@ -70,23 +88,6 @@ namespace ConfMgmt
             }
 
             return result;
-        }
-        public static void Modify(object xmlFile, string key, string value)
-        {
-            Find(xmlFile as XmlNode, key).InnerText = value;
-        }
-        public static void Save(ConfTree conf, string path)
-        {
-            var doc = conf.XmlFile as XmlDocument;
-            if (doc != null)
-            {
-                path = path == null ? doc.BaseURI.Substring(@"file:///".Length) : path;
-                doc.Save(path);
-            }
-            else
-            {
-                SaveDictionaryConf(conf, path);
-            }
         }
         private static void CreateNode(XmlDocument xmlDoc, XmlNode parentNode, string name, string value)
         {

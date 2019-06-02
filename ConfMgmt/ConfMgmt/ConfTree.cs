@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ConfMgmt
+namespace JbConf
 {
     public class ConfItem
     {

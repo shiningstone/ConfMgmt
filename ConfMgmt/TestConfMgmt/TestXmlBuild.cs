@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using ConfMgmt;
+using JbConf;
 using System.IO;
 
 namespace TestConfMgmt
