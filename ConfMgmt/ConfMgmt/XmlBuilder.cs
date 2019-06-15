@@ -12,8 +12,10 @@ namespace JbConf
 
             var node = xmlFile.ChildNodes[xmlFile.ChildNodes.Count - 1];
             var result = GenerateTree(node);
+            result.Source = Source.Xml;
             result.XmlFile = xmlFile;
 
+            ConfMgmt.Add(result);
             return result;
         }
         public static void Modify(object xmlFile, string key, string value)

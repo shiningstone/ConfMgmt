@@ -7,12 +7,12 @@ using JbConf;
 namespace TestConfMgmt
 {
     /// <summary>
-    /// TestActiveConf 的摘要说明
+    /// TestDuplicateConf 的摘要说明
     /// </summary>
     [TestClass]
-    public class TestActiveConf
+    public class TestDuplicateConf
     {
-        public TestActiveConf()
+        public TestDuplicateConf()
         {
             //
             //TODO:  在此处添加构造函数逻辑
@@ -60,14 +60,50 @@ namespace TestConfMgmt
         #endregion
 
         [TestMethod]
-        public void TestActive()
+        public void TestDuplicate_GlobalDict()
         {
-            var dictConf = DictionaryBuilder.Generate(new Dictionary<string, string>
+            DictionaryBuilder.Generate(new Dictionary<string, string>
             {
                 { "Item1", "V1" },
+                { "Item2", "V2" },
             }, "Basic");
 
-            Assert.IsTrue(ConfMgmt.GetItem("Basic", "Item1") == "V1");
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item1") == "V1");
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item2") == "V2");
+        }
+        [TestMethod]
+        public void TestDuplicate_GlobalXml()
+        {
+            XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\Basic.xml");
+
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item1") == "Value1");
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item2") == "Value2");
+        }
+        [TestMethod]
+        public void TestDuplicate_XmlItemsPriorToDict()
+        {
+            DictionaryBuilder.Generate(new Dictionary<string, string>
+            {
+                { "Item1", "V1" },
+                { "Item2", "V2" },
+            }, "Basic");
+            XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\Basic.xml");
+
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item1") == "Value1");
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item2") == "Value2");
+        }
+        [TestMethod]
+        public void TestDuplicate_XmlItemsPriorToDict2()
+        {
+            XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\Basic.xml");
+            DictionaryBuilder.Generate(new Dictionary<string, string>
+            {
+                { "Item1", "V1" },
+                { "Item2", "V2" },
+            }, "Basic");
+
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item1") == "Value1");
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item2") == "Value2");
         }
     }
 }

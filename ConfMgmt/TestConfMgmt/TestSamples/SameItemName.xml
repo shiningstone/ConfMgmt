@@ -1,4 +1,4 @@
-<Basic>
+<SameItemName>
   <Function1>
     <Item1>Value1</Item1>
     <!-- comments -->
@@ -6,7 +6,14 @@
   </Function1>
   <Function2>
     <!-- comments -->
+    <Item1>Func2-1</Item1>
     <Item3>Value3</Item3>
     <Item4>Value4</Item4>
   </Function2>
-</Basic>
+  <Function3>
+    <!-- comments -->
+    <Item1>Func3-1</Item1>
+    <Item3>Func3-3</Item3>
+    <Item4>Func3-4</Item4>
+  </Function3>
+</SameItemName>

@@ -11,11 +11,14 @@ namespace JbConf
         public static ConfTree Generate(Dictionary<string, string> kvs, string name)
         {
             ConfTree result = new ConfTree(name);
+            result.Source = Source.Dictionary;
+
             result.Sons = new List<ConfItem>();
             foreach (var kv in kvs)
             {
                 result.Sons.Add(new ConfItem(kv.Key, kv.Value));
             }
+            ConfMgmt.Add(result);
             return result;
         }
     }

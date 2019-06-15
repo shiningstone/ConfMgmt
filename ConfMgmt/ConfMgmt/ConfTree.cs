@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 namespace JbConf
 {
+    public enum Source
+    {
+        Xml,
+        Dictionary,
+    }
+
     public class ConfItem
     {
         public string Name;
@@ -20,6 +26,7 @@ namespace JbConf
     }
     public class ConfTree : ConfItem
     {
+        public Source Source;
         public List<ConfItem> Sons;
 
         private int _depth = 0;
