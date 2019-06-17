@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Utils;
 
 namespace JbConf
 {
@@ -13,11 +14,18 @@ namespace JbConf
     {
         public string Name;
         public string Value;
+        public string Path;
 
         public ConfItem(string name, string value = null)
         {
             Name = name;
             Value = value;
+        }
+        public ConfItem(string name, string value, string parent)
+        {
+            Name = name;
+            Value = value;
+            Path = $"{parent}";
         }
         public override string ToString()
         {
@@ -26,6 +34,8 @@ namespace JbConf
     }
     public class ConfTree : ConfItem
     {
+        public static Logger _log = new Logger("ConfTree");
+
         public Source Source;
         public List<ConfItem> Sons;
 
@@ -61,15 +71,15 @@ namespace JbConf
                 executor(item, _depth);
             }
         }
-        public ConfItem Find(string name)
+        public ConfItem Find(string itemName)
         {
             ConfItem result = null;
 
-            if (!name.Contains(@"\"))
+            if (!itemName.Contains(@"\"))
             {
                 Visit((item, level) =>
                 {
-                    if (item.Name == name)
+                    if (item.Name == itemName)
                     {
                         result = item;
                     }
@@ -77,7 +87,7 @@ namespace JbConf
             }
             else
             {
-                string[] strs = name.Split('\\');
+                string[] strs = itemName.Split('\\');
 
                 var item = Find(strs[0]);
                 var tree = item as ConfTree;
@@ -101,7 +111,7 @@ namespace JbConf
                 {
                     output += "--";
                 }
-                output += $"{item.Name}:{(item.Value != null ? item.Value : Environment.NewLine)}{(item.Value == null ? "" : Environment.NewLine)}";
+                output += $"({item.Path}){item.Name}:{(item.Value != null ? item.Value : Environment.NewLine)}{(item.Value == null ? "" : Environment.NewLine)}";
             });
             return output;
         }
@@ -134,6 +144,36 @@ namespace JbConf
             }
         }
 
+        public List<ConfItem> Items
+        {
+            get
+            {
+                var result = new List<ConfItem>();
+                Visit((item, level) => {
+                    result.Add(item);
+                });
+                return result;
+            }
+        }
+        public void Add(ConfItem item)
+        {
+            Sons.Add(item);
+        }
+        public ConfTree Merge(ConfTree tree)
+        {
+            foreach (var item in tree.Items)
+            {
+                if (null == Find(item.Name))
+                {
+                    Add(item);
+                }
+                else
+                {
+                    _log.Warn($"ConfTree({this.Name}) Merge Failed : Item({item.Name}) already exist({item.Value})");
+                }
+            }
+            return this;
+        }
         public void Save(string path = null)
         {
             XmlBuilder.Save(this, path);

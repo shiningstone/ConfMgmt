@@ -33,6 +33,20 @@ namespace TestConfMgmt
             Assert.IsTrue(conf["Item4"] == "Value4");
         }
         [TestMethod]
+        public void TestXmlBuild_Basic_Path()
+        {
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\Basic.xml");
+            Debug.WriteLine(conf.ToString());
+
+            Assert.IsTrue(conf.Find("Item1").Path == "/Basic/Function1");
+            Assert.IsTrue(conf.Find("Item2").Path == "/Basic/Function1");
+            Assert.IsTrue(conf.Find("Item3").Path == "/Basic/Function2");
+            Assert.IsTrue(conf.Find("Item4").Path == "/Basic/Function2");
+
+            conf["Item1"] = "Value5";
+            Assert.IsTrue(conf.Find("Item1").Path == "/Basic/Function1");
+        }
+        [TestMethod]
         public void TestXmlBuild_BasicNoExist()
         {
             ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\Basic.xml");

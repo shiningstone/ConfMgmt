@@ -5,10 +5,10 @@ namespace JbConf
 {
     public class XmlBuilder
     {
-        public static ConfTree Generate(string path)
+        public static ConfTree Generate(string xmlPath)
         {
             var xmlFile = new XmlDocument();
-            xmlFile.Load(path);
+            xmlFile.Load(xmlPath);
 
             var node = xmlFile.ChildNodes[xmlFile.ChildNodes.Count - 1];
             var result = GenerateTree(node);
@@ -36,23 +36,26 @@ namespace JbConf
             }
         }
 
-        private static ConfTree GenerateTree(XmlNode node)
+        private static ConfTree GenerateTree(XmlNode node, string path = "")
         {
             var result = new ConfTree(node.Name);
 
+            result.Path = path;
             result.Sons = new List<ConfItem>();
 
             foreach (XmlNode n in node.ChildNodes)
             {
                 if (IsLeaf(n))
                 {
-                    result.Sons.Add(GenerateLeaf(n));
+                    var item = GenerateLeaf(n, $"{path}/{node.Name}");
+                    result.Sons.Add(item);
                 }
                 else
                 {
                     if (n.ChildNodes.Count > 1)
                     {
-                        result.Sons.Add(GenerateTree(n));
+                        var item = GenerateTree(n, $"{path}/{node.Name}");
+                        result.Sons.Add(item);
                     }
                 }
             }
@@ -63,9 +66,9 @@ namespace JbConf
         {
             return (node.ChildNodes.Count == 1 && node.FirstChild.NodeType == XmlNodeType.Text);
         }
-        private static ConfItem GenerateLeaf(XmlNode node)
+        private static ConfItem GenerateLeaf(XmlNode node, string path = "")
         {
-            return new ConfItem(node.Name, node.FirstChild.InnerText);
+            return new ConfItem(node.Name, node.FirstChild.InnerText, path);
         }
         private static XmlNode Find(XmlNode node, string key)
         {

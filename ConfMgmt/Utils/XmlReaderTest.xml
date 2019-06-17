@@ -1,0 +1,35 @@
+<HardwareEnv>
+	<Floor1>
+		<Slot1>
+			<AirPressure>
+				<GetValue>666</GetValue>
+			</AirPressure>
+		</Slot1>
+		<Slot2>
+		</Slot2>
+	</Floor1>
+	<Floor2>
+		<Slot1>
+		</Slot1>
+		<Slot2>
+		</Slot2>
+	</Floor2>
+	<Floor3>
+		<Slot1>
+		</Slot1>
+		<Slot2>
+		</Slot2>
+	</Floor3>
+	<Floor4>
+		<Slot1>
+		</Slot1>
+		<Slot2>
+		</Slot2>
+	</Floor4>
+	<Floor5>
+		<Slot1>
+		</Slot1>
+		<Slot2>
+		</Slot2>
+	</Floor5>
+</HardwareEnv>

@@ -105,5 +105,18 @@ namespace TestConfMgmt
             Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item1") == "Value1");
             Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item2") == "Value2");
         }
+        [TestMethod]
+        public void TestDuplicate_DictItemAddToXml()
+        {
+            XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\Basic.xml");
+            DictionaryBuilder.Generate(new Dictionary<string, string>
+            {
+                { "Item5", "V5" },
+            }, "Basic");
+
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item1") == "Value1");
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item2") == "Value2");
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item5") == "V5");
+        }
     }
 }

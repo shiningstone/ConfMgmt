@@ -44,7 +44,14 @@
     <Compile Include="DictionaryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConfTree.cs" />
+    <Compile Include="Tree.cs" />
     <Compile Include="XmlBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils\Utils.csproj">
+      <Project>{F074B62B-6DD3-40AE-B9A6-0FBFA984733E}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

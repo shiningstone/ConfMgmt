@@ -71,5 +71,16 @@ namespace TestConfMgmt
             Assert.IsTrue(conf["Item2"] == "Value2");
             conf.Save($@"{GlobalVariables.SamplePath}\DictionaryConf.xml");
         }
+        [TestMethod]
+        public void TestDictionaryBuild_Basic_Path()
+        {
+            ConfTree conf = DictionaryBuilder.Generate(new Dictionary<string, string> {
+                { "Item1", "Value1" },
+                { "Item2", "Value2" },
+            }, "Default");
+
+            var item = conf.Find("Item1");
+            Assert.IsTrue(item.Path == "/Default");
+        }
     }
 }

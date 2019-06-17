@@ -16,7 +16,7 @@ namespace JbConf
             result.Sons = new List<ConfItem>();
             foreach (var kv in kvs)
             {
-                result.Sons.Add(new ConfItem(kv.Key, kv.Value));
+                result.Sons.Add(new ConfItem(kv.Key, kv.Value, $"/{name}"));
             }
             ConfMgmt.Add(result);
             return result;

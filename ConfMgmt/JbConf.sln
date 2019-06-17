@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JbConf", "ConfMgmt\JbConf.c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConfMgmt", "TestConfMgmt\TestConfMgmt.csproj", "{AB8C280B-9583-481A-9F83-B2AEE13145FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Utils\Utils\Utils.csproj", "{F074B62B-6DD3-40AE-B9A6-0FBFA984733E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AB8C280B-9583-481A-9F83-B2AEE13145FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB8C280B-9583-481A-9F83-B2AEE13145FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB8C280B-9583-481A-9F83-B2AEE13145FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F074B62B-6DD3-40AE-B9A6-0FBFA984733E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F074B62B-6DD3-40AE-B9A6-0FBFA984733E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F074B62B-6DD3-40AE-B9A6-0FBFA984733E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F074B62B-6DD3-40AE-B9A6-0FBFA984733E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
