@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JbConf;
+using System.Diagnostics;
 
 namespace TestConfMgmt
 {
@@ -66,6 +67,7 @@ namespace TestConfMgmt
                 { "Item1", "Value1" },
                 { "Item2", "Value2" },
             }, "Default");
+            Debug.WriteLine(conf.ToString());
 
             Assert.IsTrue(conf["Item1"] == "Value1");
             Assert.IsTrue(conf["Item2"] == "Value2");

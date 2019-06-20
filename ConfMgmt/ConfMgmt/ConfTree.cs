@@ -14,18 +14,13 @@ namespace JbConf
     {
         public string Name;
         public string Value;
+
         public string Path;
 
         public ConfItem(string name, string value = null)
         {
             Name = name;
             Value = value;
-        }
-        public ConfItem(string name, string value, string parent)
-        {
-            Name = name;
-            Value = value;
-            Path = $"{parent}";
         }
         public override string ToString()
         {
@@ -37,7 +32,7 @@ namespace JbConf
         public static Logger _log = new Logger("ConfTree");
 
         public Source Source;
-        public List<ConfItem> Sons;
+        public List<ConfItem> Sons = new List<ConfItem>();
 
         private int _depth = 0;
         public object XmlFile;
@@ -157,6 +152,7 @@ namespace JbConf
         }
         public void Add(ConfItem item)
         {
+            item.Path = $"{Path}/{Name}";
             Sons.Add(item);
         }
         public ConfTree Merge(ConfTree tree)

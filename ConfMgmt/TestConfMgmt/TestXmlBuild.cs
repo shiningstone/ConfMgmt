@@ -20,6 +20,7 @@ namespace TestConfMgmt
             Assert.IsTrue(conf["Item2"] == "Value2");
             Assert.IsTrue(conf["Item3"] == "Value3");
             Assert.IsTrue(conf["Item4"] == "Value4");
+            Assert.IsTrue(conf["Item5"] == "Value5");
 
             conf["Item1"] = "Value5";
             Assert.IsTrue(conf["Item1"] == "Value5");
@@ -42,6 +43,7 @@ namespace TestConfMgmt
             Assert.IsTrue(conf.Find("Item2").Path == "/Basic/Function1");
             Assert.IsTrue(conf.Find("Item3").Path == "/Basic/Function2");
             Assert.IsTrue(conf.Find("Item4").Path == "/Basic/Function2");
+            Assert.IsTrue(conf.Find("Item5").Path == "/Basic");
 
             conf["Item1"] = "Value5";
             Assert.IsTrue(conf.Find("Item1").Path == "/Basic/Function1");

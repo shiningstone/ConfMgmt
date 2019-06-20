@@ -44,7 +44,6 @@
     <Compile Include="DictionaryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConfTree.cs" />
-    <Compile Include="Tree.cs" />
     <Compile Include="XmlBuilder.cs" />
   </ItemGroup>
   <ItemGroup>

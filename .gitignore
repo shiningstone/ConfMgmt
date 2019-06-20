@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 ConfMgmt/TestConfMgmt/TestSamples/Sample1-result.xml
+ConfMgmt/TestConfMgmt/TestSamples/RealConfigs/

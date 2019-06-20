@@ -111,12 +111,12 @@ namespace TestConfMgmt
             XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\Basic.xml");
             DictionaryBuilder.Generate(new Dictionary<string, string>
             {
-                { "Item5", "V5" },
+                { "Item6", "V6" },
             }, "Basic");
 
             Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item1") == "Value1");
             Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item2") == "Value2");
-            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item5") == "V5");
+            Assert.IsTrue(ConfMgmt.GetItem(@"Basic\Item6") == "V6");
         }
     }
 }

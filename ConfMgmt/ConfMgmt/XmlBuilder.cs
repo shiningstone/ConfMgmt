@@ -39,23 +39,19 @@ namespace JbConf
         private static ConfTree GenerateTree(XmlNode node, string path = "")
         {
             var result = new ConfTree(node.Name);
-
             result.Path = path;
-            result.Sons = new List<ConfItem>();
 
             foreach (XmlNode n in node.ChildNodes)
             {
                 if (IsLeaf(n))
                 {
-                    var item = GenerateLeaf(n, $"{path}/{node.Name}");
-                    result.Sons.Add(item);
+                    result.Add(GenerateLeaf(n));
                 }
                 else
                 {
                     if (n.ChildNodes.Count > 1)
                     {
-                        var item = GenerateTree(n, $"{path}/{node.Name}");
-                        result.Sons.Add(item);
+                        result.Add(GenerateTree(n, $"{result.Path}/{result.Name}"));
                     }
                 }
             }
@@ -66,9 +62,9 @@ namespace JbConf
         {
             return (node.ChildNodes.Count == 1 && node.FirstChild.NodeType == XmlNodeType.Text);
         }
-        private static ConfItem GenerateLeaf(XmlNode node, string path = "")
+        private static ConfItem GenerateLeaf(XmlNode node)
         {
-            return new ConfItem(node.Name, node.FirstChild.InnerText, path);
+            return new ConfItem(node.Name, node.FirstChild.InnerText);
         }
         private static XmlNode Find(XmlNode node, string key)
         {
