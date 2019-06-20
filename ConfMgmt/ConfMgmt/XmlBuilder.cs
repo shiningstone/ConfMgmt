@@ -36,10 +36,9 @@ namespace JbConf
             }
         }
 
-        private static ConfTree GenerateTree(XmlNode node, string path = "")
+        private static ConfTree GenerateTree(XmlNode node)
         {
             var result = new ConfTree(node.Name);
-            result.Path = path;
 
             foreach (XmlNode n in node.ChildNodes)
             {
@@ -51,7 +50,7 @@ namespace JbConf
                 {
                     if (n.ChildNodes.Count > 1)
                     {
-                        result.Add(GenerateTree(n, $"{result.Path}/{result.Name}"));
+                        result.Add(GenerateTree(n));
                     }
                 }
             }

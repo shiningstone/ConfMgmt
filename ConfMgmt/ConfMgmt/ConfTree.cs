@@ -152,8 +152,34 @@ namespace JbConf
         }
         public void Add(ConfItem item)
         {
-            item.Path = $"{Path}/{Name}";
             Sons.Add(item);
+
+            var subtree = item as ConfTree;
+            if (subtree != null)
+            {
+                subtree.PrefixPath($"{Path}/{Name}");
+            }
+            else
+            {
+                item.Path = $"{Path}/{Name}";
+            }
+        }
+        public void PrefixPath(string prefix)
+        {
+            Path = !string.IsNullOrEmpty(Path) ? $"{prefix}{Path}" : $"{prefix}";
+
+            foreach (var son in Sons)
+            {
+                var subtree = son as ConfTree;
+                if (subtree != null)
+                {
+                    subtree.PrefixPath(prefix);
+                }
+                else
+                {
+                    son.Path = !string.IsNullOrEmpty(son.Path) ? $"{prefix}{son.Path}" : $"{prefix}/{son.Path}";
+                }
+            }
         }
         public ConfTree Merge(ConfTree tree)
         {
