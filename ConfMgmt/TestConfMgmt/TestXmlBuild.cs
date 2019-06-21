@@ -65,6 +65,12 @@ namespace TestConfMgmt
             Assert.IsTrue(conf[@"Function3\Item1"] == "Func3-1");
         }
         [TestMethod]
+        public void TestXmlBuild_Tag()
+        {
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\Tag.xml");
+            Debug.WriteLine(conf.ToString());
+        }
+        [TestMethod]
         public void TestXmlBuild_BuildRealConf()
         {
             Traverse(GlobalVariables.RealConfPath, (path) =>

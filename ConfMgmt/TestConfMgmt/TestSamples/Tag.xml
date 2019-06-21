@@ -1,0 +1,14 @@
+<Config>
+	<Tree tag="Default">
+		<Item1>0</Item1>
+		<Item1>0</Item1>
+	</Tree>
+	<Tree tag="tree1">
+		<Item1>1.1</Item1>
+		<Item1>1.2</Item1>
+	</Tree>
+	<Tree tag="tree2">
+		<Item1>2.1</Item1>
+		<Item1>2.2</Item1>
+	</Tree>
+</Config>

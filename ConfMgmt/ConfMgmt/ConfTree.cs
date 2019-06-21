@@ -14,6 +14,7 @@ namespace JbConf
     {
         public string Name;
         public string Value;
+        public string Tag;
 
         public string Path;
 
@@ -106,7 +107,8 @@ namespace JbConf
                 {
                     output += "--";
                 }
-                output += $"({item.Path}){item.Name}:{(item.Value != null ? item.Value : Environment.NewLine)}{(item.Value == null ? "" : Environment.NewLine)}";
+                var tag = !string.IsNullOrEmpty(item.Tag) ? item.Tag : "";
+                output += $"({item.Path}){item.Name}({tag}):{(item.Value != null ? item.Value : Environment.NewLine)}{(item.Value == null ? "" : Environment.NewLine)}";
             });
             return output;
         }

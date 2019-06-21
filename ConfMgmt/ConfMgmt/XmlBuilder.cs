@@ -39,6 +39,11 @@ namespace JbConf
         private static ConfTree GenerateTree(XmlNode node)
         {
             var result = new ConfTree(node.Name);
+            var tag = (node as XmlElement).Attributes.GetNamedItem("tag");
+            if (tag != null)
+            {
+                result.Tag = tag.Value;
+            }
 
             foreach (XmlNode n in node.ChildNodes)
             {
