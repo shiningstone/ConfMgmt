@@ -27,6 +27,18 @@ namespace JbConf
         {
             return $"{Name}:{(Value != null ? Value : Environment.NewLine)}{(Value == null ? "" : Environment.NewLine)}";
         }
+        protected static string[] ExtractTag(string path)
+        {
+            if (path.Contains(":"))
+            {
+                var strs = path.Split(':');
+                return new string[] { strs[0], strs[1] };
+            }
+            else
+            {
+                return new string[] { null, path };
+            }
+        }
     }
     public class ConfTree : ConfItem
     {
@@ -36,6 +48,7 @@ namespace JbConf
         public List<ConfItem> Sons = new List<ConfItem>();
 
         private int _depth = 0;
+        private string _tag;
         public object XmlFile;
 
         public ConfTree(string name) : base(name, null)
@@ -67,7 +80,7 @@ namespace JbConf
                 executor(item, _depth);
             }
         }
-        public ConfItem Find(string itemName)
+        public ConfItem Find(string itemName, string tag = null)
         {
             ConfItem result = null;
 
@@ -75,7 +88,7 @@ namespace JbConf
             {
                 Visit((item, level) =>
                 {
-                    if (item.Name == itemName)
+                    if (item.Name == itemName && (tag == null || item.Tag == tag))
                     {
                         result = item;
                     }
@@ -85,9 +98,9 @@ namespace JbConf
             {
                 string[] strs = itemName.Split('\\');
 
-                var item = Find(strs[0]);
+                var item = Find(strs[0], _tag);
                 var tree = item as ConfTree;
-                if(tree != null)
+                if(tree != null && (_tag == null || _tag == tree.Tag))
                 {
                     item = tree.Find(strs[1]);
                     if (item != null)
@@ -116,7 +129,9 @@ namespace JbConf
         {
             get
             {
-                var item = Find(key);
+                var tag_path = ExtractTag(key);
+                _tag = tag_path[0];
+                var item = Find(tag_path[1]);
                 if (item != null)
                 {
                     return item.Value;
@@ -136,7 +151,7 @@ namespace JbConf
                 }
                 else
                 {
-                    throw new Exception($"ConfTree({Name}) doesn't contains key {key}");
+                    throw new Exception($"ConfTree({Name}({Tag})) doesn't contains key {key}");
                 }
             }
         }

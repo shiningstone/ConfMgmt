@@ -69,6 +69,9 @@ namespace TestConfMgmt
         {
             ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}\Tag.xml");
             Debug.WriteLine(conf.ToString());
+            Assert.IsTrue(conf[@"Default:Func\Item1"] == "0");
+            Assert.IsTrue(conf[@"Tag1:Func\Item1"] == "1.1");
+            Assert.IsTrue(conf[@"Tag2:Func\Item1"] == "2.1");
         }
         [TestMethod]
         public void TestXmlBuild_BuildRealConf()

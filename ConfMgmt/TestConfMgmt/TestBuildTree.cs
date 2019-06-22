@@ -33,7 +33,7 @@ namespace TestConfMgmt
             Assert.IsTrue(tree1.Find("Item2").Path == "/Tree1/Tree2");
         }
         [TestMethod]
-        public void TestAddComplicate1()
+        public void TestAddMixToTree()
         {
             ConfTree tree1 = new ConfTree("Tree1");
             tree1.Add(new ConfItem("Item1-1", "Value1-1"));
@@ -57,7 +57,7 @@ namespace TestConfMgmt
             Assert.IsTrue(tree1.Find("Item3-2").Path == "/Tree1/Tree2/Tree3");
         }
         [TestMethod]
-        public void TestAddComplicate2()
+        public void TestAddMixToTree2()
         {
             ConfTree tree1 = new ConfTree("Tree1");
             tree1.Add(new ConfItem("Item1-1", "Value1-1"));

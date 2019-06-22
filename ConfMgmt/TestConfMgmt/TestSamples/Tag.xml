@@ -1,14 +1,14 @@
 <Config>
-	<Tree tag="Default">
+	<Func tag="Default">
 		<Item1>0</Item1>
-		<Item1>0</Item1>
-	</Tree>
-	<Tree tag="tree1">
+		<Item2>0</Item2>
+	</Func>
+	<Func tag="Tag1">
 		<Item1>1.1</Item1>
-		<Item1>1.2</Item1>
-	</Tree>
-	<Tree tag="tree2">
+		<Item2>1.2</Item2>
+	</Func>
+	<Func tag="Tag2">
 		<Item1>2.1</Item1>
-		<Item1>2.2</Item1>
-	</Tree>
+		<Item2>2.2</Item2>
+	</Func>
 </Config>
