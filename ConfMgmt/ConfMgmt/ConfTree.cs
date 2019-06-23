@@ -60,9 +60,9 @@ namespace JbConf
         public Source Source;
         public List<ConfItem> Sons = new List<ConfItem>();
 
-        private int _depth = 0;
-        private string _tag;
         public object XmlFile;
+        private int _depth = 0;
+        protected string _currentTag;
 
         public ConfTree(string name) : base(name, null)
         {
@@ -147,8 +147,7 @@ namespace JbConf
             get
             {
                 var tag_path = ExtractTag(key);
-                _tag = tag_path[0];
-                var item = Find(tag_path[1]);
+                var item = Find(tag_path[1], tag_path[0]);
                 if (item != null)
                 {
                     return item.Value;
@@ -219,8 +218,13 @@ namespace JbConf
             {
                 Visit((item, level) =>
                 {
-                    DebugDetail($"Current tag: {item.Tag}");
-                    if (item.Name == itemName && (tag == null || item.Tag == tag))
+                    if (!string.IsNullOrEmpty(item.Tag))
+                    {
+                        _currentTag = item.Tag;
+                        DebugDetail($"_currentTag: {_currentTag}");
+                    }
+
+                    if (item.Name == itemName && (tag == null || _currentTag == tag))
                     {
                         DebugDetail($"Find {item.Path}/{item.Name}");
                         result = item;
@@ -236,8 +240,8 @@ namespace JbConf
             {
                 var head_tail = ExtractHead(itemName);
 
-                var tree = Find(head_tail[0], _tag) as ConfTree;
-                if(tree != null && (_tag == null || _tag == tree.Tag))
+                var tree = Find(head_tail[0], tag) as ConfTree;
+                if(tree != null && (tag == null || tag == tree.Tag))
                 {
                     var item = tree.Find(head_tail[1]);
                     if (item != null)
