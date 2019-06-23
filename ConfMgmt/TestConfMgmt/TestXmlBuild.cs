@@ -99,6 +99,22 @@ namespace TestConfMgmt
             JbAssert.Equal(conf[@"Tag2:Item1"], "2.1");
         }
         [TestMethod]
+        public void TestXmlBuild_MultiTag()
+        {
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/MultiTag.xml");
+            Debug.WriteLine(conf.ToString());
+
+            JbAssert.Equal(conf[@"T1.1&T1.1.1:Item1"], "1.1.1.1");
+            JbAssert.Equal(conf[@"T1.1&T1.1.1:Item2"], "1.1.1.2");
+            JbAssert.Equal(conf[@"T1.1&T1.1.2:Item1"], "1.1.2.1");
+            JbAssert.Equal(conf[@"T1.1&T1.1.2:Item2"], "1.1.2.2");
+
+            JbAssert.Equal(conf[@"T1.2&T1.2.1:Item1"], "1.2.1.1");
+            JbAssert.Equal(conf[@"T1.2&T1.2.1:Item2"], "1.2.1.2");
+            JbAssert.Equal(conf[@"T1.2&T1.2.2:Item1"], "1.2.2.1");
+            JbAssert.Equal(conf[@"T1.2&T1.2.2:Item2"], "1.2.2.2");
+        }
+        [TestMethod]
         public void TestXmlBuild_MultiLevel()
         {
             ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/MultiLevel.xml");

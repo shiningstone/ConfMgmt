@@ -55,14 +55,13 @@ namespace JbConf
 #endif
         }
     }
-    public class ConfTree : ConfItem
+    public partial class ConfTree : ConfItem
     {
         public Source Source;
         public List<ConfItem> Sons = new List<ConfItem>();
 
         public object XmlFile;
         private int _depth = 0;
-        protected string _currentTag;
 
         public ConfTree(string name) : base(name, null)
         {
@@ -147,7 +146,7 @@ namespace JbConf
             get
             {
                 var tag_path = ExtractTag(key);
-                var item = Find(tag_path[1], tag_path[0]);
+                var item = Find(tag_path[1], tag_path[0] != null ? tag_path[0].Split('&').ToList() : null);
                 if (item != null)
                 {
                     return item.Value;
@@ -172,86 +171,6 @@ namespace JbConf
             }
         }
 
-        public bool Visit(string func, Func<ConfItem, int, bool> executor, ConfItem item = null)
-        {
-            if (item == null)
-            {
-                _depth = 0;
-                item = this;
-            }
-
-            var tree = item as ConfTree;
-            if(tree != null)
-            {
-                DebugDetail($@"Visit({func}) ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
-
-                executor(item, _depth);
-
-                foreach (var c in tree.Sons)
-                {
-                    _depth++;
-                    var ret = Visit(func, executor, c);
-                    _depth--;
-
-                    if (ret)
-                    {
-                        return true;
-                    }
-                }
-            }
-            else
-            {
-                DebugDetail($"Visit({func}) ConfItem: {item.Name}({item.Value})");
-                if (executor(item, _depth))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        public ConfItem Find(string itemName, string tag = null)
-        {
-            ConfItem result = null;
-
-            if (!itemName.Contains(@"/"))
-            {
-                Visit("Find", (item, level) =>
-                {
-                    if (!string.IsNullOrEmpty(item.Tag))
-                    {
-                        _currentTag = item.Tag;
-                        DebugDetail($"_currentTag: {_currentTag}");
-                    }
-
-                    if (item.Name == itemName && (tag == null || _currentTag == tag))
-                    {
-                        DebugDetail($"Find {item.Path}/{item.Name}");
-                        result = item;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                });
-            }
-            else
-            {
-                var head_tail = ExtractHead(itemName);
-
-                var tree = Find(head_tail[0], tag) as ConfTree;
-                if(tree != null && (tag == null || tag == tree.Tag))
-                {
-                    var item = tree.Find(head_tail[1]);
-                    if (item != null)
-                    {
-                        return item;
-                    }
-                }
-            }
-            return result;
-        }
         public void Save(string path = null)
         {
             XmlBuilder.Save(this, path);
