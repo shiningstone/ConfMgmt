@@ -1,0 +1,32 @@
+<Config>
+	<Level1 tag="Default">
+		<Level2 tag="Default">
+			<Item1>1.2.2.1</Item1>
+			<Item2>1.2.2.2</Item2>
+		</Level2>
+		<Level2 tag="T1.2.1">
+			<Item1>1.2.1.3</Item1>
+			<Item2>1.2.1.4</Item2>
+		</Level2>
+	</Level1>
+	<Level1 tag="T1.1">
+		<Level2 tag="Default">
+			<Item1>1.1.1.1</Item1>
+			<Item2>1.1.1.2</Item2>
+		</Level2>
+		<Level2 tag="T1.1.2">
+			<Item1>1.1.2.1</Item1>
+			<Item2>1.1.2.2</Item2>
+		</Level2>
+	</Level1>
+	<Level1 tag="T1.2">
+		<Level2 tag="Default">
+			<Item1>1.2.2.1</Item1>
+			<Item2>1.2.2.2</Item2>
+		</Level2>
+		<Level2 tag="T1.2.1">
+			<Item1>1.2.1.1</Item1>
+			<Item2>1.2.1.2</Item2>
+		</Level2>
+	</Level1>
+</Config>
