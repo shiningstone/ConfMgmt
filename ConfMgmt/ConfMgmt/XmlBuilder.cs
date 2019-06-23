@@ -57,6 +57,10 @@ namespace JbConf
                     {
                         result.Add(GenerateTree(n));
                     }
+                    else if (n.ChildNodes.Count == 1 && IsLeaf(n.ChildNodes[0]))
+                    {
+                        result.Add(GenerateTree(n));
+                    }
                 }
             }
 

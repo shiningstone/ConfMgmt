@@ -168,7 +168,7 @@ namespace Utils
             }
             else
             {
-                return path + @"\" + filename + postfix + fileExt;
+                return path + @"/" + filename + postfix + fileExt;
             }
         }
         public static string Combine(List<string> filters, string header, string combiner)

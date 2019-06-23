@@ -18,7 +18,7 @@ namespace JbConf
         }
         public static string GetItem(string index)
         {
-            string[] indexes = index.Split('\\');
+            string[] indexes = index.Split('/');
             return Trees[indexes[0]][indexes[1]];
         }
     }

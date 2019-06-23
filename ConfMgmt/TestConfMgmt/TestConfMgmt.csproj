@@ -50,8 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalVariables.cs" />
-    <Compile Include="TestDuplicateConf.cs" />
-    <Compile Include="TestDictionaryBuild.cs" />
     <Compile Include="TestXmlBuild.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestBuildTree.cs" />
@@ -63,6 +61,10 @@
     <ProjectReference Include="..\ConfMgmt\JbConf.csproj">
       <Project>{AA627527-6A1A-4758-9117-BA3D41E1D6A8}</Project>
       <Name>JbConf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils\Utils.csproj">
+      <Project>{F074B62B-6DD3-40AE-B9A6-0FBFA984733E}</Project>
+      <Name>Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

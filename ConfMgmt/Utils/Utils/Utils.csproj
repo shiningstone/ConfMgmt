@@ -58,6 +58,7 @@
     <Compile Include="ComPort.cs" />
     <Compile Include="CsvFile.cs" />
     <Compile Include="ErrInfo.cs" />
+    <Compile Include="JbAssert.cs" />
     <Compile Include="JsonSerializer.cs" />
     <Compile Include="LinearFit.cs" />
     <Compile Include="Logger.cs" />

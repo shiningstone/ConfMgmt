@@ -1,5 +1,8 @@
-﻿using System;
+﻿#define DebugDetailEnable
+
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Utils;
 
 namespace JbConf
@@ -12,11 +15,12 @@ namespace JbConf
 
     public class ConfItem
     {
+        protected static Logger _log = new Logger("ConfTree");
+
         public string Name;
         public string Value;
-        public string Tag;
-
         public string Path;
+        public string Tag;
 
         public ConfItem(string name, string value = null)
         {
@@ -39,11 +43,20 @@ namespace JbConf
                 return new string[] { null, path };
             }
         }
+        protected static string[] ExtractHead(string path)
+        {
+            var strs = path.Split('/').ToList();
+            return new string[] { strs[0], string.Join(@"/", strs.Skip(1).ToArray()) };
+        }
+        protected static void DebugDetail(string str)
+        {
+#if DebugDetailEnable
+            _log.Debug(str);
+#endif
+        }
     }
     public class ConfTree : ConfItem
     {
-        public static Logger _log = new Logger("ConfTree");
-
         public Source Source;
         public List<ConfItem> Sons = new List<ConfItem>();
 
@@ -55,62 +68,6 @@ namespace JbConf
         {
         }
 
-        public void Visit(Action<ConfItem, int> executor, ConfItem item = null)
-        {
-            if (item == null)
-            {
-                _depth = 0;
-                item = this;
-            }
-
-            var tree = item as ConfTree;
-            if(tree != null)
-            {
-                executor(item, _depth);
-
-                foreach (var c in tree.Sons)
-                {
-                    _depth++;
-                    Visit(executor, c);
-                    _depth--;
-                }
-            }
-            else
-            {
-                executor(item, _depth);
-            }
-        }
-        public ConfItem Find(string itemName, string tag = null)
-        {
-            ConfItem result = null;
-
-            if (!itemName.Contains(@"\"))
-            {
-                Visit((item, level) =>
-                {
-                    if (item.Name == itemName && (tag == null || item.Tag == tag))
-                    {
-                        result = item;
-                    }
-                });
-            }
-            else
-            {
-                string[] strs = itemName.Split('\\');
-
-                var item = Find(strs[0], _tag);
-                var tree = item as ConfTree;
-                if(tree != null && (_tag == null || _tag == tree.Tag))
-                {
-                    item = tree.Find(strs[1]);
-                    if (item != null)
-                    {
-                        return item;
-                    }
-                }
-            }
-            return result;
-        }
         public override string ToString()
         {
             string output = "";
@@ -122,8 +79,68 @@ namespace JbConf
                 }
                 var tag = !string.IsNullOrEmpty(item.Tag) ? item.Tag : "";
                 output += $"({item.Path}){item.Name}({tag}):{(item.Value != null ? item.Value : Environment.NewLine)}{(item.Value == null ? "" : Environment.NewLine)}";
+                return false;
             });
             return output;
+        }
+
+        public List<ConfItem> Items
+        {
+            get
+            {
+                var result = new List<ConfItem>();
+                Visit((item, level) => {
+                    result.Add(item);
+                    return false;
+                });
+                return result;
+            }
+        }
+        public void PrefixPath(string prefix)
+        {
+            Path = !string.IsNullOrEmpty(Path) ? $"{prefix}{Path}" : $"{prefix}";
+
+            foreach (var son in Sons)
+            {
+                var subtree = son as ConfTree;
+                if (subtree != null)
+                {
+                    subtree.PrefixPath(prefix);
+                }
+                else
+                {
+                    son.Path = !string.IsNullOrEmpty(son.Path) ? $"{prefix}{son.Path}" : $"{prefix}/{son.Path}";
+                }
+            }
+        }
+        public void Add(ConfItem item)
+        {
+            Sons.Add(item);
+
+            var subtree = item as ConfTree;
+            if (subtree != null)
+            {
+                subtree.PrefixPath($"{Path}/{Name}");
+            }
+            else
+            {
+                item.Path = $"{Path}/{Name}";
+            }
+        }
+        public ConfTree Merge(ConfTree tree)
+        {
+            foreach (var item in tree.Items)
+            {
+                if (null == Find(item.Name))
+                {
+                    Add(item);
+                }
+                else
+                {
+                    _log.Warn($"ConfTree({this.Name}) Merge Failed : Item({item.Name}) already exist({item.Value})");
+                }
+            }
+            return this;
         }
         public string this[string key]
         {
@@ -156,62 +173,80 @@ namespace JbConf
             }
         }
 
-        public List<ConfItem> Items
+        public bool Visit(Func<ConfItem, int, bool> executor, ConfItem item = null)
         {
-            get
+            if (item == null)
             {
-                var result = new List<ConfItem>();
-                Visit((item, level) => {
-                    result.Add(item);
-                });
-                return result;
+                _depth = 0;
+                item = this;
             }
-        }
-        public void Add(ConfItem item)
-        {
-            Sons.Add(item);
 
-            var subtree = item as ConfTree;
-            if (subtree != null)
+            var tree = item as ConfTree;
+            if(tree != null)
             {
-                subtree.PrefixPath($"{Path}/{Name}");
+                DebugDetail($@"Visiting ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
+
+                executor(item, _depth);
+
+                foreach (var c in tree.Sons)
+                {
+                    _depth++;
+                    var ret = Visit(executor, c);
+                    _depth--;
+
+                    if (ret)
+                    {
+                        return true;
+                    }
+                }
             }
             else
             {
-                item.Path = $"{Path}/{Name}";
+                DebugDetail($"Visiting ConfItem: {item.Name}({item.Value})");
+                if (executor(item, _depth))
+                {
+                    return true;
+                }
             }
-        }
-        public void PrefixPath(string prefix)
-        {
-            Path = !string.IsNullOrEmpty(Path) ? $"{prefix}{Path}" : $"{prefix}";
 
-            foreach (var son in Sons)
-            {
-                var subtree = son as ConfTree;
-                if (subtree != null)
-                {
-                    subtree.PrefixPath(prefix);
-                }
-                else
-                {
-                    son.Path = !string.IsNullOrEmpty(son.Path) ? $"{prefix}{son.Path}" : $"{prefix}/{son.Path}";
-                }
-            }
+            return false;
         }
-        public ConfTree Merge(ConfTree tree)
+        public ConfItem Find(string itemName, string tag = null)
         {
-            foreach (var item in tree.Items)
+            ConfItem result = null;
+
+            if (!itemName.Contains(@"/"))
             {
-                if (null == Find(item.Name))
+                Visit((item, level) =>
                 {
-                    Add(item);
-                }
-                else
+                    DebugDetail($"Current tag: {item.Tag}");
+                    if (item.Name == itemName && (tag == null || item.Tag == tag))
+                    {
+                        DebugDetail($"Find {item.Path}/{item.Name}");
+                        result = item;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                });
+            }
+            else
+            {
+                var head_tail = ExtractHead(itemName);
+
+                var tree = Find(head_tail[0], _tag) as ConfTree;
+                if(tree != null && (_tag == null || _tag == tree.Tag))
                 {
-                    _log.Warn($"ConfTree({this.Name}) Merge Failed : Item({item.Name}) already exist({item.Value})");
+                    var item = tree.Find(head_tail[1]);
+                    if (item != null)
+                    {
+                        return item;
+                    }
                 }
             }
-            return this;
+            return result;
         }
         public void Save(string path = null)
         {

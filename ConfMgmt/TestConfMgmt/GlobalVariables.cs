@@ -8,7 +8,7 @@ namespace TestConfMgmt
 {
     internal class GlobalVariables
     {
-        public static string SamplePath = @"D:\ConfMgmt\ConfMgmt\TestConfMgmt\TestSamples";
-        public static string RealConfPath = @"D:\TestSystem\Configurations\";
+        public static string SamplePath = @"D:/ConfMgmt/ConfMgmt/TestConfMgmt/TestSamples";
+        public static string RealConfPath = @"D:/TestSystem/Configurations/";
     }
 }
