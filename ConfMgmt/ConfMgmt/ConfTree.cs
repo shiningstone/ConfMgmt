@@ -71,7 +71,7 @@ namespace JbConf
         public override string ToString()
         {
             string output = "";
-            Visit((item, level) =>
+            Visit("ToString", (item, level) =>
             {
                 for (int i = 0; i < level; i++)
                 {
@@ -89,7 +89,7 @@ namespace JbConf
             get
             {
                 var result = new List<ConfItem>();
-                Visit((item, level) => {
+                Visit("Items", (item, level) => {
                     result.Add(item);
                     return false;
                 });
@@ -172,7 +172,7 @@ namespace JbConf
             }
         }
 
-        public bool Visit(Func<ConfItem, int, bool> executor, ConfItem item = null)
+        public bool Visit(string func, Func<ConfItem, int, bool> executor, ConfItem item = null)
         {
             if (item == null)
             {
@@ -183,14 +183,14 @@ namespace JbConf
             var tree = item as ConfTree;
             if(tree != null)
             {
-                DebugDetail($@"Visiting ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
+                DebugDetail($@"Visit({func}) ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
 
                 executor(item, _depth);
 
                 foreach (var c in tree.Sons)
                 {
                     _depth++;
-                    var ret = Visit(executor, c);
+                    var ret = Visit(func, executor, c);
                     _depth--;
 
                     if (ret)
@@ -201,7 +201,7 @@ namespace JbConf
             }
             else
             {
-                DebugDetail($"Visiting ConfItem: {item.Name}({item.Value})");
+                DebugDetail($"Visit({func}) ConfItem: {item.Name}({item.Value})");
                 if (executor(item, _depth))
                 {
                     return true;
@@ -216,7 +216,7 @@ namespace JbConf
 
             if (!itemName.Contains(@"/"))
             {
-                Visit((item, level) =>
+                Visit("Find", (item, level) =>
                 {
                     if (!string.IsNullOrEmpty(item.Tag))
                     {
