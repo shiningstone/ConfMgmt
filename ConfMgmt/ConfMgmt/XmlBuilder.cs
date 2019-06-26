@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Xml;
+using Utils;
 
 namespace JbConf
 {
     public class XmlBuilder
     {
+        private static Logger _log = new Logger("XmlBuilder");
+
         public static ConfTree Generate(string xmlPath)
         {
             var xmlFile = new XmlDocument();
@@ -25,15 +28,15 @@ namespace JbConf
         }
         public static void Save(ConfTree conf, string path)
         {
-            var doc = conf.XmlFile as XmlDocument;
-            if (doc != null)
+            try
             {
+                var doc = conf.XmlFile as XmlDocument;
                 path = path == null ? doc.BaseURI.Substring(@"file:///".Length) : path;
                 doc.Save(path);
             }
-            else
+            catch (Exception ex)
             {
-                SaveDictionaryConf(conf, path);
+                _log.Error($"Save({conf.Name}, {path}) failed", ex);
             }
         }
 
@@ -98,41 +101,6 @@ namespace JbConf
             }
 
             return result;
-        }
-        private static void CreateNode(XmlDocument xmlDoc, XmlNode parentNode, string name, string value, string tag = null)
-        {
-            XmlNode node = xmlDoc.CreateNode(XmlNodeType.Element, name, null);
-            AddTag(xmlDoc, node, tag);
-            node.InnerText = value;
-            parentNode.AppendChild(node);
-        }
-        private static void AddTag(XmlDocument xmlDoc, XmlNode node, string tag)
-        {
-            if (!string.IsNullOrEmpty(tag))
-            {
-                XmlAttribute attr = xmlDoc.CreateAttribute("Tag");
-                attr.Value = tag;
-                node.Attributes.Append(attr);
-            }
-        }
-        private static void SaveDictionaryConf(ConfTree conf, string path)
-        {
-            conf.XmlFile = new XmlDocument();
-            XmlDocument xmlDoc = conf.XmlFile as XmlDocument;
-
-            XmlNode node = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", "");
-            xmlDoc.AppendChild(node);
-
-            XmlNode root = xmlDoc.CreateElement(conf.Name);
-            AddTag(xmlDoc, root, conf.Tag);
-            xmlDoc.AppendChild(root);
-
-            foreach (ConfItem son in conf.Sons)
-            {
-                CreateNode(xmlDoc, root, son.Name, son.Value, son.Tag);
-            }
-
-            xmlDoc.Save(path);
         }
     }
 }

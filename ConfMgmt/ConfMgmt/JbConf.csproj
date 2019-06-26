@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfItem.cs" />
     <Compile Include="ConfMgmt.cs" />
     <Compile Include="ConfTreeFind.cs" />
     <Compile Include="DictionaryBuilder.cs" />
