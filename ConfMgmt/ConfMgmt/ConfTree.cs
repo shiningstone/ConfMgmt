@@ -1,4 +1,4 @@
-﻿#define DebugDetailEnable
+﻿//#define DebugDetailEnable
 
 using System;
 using System.Collections.Generic;
@@ -27,6 +27,15 @@ namespace JbConf
             Name = name;
             Value = value;
         }
+        public virtual ConfItem Clone(string tag = null)
+        {
+            return new ConfItem(Name, Value)
+            {
+                Path = Path,
+                Tag = tag == null ? Tag : tag,
+            };
+        }
+
         public override string ToString()
         {
             return $"{Name}:{(Value != null ? Value : Environment.NewLine)}{(Value == null ? "" : Environment.NewLine)}";
@@ -126,21 +135,6 @@ namespace JbConf
                 item.Path = $"{Path}/{Name}";
             }
         }
-        public ConfTree Merge(ConfTree tree)
-        {
-            foreach (var item in tree.Items)
-            {
-                if (null == Find(item.Name))
-                {
-                    Add(item);
-                }
-                else
-                {
-                    _log.Warn($"ConfTree({this.Name}) Merge Failed : Item({item.Name}) already exist({item.Value})");
-                }
-            }
-            return this;
-        }
         public string this[string key]
         {
             get
@@ -174,6 +168,39 @@ namespace JbConf
         public void Save(string path = null)
         {
             XmlBuilder.Save(this, path);
+        }
+
+        public ConfTree Merge(ConfTree tree)
+        {
+            foreach (var item in tree.Items)
+            {
+                if (null == Find(item.Name))
+                {
+                    Add(item);
+                }
+                else
+                {
+                    _log.Warn($"ConfTree({this.Name}) Merge Failed : Item({item.Name}) already exist({item.Value})");
+                }
+            }
+            return this;
+        }
+        public override ConfItem Clone(string tag = null)
+        {
+            var conf = new ConfTree(Name)
+            {
+                Source = Source,
+                Value = Value,
+                Path = Path,
+                Tag = tag == null ? Tag : tag,
+            };
+
+            foreach (var son in Sons)
+            {
+                conf.Add(son.Clone());
+            }
+
+            return conf;
         }
     }
 }

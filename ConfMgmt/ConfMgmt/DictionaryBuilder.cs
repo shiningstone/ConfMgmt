@@ -15,7 +15,9 @@ namespace JbConf
             {
                 result.Add(new ConfItem(kv.Key, kv.Value));
             }
+
             ConfMgmt.Add(result);
+
             return result;
         }
     }

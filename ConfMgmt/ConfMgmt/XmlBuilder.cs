@@ -18,6 +18,7 @@ namespace JbConf
             ConfMgmt.Add(result);
             return result;
         }
+
         public static void Modify(object xmlFile, string key, string value)
         {
             Find(xmlFile as XmlNode, key).InnerText = value;
@@ -98,11 +99,21 @@ namespace JbConf
 
             return result;
         }
-        private static void CreateNode(XmlDocument xmlDoc, XmlNode parentNode, string name, string value)
+        private static void CreateNode(XmlDocument xmlDoc, XmlNode parentNode, string name, string value, string tag = null)
         {
             XmlNode node = xmlDoc.CreateNode(XmlNodeType.Element, name, null);
+            AddTag(xmlDoc, node, tag);
             node.InnerText = value;
             parentNode.AppendChild(node);
+        }
+        private static void AddTag(XmlDocument xmlDoc, XmlNode node, string tag)
+        {
+            if (!string.IsNullOrEmpty(tag))
+            {
+                XmlAttribute attr = xmlDoc.CreateAttribute("Tag");
+                attr.Value = tag;
+                node.Attributes.Append(attr);
+            }
         }
         private static void SaveDictionaryConf(ConfTree conf, string path)
         {
@@ -113,11 +124,12 @@ namespace JbConf
             xmlDoc.AppendChild(node);
 
             XmlNode root = xmlDoc.CreateElement(conf.Name);
+            AddTag(xmlDoc, root, conf.Tag);
             xmlDoc.AppendChild(root);
 
             foreach (ConfItem son in conf.Sons)
             {
-                CreateNode(xmlDoc, root, son.Name, son.Value);
+                CreateNode(xmlDoc, root, son.Name, son.Value, son.Tag);
             }
 
             xmlDoc.Save(path);

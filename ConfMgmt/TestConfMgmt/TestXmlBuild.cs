@@ -25,10 +25,10 @@ namespace TestConfMgmt
 
             conf["Item1"] = "Value5";
             JbAssert.Equal(conf["Item1"], "Value5");
-            conf.Save($@"{GlobalVariables.SamplePath}/BasicResult.xml");
+            conf.Save($@"{GlobalVariables.ResultPath}/BasicResult.xml");
             //conf.Save();
 
-            conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/BasicResult.xml");
+            conf = XmlBuilder.Generate($@"{GlobalVariables.ResultPath}/BasicResult.xml");
             JbAssert.Equal(conf["Item1"], "Value5");
             JbAssert.Equal(conf["Item2"], "Value2");
             JbAssert.Equal(conf["Item3"], "Value3");
@@ -40,10 +40,10 @@ namespace TestConfMgmt
             ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/Basic.xml");
 
             conf["Item1"] = "Value5";
-            conf.Save($@"{GlobalVariables.SamplePath}/BasicResult.xml");
+            conf.Save($@"{GlobalVariables.ResultPath}/BasicResult.xml");
             //conf.Save();
 
-            conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/BasicResult.xml");
+            conf = XmlBuilder.Generate($@"{GlobalVariables.ResultPath}/BasicResult.xml");
             Debug.WriteLine(conf.ToString());
             JbAssert.Equal(conf["Item1"], "Value5");
             JbAssert.Equal(conf["Item2"], "Value2");

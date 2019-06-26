@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalVariables.cs" />
+    <Compile Include="TestConfTree.cs" />
     <Compile Include="TestDictionaryBuild.cs" />
     <Compile Include="TestXmlBuild.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

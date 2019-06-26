@@ -66,7 +66,7 @@ namespace TestConfMgmt
 
             Assert.IsTrue(conf["Item1"] == "Value1");
             Assert.IsTrue(conf["Item2"] == "Value2");
-            conf.Save($@"{GlobalVariables.SamplePath}\DictionaryConf.xml");
+            conf.Save($@"{GlobalVariables.ResultPath}\DictionaryConf.xml");
         }
         [TestMethod]
         public void TestDictionaryBuild_Basic_Path()
