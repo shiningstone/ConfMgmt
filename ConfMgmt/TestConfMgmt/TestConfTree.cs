@@ -8,6 +8,12 @@ namespace TestConfMgmt
     [TestClass]
     public class TestConfTree
     {
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            ConfMgmt.Clear();
+        }
+
         [TestMethod]
         public void TestConfTree_Clone()
         {
@@ -20,6 +26,12 @@ namespace TestConfMgmt
             var conf2 = conf1.Clone("new");
             Debug.WriteLine(conf2.ToString());
             (conf2 as ConfTree).Save($"{GlobalVariables.ResultPath}/Conf2.xml");
+
+            ConfTree conf = new ConfTree("DictionaryConf");
+            conf.Add(conf1);
+            conf.Add(conf2);
+            Debug.WriteLine(conf.ToString());
+            (conf as ConfTree).Save($"{GlobalVariables.ResultPath}/Conf.xml");
         }
     }
 }

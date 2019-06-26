@@ -11,6 +11,12 @@ namespace TestConfMgmt
     [TestClass]
     public class TestXmlBuild
     {
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            ConfMgmt.Clear();
+        }
+
         [TestMethod]
         public void TestXmlBuild_Basic()
         {
@@ -56,14 +62,14 @@ namespace TestConfMgmt
             ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/Basic.xml");
             Debug.WriteLine(conf.ToString());
 
-            JbAssert.Equal(conf.Find("Item1").Path, "/Basic/Function1");
-            JbAssert.Equal(conf.Find("Item2").Path, "/Basic/Function1");
-            JbAssert.Equal(conf.Find("Item3").Path, "/Basic/Function2");
-            JbAssert.Equal(conf.Find("Item4").Path, "/Basic/Function2");
-            JbAssert.Equal(conf.Find("Item5").Path, "/Basic");
+            JbAssert.Equal(conf.Find("Item1").Path, "/Root/Basic/Function1");
+            JbAssert.Equal(conf.Find("Item2").Path, "/Root/Basic/Function1");
+            JbAssert.Equal(conf.Find("Item3").Path, "/Root/Basic/Function2");
+            JbAssert.Equal(conf.Find("Item4").Path, "/Root/Basic/Function2");
+            JbAssert.Equal(conf.Find("Item5").Path, "/Root/Basic");
 
             conf["Item1"] = "Value5";
-            JbAssert.Equal(conf.Find("Item1").Path, "/Basic/Function1");
+            JbAssert.Equal(conf.Find("Item1").Path, "/Root/Basic/Function1");
         }
         [TestMethod]
         public void TestXmlBuild_BasicNoExist()

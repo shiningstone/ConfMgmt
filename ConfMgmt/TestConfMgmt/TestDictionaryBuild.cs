@@ -77,7 +77,7 @@ namespace TestConfMgmt
             }, "DictionaryConf");
 
             var item = conf.Find("Item1");
-            Assert.IsTrue(item.Path == "/DictionaryConf");
+            Assert.IsTrue(item.Path == "/Root/DictionaryConf");
         }
     }
 }

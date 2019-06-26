@@ -7,6 +7,12 @@ namespace TestConfMgmt
     [TestClass]
     public class TestBuildConfTree
     {
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            ConfMgmt.Clear();
+        }
+
         [TestMethod]
         public void TestAddItemToTree()
         {
