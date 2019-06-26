@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="ConfMgmt.cs" />
     <Compile Include="ConfTreeFind.cs" />
+    <Compile Include="DictionaryBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConfTree.cs" />
     <Compile Include="XmlBuilder.cs" />
