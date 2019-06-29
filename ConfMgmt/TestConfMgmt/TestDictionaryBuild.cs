@@ -2,12 +2,19 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Utils;
 
 namespace TestConfMgmt
 {
     [TestClass]
     public class TestDictionaryBuild
     {
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            GlobalVar.Initialize();
+        }
+
         public TestDictionaryBuild()
         {
             //
@@ -61,12 +68,12 @@ namespace TestConfMgmt
             ConfTree conf = DictionaryBuilder.Generate(new Dictionary<string, string> {
                 { "Item1", "Value1" },
                 { "Item2", "Value2" },
-            }, "DictionaryConf");
+            }, "DictConf1");
             Debug.WriteLine(conf.ToString());
 
             Assert.IsTrue(conf["Item1"] == "Value1");
             Assert.IsTrue(conf["Item2"] == "Value2");
-            conf.Save($@"{GlobalVariables.ResultPath}\DictionaryConf.xml");
+            conf.Save($@"{GlobalVar.ResultPath}\DictConf1.xml");
         }
         [TestMethod]
         public void TestDictionaryBuild_Basic_Path()
@@ -74,10 +81,10 @@ namespace TestConfMgmt
             ConfTree conf = DictionaryBuilder.Generate(new Dictionary<string, string> {
                 { "Item1", "Value1" },
                 { "Item2", "Value2" },
-            }, "DictionaryConf");
+            }, "DictConf1");
+            new Logger().Debug($"{conf.ToString()}");
 
-            var item = conf.Find("Item1");
-            Assert.IsTrue(item.Path == "/Root/DictionaryConf");
+            JbAssert.Equal(conf.Find("Item1").Path, "/Root/DictConf1");
         }
     }
 }

@@ -14,13 +14,13 @@ namespace TestConfMgmt
         [TestInitialize()]
         public void MyTestInitialize()
         {
-            ConfMgmt.Clear();
+            GlobalVar.Initialize();
         }
 
         [TestMethod]
         public void TestXmlBuild_Basic()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/Basic.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
             Debug.WriteLine(conf.ToString());
 
             JbAssert.Equal(conf["Item1"], "Value1");
@@ -31,10 +31,12 @@ namespace TestConfMgmt
 
             conf["Item1"] = "Value5";
             JbAssert.Equal(conf["Item1"], "Value5");
-            conf.Save($@"{GlobalVariables.ResultPath}/BasicResult.xml");
+            conf.Save($@"{GlobalVar.ResultPath}/BasicResult.xml");
             //conf.Save();
 
-            conf = XmlBuilder.Generate($@"{GlobalVariables.ResultPath}/BasicResult.xml");
+            GlobalVar.Initialize();
+
+            conf = XmlBuilder.Generate($@"{GlobalVar.ResultPath}/BasicResult.xml");
             JbAssert.Equal(conf["Item1"], "Value5");
             JbAssert.Equal(conf["Item2"], "Value2");
             JbAssert.Equal(conf["Item3"], "Value3");
@@ -43,13 +45,15 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestXmlBuild_Basic_Save()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/Basic.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
 
             conf["Item1"] = "Value5";
-            conf.Save($@"{GlobalVariables.ResultPath}/BasicResult.xml");
+            conf.Save($@"{GlobalVar.ResultPath}/BasicResult.xml");
             //conf.Save();
 
-            conf = XmlBuilder.Generate($@"{GlobalVariables.ResultPath}/BasicResult.xml");
+            GlobalVar.Initialize();
+
+            conf = XmlBuilder.Generate($@"{GlobalVar.ResultPath}/BasicResult.xml");
             Debug.WriteLine(conf.ToString());
             JbAssert.Equal(conf["Item1"], "Value5");
             JbAssert.Equal(conf["Item2"], "Value2");
@@ -59,7 +63,7 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestXmlBuild_Basic_Path()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/Basic.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
             Debug.WriteLine(conf.ToString());
 
             JbAssert.Equal(conf.Find("Item1").Path, "/Root/Basic/Function1");
@@ -74,13 +78,13 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestXmlBuild_BasicNoExist()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/Basic.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
             Assert.ThrowsException<Exception>(() => { var result = conf["NonExisting"]; });
         }
         [TestMethod]
         public void TestXmlBuild_SameItemName()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/SameItemName.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVar.SamplePath}/SameItemName.xml");
 
             Debug.WriteLine(conf.ToString());
             JbAssert.Equal(conf[@"Function1/Item1"], "Value1");
@@ -90,7 +94,7 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestXmlBuild_Tag()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/Tag.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVar.SamplePath}/Tag.xml");
             Debug.WriteLine(conf.ToString());
             JbAssert.Equal(conf[@"Default:Func/Item1"], "0");
             JbAssert.Equal(conf[@"Tag1:Func/Item1"], "1.1");
@@ -99,7 +103,7 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestXmlBuild_Tag_FindItem()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/Tag.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVar.SamplePath}/Tag.xml");
             JbAssert.Equal(conf[@"Default:Item1"], "0");
             JbAssert.Equal(conf[@"Tag1:Item1"], "1.1");
             JbAssert.Equal(conf[@"Tag2:Item1"], "2.1");
@@ -107,7 +111,7 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestXmlBuild_MultiTag()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/MultiTag.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVar.SamplePath}/MultiTag.xml");
             Debug.WriteLine(conf.ToString());
 
             JbAssert.Equal(conf[@"T1.1&T1.1.1:Item1"], "1.1.1.1");
@@ -123,7 +127,7 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestXmlBuild_MultiTagWithDefault()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/MultiTagWithDefault.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVar.SamplePath}/MultiTagWithDefault.xml");
             Debug.WriteLine(conf.ToString());
 
             JbAssert.Equal(conf[@"T1.1:Item1"], "1.1.1.1");
@@ -133,7 +137,7 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestXmlBuild_MultiLevel()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/MultiLevel.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVar.SamplePath}/MultiLevel.xml");
 
             JbAssert.Equal(conf["Item1"], "1.1");
             JbAssert.Equal(conf[@"Level1/Item1"], "1.1");
@@ -151,7 +155,7 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestXmlBuild_MultiLevel_SameItemName()
         {
-            ConfTree conf = XmlBuilder.Generate($@"{GlobalVariables.SamplePath}/MultiLevel.xml");
+            ConfTree conf = XmlBuilder.Generate($@"{GlobalVar.SamplePath}/MultiLevel.xml");
             Debug.Write(conf);
 
             JbAssert.Equal(conf[@"Level1/Item"], "1.0");
@@ -162,7 +166,7 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestXmlBuild_BuildRealConf()
         {
-            Traverse(GlobalVariables.RealConfPath, (path) =>
+            Traverse(GlobalVar.RealConfPath, (path) =>
             {
                 try
                 {

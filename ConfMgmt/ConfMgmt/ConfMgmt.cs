@@ -11,13 +11,18 @@ namespace JbConf
         }
         public static void Add(ConfTree tree)
         {
-            if (Root.Find(tree.Name) != null)
+            var target = Root.Find(tree.Name);
+            if (target == null)
             {
                 Root.Add(tree);
             }
+            else if (target.Tag != tree.Tag)
+            {
+                (target.Parent as ConfTree).Add(tree);
+            }
             else
             {
-                Root.Add(tree);
+                throw new System.Exception($"ConfTree(Name:{tree.Name}, Tag:{tree.Tag}) already exist");
             }
         }
     }

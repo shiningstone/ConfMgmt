@@ -262,3 +262,5 @@ __pycache__/
 ConfMgmt/TestConfMgmt/TestSamples/Sample1-result.xml
 ConfMgmt/TestConfMgmt/TestSamples/RealConfigs/
 ConfMgmt/TestConfMgmt/TestSamples/Result/
+ConfMgmt/TestSamples/RealConfigs/
+ConfMgmt/TestSamples/Result/

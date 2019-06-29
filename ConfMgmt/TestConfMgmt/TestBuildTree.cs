@@ -10,7 +10,7 @@ namespace TestConfMgmt
         [TestInitialize()]
         public void MyTestInitialize()
         {
-            ConfMgmt.Clear();
+            GlobalVar.Initialize();
         }
 
         [TestMethod]
@@ -37,6 +37,10 @@ namespace TestConfMgmt
             Assert.IsTrue(tree1.Find("Item1").Path == "/Tree1");
             Assert.IsTrue(tree1.Find("Tree2").Path == "/Tree1");
             Assert.IsTrue(tree1.Find("Item2").Path == "/Tree1/Tree2");
+
+            Assert.IsTrue(tree1.Find("Item1").Parent.Name == "Tree1");
+            Assert.IsTrue(tree1.Find("Tree2").Parent.Name == "Tree1");
+            Assert.IsTrue(tree1.Find("Item2").Parent.Name == "Tree2");
         }
         [TestMethod]
         public void TestAddMixToTree()

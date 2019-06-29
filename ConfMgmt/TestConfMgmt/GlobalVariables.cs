@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using JbConf;
 
 namespace TestConfMgmt
 {
-    internal class GlobalVariables
+    internal class GlobalVar
     {
-        public static string SamplePath = @"D:/ConfMgmt/ConfMgmt/TestConfMgmt/TestSamples";
+        public static string SamplePath = @"D:/ConfMgmt/ConfMgmt/TestSamples";
         public static string ResultPath = $@"{SamplePath}/Result";
         public static string RealConfPath = @"D:/TestSystem/Configurations/";
-        static GlobalVariables()
+        static GlobalVar()
         {
             if (!Directory.Exists(SamplePath))
             {
@@ -22,6 +18,10 @@ namespace TestConfMgmt
             {
                 Directory.CreateDirectory(ResultPath);
             }
+        }
+        public static void Initialize()
+        {
+            ConfMgmt.Clear();
         }
     }
 }

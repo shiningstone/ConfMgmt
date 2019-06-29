@@ -6,6 +6,7 @@ namespace JbConf
 {
     public enum Source
     {
+        Code,
         Xml,
         Dictionary,
     }
@@ -18,6 +19,7 @@ namespace JbConf
         public string Value;
         public string Path;
         public string Tag;
+        public ConfItem Parent;
 
         public ConfItem(string name, string value = null)
         {

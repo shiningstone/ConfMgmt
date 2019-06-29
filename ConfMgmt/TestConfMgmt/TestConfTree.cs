@@ -11,7 +11,7 @@ namespace TestConfMgmt
         [TestInitialize()]
         public void MyTestInitialize()
         {
-            ConfMgmt.Clear();
+            GlobalVar.Initialize();
         }
 
         [TestMethod]
@@ -21,17 +21,17 @@ namespace TestConfMgmt
                 { "Item1", "Value1" },
                 { "Item2", "Value2" },
             }, "DictionaryConf");
-            (conf1 as ConfTree).Save($"{GlobalVariables.ResultPath}/Conf1.xml");
+            (conf1 as ConfTree).Save($"{GlobalVar.ResultPath}/Conf1.xml");
 
             var conf2 = conf1.Clone("new");
             Debug.WriteLine(conf2.ToString());
-            (conf2 as ConfTree).Save($"{GlobalVariables.ResultPath}/Conf2.xml");
+            (conf2 as ConfTree).Save($"{GlobalVar.ResultPath}/Conf2.xml");
 
             ConfTree conf = new ConfTree("DictionaryConf");
             conf.Add(conf1);
             conf.Add(conf2);
             Debug.WriteLine(conf.ToString());
-            (conf as ConfTree).Save($"{GlobalVariables.ResultPath}/Conf.xml");
+            (conf as ConfTree).Save($"{GlobalVar.ResultPath}/Conf.xml");
         }
     }
 }

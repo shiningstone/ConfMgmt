@@ -30,12 +30,31 @@ namespace JbConf
                 node.Attributes.Append(attr);
             }
         }
-        private static void CreateNode(XmlDocument xmlDoc, XmlNode parentNode, string name, string value, string tag = null)
+        private static XmlNode CreateNode(XmlDocument xmlDoc, XmlNode parentNode, string name, string value, string tag = null)
         {
             XmlNode node = xmlDoc.CreateNode(XmlNodeType.Element, name, null);
             AddTag(xmlDoc, node, tag);
             node.InnerText = value;
             parentNode.AppendChild(node);
+            return node;
+        }
+        private static XmlNode CreateTree(XmlDocument xmlDoc, XmlNode parentNode, ConfTree tree)
+        {
+            var treeNode = CreateNode(xmlDoc, parentNode, tree.Name, tree.Value, tree.Tag);
+            foreach (var son in tree.Sons)
+            {
+                if (son is ConfTree)
+                {
+                    throw new System.Exception($"Doesn't support tree depth larger than 3");
+                }
+                else
+                {
+                    treeNode.AppendChild(
+                        CreateNode(xmlDoc, parentNode, son.Name, son.Value, son.Tag)
+                    );
+                }
+            }
+            return treeNode;
         }
         public static void Save(ConfTree conf, string path = null)
         {
@@ -49,9 +68,16 @@ namespace JbConf
             AddTag(xmlDoc, root, conf.Tag);
             xmlDoc.AppendChild(root);
 
-            foreach (ConfItem son in conf.Sons)
+            foreach (var son in conf.Sons)
             {
-                CreateNode(xmlDoc, root, son.Name, son.Value, son.Tag);
+                if (son is ConfTree)
+                {
+                    CreateTree(xmlDoc, root, son as ConfTree);
+                }
+                else
+                {
+                    CreateNode(xmlDoc, root, son.Name, son.Value, son.Tag);
+                }
             }
 
             xmlDoc.Save(path);

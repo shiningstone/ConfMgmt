@@ -67,6 +67,7 @@ namespace JbConf
         public void Add(ConfItem item)
         {
             Sons.Add(item);
+            item.Parent = this;
 
             var subtree = item as ConfTree;
             if (subtree != null)
