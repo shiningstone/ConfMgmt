@@ -21,6 +21,7 @@ namespace JbConf
 
             return result;
         }
+
         private static void AddTag(XmlDocument xmlDoc, XmlNode node, string tag)
         {
             if (!string.IsNullOrEmpty(tag))
@@ -30,55 +31,39 @@ namespace JbConf
                 node.Attributes.Append(attr);
             }
         }
-        private static XmlNode CreateNode(XmlDocument xmlDoc, XmlNode parentNode, string name, string value, string tag = null)
+        private static XmlNode CreateNode(XmlDocument xmlDoc, XmlNode parentNode, ConfItem conf)
         {
-            XmlNode node = xmlDoc.CreateNode(XmlNodeType.Element, name, null);
-            AddTag(xmlDoc, node, tag);
-            node.InnerText = value;
+            XmlNode node = xmlDoc.CreateElement(conf.Name, null);
+            AddTag(xmlDoc, node, conf.Tag);
             parentNode.AppendChild(node);
             return node;
         }
-        private static XmlNode CreateTree(XmlDocument xmlDoc, XmlNode parentNode, ConfTree tree)
+        private static XmlNode CreateNode(XmlDocument xmlDoc, XmlNode parentNode, ConfTree conf)
         {
-            var treeNode = CreateNode(xmlDoc, parentNode, tree.Name, tree.Value, tree.Tag);
-            foreach (var son in tree.Sons)
-            {
-                if (son is ConfTree)
-                {
-                    throw new System.Exception($"Doesn't support tree depth larger than 3");
-                }
-                else
-                {
-                    treeNode.AppendChild(
-                        CreateNode(xmlDoc, parentNode, son.Name, son.Value, son.Tag)
-                    );
-                }
-            }
-            return treeNode;
-        }
-        public static void Save(ConfTree conf, string path = null)
-        {
-            conf.XmlFile = new XmlDocument();
-            XmlDocument xmlDoc = conf.XmlFile as XmlDocument;
-
-            XmlNode node = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", "");
-            xmlDoc.AppendChild(node);
-
-            XmlNode root = xmlDoc.CreateElement(conf.Name);
-            AddTag(xmlDoc, root, conf.Tag);
-            xmlDoc.AppendChild(root);
-
+            var current = CreateNode(xmlDoc, parentNode, conf as ConfItem);
             foreach (var son in conf.Sons)
             {
                 if (son is ConfTree)
                 {
-                    CreateTree(xmlDoc, root, son as ConfTree);
+                    CreateNode(xmlDoc, current, son as ConfTree);
                 }
                 else
                 {
-                    CreateNode(xmlDoc, root, son.Name, son.Value, son.Tag);
+                    var newNode = CreateNode(xmlDoc, current, son);
+                    newNode.InnerText = son.Value;
                 }
             }
+            return current;
+        }
+        public static void Save(ConfTree conf, string path = null)
+        {
+            /* xml file header */
+            conf.XmlFile = new XmlDocument();
+            XmlDocument xmlDoc = conf.XmlFile as XmlDocument;
+            XmlNode node = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", "");
+            xmlDoc.AppendChild(node);
+
+            CreateNode(xmlDoc, xmlDoc, conf);
 
             xmlDoc.Save(path);
         }

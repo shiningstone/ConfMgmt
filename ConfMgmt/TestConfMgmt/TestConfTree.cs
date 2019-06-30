@@ -32,6 +32,13 @@ namespace TestConfMgmt
             conf.Add(conf2);
             Debug.WriteLine(conf.ToString());
             (conf as ConfTree).Save($"{GlobalVar.ResultPath}/Conf.xml");
+
+            var conf4 = conf.Clone("conf4");
+
+            ConfTree super = new ConfTree("SuperConf");
+            super.Add(conf);
+            super.Add(conf4);
+            super.Save($"{GlobalVar.ResultPath}/Super.xml");
         }
     }
 }
