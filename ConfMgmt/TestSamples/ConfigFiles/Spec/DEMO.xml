@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Specs>
+  <Spec Name="SANAN">
+    <CW>
+      <Ith Min="0" Max="10000" />
+      <Kink Min="-1000" Max="1000" />
+    </CW>
+    <PW>
+      <Ith Min="0" Max="10000" />
+      <Kink Min="-1000" Max="1000" />
+    </PW>
+    <SP>
+      <WL Min="0" Max="3000" />
+    </SP>
+    <NFT>
+      <DeadEmitters Min="0.5" Max="1.5" />
+      <Weist Min="0" Max="0.01" />
+      <M2 Min="1" Max="4" />
+      <DivergencyAngle Min="10" Max="20" />
+      <EmmieerPower Min="0" Max="0.0024" />
+
+      <Emitter_Divergence_Angle Min="0" Max="3000" />
+	  <Beam_Waist_Diameter_um Min="0" Max="3000" />
+	  <Emission_Uniformity Min="0" Max="3000" />
+      <Dead_Emitters Min="0" Max="1" />
+      <Failed_Weist Min="0" Max="3000" />
+      <Failed_M2 Min="0" Max="3000" />
+      <Failed_DivergencyAngle Min="0" Max="3000" />
+      <Emitter_Power Min="0" Max="3000" />
+    </NFT>
+    <FFT>
+      <Emitter_Divergence_Angle_X Min="0" Max="3000" />
+      <Emitter_Divergence_Angle_Y Min="0" Max="3000" />
+      <Eyesafety Min="0" Max="3000" />
+    </FFT>
+  </Spec>
+</Specs>

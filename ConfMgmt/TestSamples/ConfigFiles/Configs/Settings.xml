@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <SystemSetting>
+    <TestStationName>Tester01</TestStationName>
+    <SQLConncetStr1>Data Source=localhost;Initial Catalog=Tester3d;Persist Security Info=True;User ID=sa;Password=feedlitech;Pooling=False</SQLConncetStr1>
+	<SQLConncetStr></SQLConncetStr>
+    <DataSavePath>E:\liv</DataSavePath>
+    <NFTBMPSavePath>E:\nft</NFTBMPSavePath>
+    <FFTBMPSavePath>E:\fft</FFTBMPSavePath>
+    <CalibrationFile>tester-1</CalibrationFile>
+  </SystemSetting>
+  <EquipmentSetting>
+    <NFTCameraSN>M8051,07866</NFTCameraSN>
+    <FFTCameraSN></FFTCameraSN>
+	  <Camera>Bobcat6620,M8051</Camera>
+    <MotionCom>7</MotionCom>
+    <MotionSpeed>60,5000</MotionSpeed>
+    <PDK>10115</PDK>
+    <PDB>4</PDB>
+  </EquipmentSetting>
+  <LIVSetting>
+    <IthStart>0.3</IthStart>
+    <IthStop>0.8</IthStop>
+    <SEStart>0.3</SEStart>
+    <SEStop>0.8</SEStop>
+    <SerialRStart>0.3</SerialRStart>
+    <SerialRStop>0.8</SerialRStop>
+    <KinkStart>0.3</KinkStart>
+    <KinkStop>0.8</KinkStop>
+    <ParameterType>POWER</ParameterType>
+  </LIVSetting>
+</Settings>

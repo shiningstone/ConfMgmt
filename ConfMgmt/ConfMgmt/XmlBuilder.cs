@@ -10,16 +10,27 @@ namespace JbConf
 
         public static ConfTree Generate(string xmlPath)
         {
-            var xmlFile = new XmlDocument();
-            xmlFile.Load(xmlPath);
+            _log.Info($"Generate({xmlPath})");
+            
+            try
+            {
+                var xmlFile = new XmlDocument();
+                xmlFile.Load(xmlPath);
 
-            var node = xmlFile.ChildNodes[xmlFile.ChildNodes.Count - 1];
-            var result = GenerateTree(node);
-            result.Source = Source.Xml;
-            result.XmlFile = xmlFile;
+                var node = xmlFile.ChildNodes[xmlFile.ChildNodes.Count - 1];
+                var result = GenerateTree(node);
+                result.Source = Source.Xml;
+                result.XmlFile = xmlFile;
+                _log.Debug(Environment.NewLine + result.ToString());
 
-            ConfMgmt.Add(result);
-            return result;
+                ConfMgmt.Add(result);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _log.Warn($"Failed to BuildConfTree for {xmlPath}", ex);
+                return null;
+            }
         }
 
         public static void Modify(object xmlFile, string key, string value)

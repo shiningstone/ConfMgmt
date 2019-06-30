@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestPlans>
+  <TestPlan Name="HUAXIN">
+    <CW>
+      <StartBias>1</StartBias>
+      <StopBias>3000</StopBias>
+      <Points>101</Points>
+    </CW>
+    <PW>
+      <StartBias>1</StartBias>
+      <StopBias>330</StopBias>
+      <Points>51</Points>
+      <On>0.008</On>
+      <Off>0.032</Off>
+      <ANPLC>0.005</ANPLC>
+      <BNPLC>0.005</BNPLC>
+      <SPC>5</SPC>
+      <PWIntegrationTime>110</PWIntegrationTime>
+      <PWSPDelay>120</PWSPDelay>
+    </PW>
+    <SP>
+      <Bias>1000</Bias>
+      <On>10</On>
+    </SP>
+    <NFT>
+      <MotionStartPosition>4</MotionStartPosition>
+      <Z1MinText>-2.6</Z1MinText>
+      <TryTimes>20,12</TryTimes>
+      <Z2Limit>-10,10;2,3</Z2Limit>
+      <NFTCalStep>0.01</NFTCalStep>
+      <NFTCalMinStepLevel>0.005</NFTCalMinStepLevel>
+      <NFTDistanceStep>1,2,2,1</NFTDistanceStep>
+      <NFTPointCount>5</NFTPointCount>
+      <ExpectCircleCount>400</ExpectCircleCount>
+      <NFTPulseSetting>1.2,0.001</NFTPulseSetting>
+      <TestReadyPosition>0</TestReadyPosition>
+      <NextStepMult>3</NextStepMult>
+      <MotionDelay>1000</MotionDelay>
+    </NFT>
+    <FFT>
+      <FFTPulseSetting>0.5,0.001</FFTPulseSetting>
+      <FFTTestReadyPosition>0</FFTTestReadyPosition>
+      <FFTCalcDivergenceAngle_A>23</FFTCalcDivergenceAngle_A>
+    </FFT>
+  </TestPlan>
+</TestPlans>

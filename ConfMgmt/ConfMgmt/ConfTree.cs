@@ -109,6 +109,7 @@ namespace JbConf
             }
         }
 
+        //如果是XML文件Load出来的ConfTree, path非必需参数
         public void Save(string path = null)
         {
             if (Source == Source.Xml)

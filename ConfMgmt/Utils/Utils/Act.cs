@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -25,6 +26,26 @@ namespace Utils
 
             _log.Error("Failed to " + action);
             return false;
+        }
+        public static void Traverse(string path, Action<string> action)
+        {
+            DirectoryInfo root = new DirectoryInfo(path);
+            DirectoryInfo[] dirs = root.GetDirectories();
+            if (dirs.Length == 0)
+            {
+                var files = root.GetFiles();
+                foreach (var f in files)
+                {
+                    action(f.FullName);
+                }
+            }
+            else
+            {
+                foreach (DirectoryInfo dir in dirs)
+                {
+                    Traverse(dir.FullName, action);
+                }
+            }
         }
         private static Logger _log = new Logger("Utils");
     }

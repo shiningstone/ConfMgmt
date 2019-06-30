@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <System>
+    <DutsCount>40</DutsCount>
+	<ListenEnable>0</ListenEnable>
+    <DBConnect>Provider=SQLOLEDB.1;Initial Catalog=Tester3d;Data Source=localhost;User Id=sa;Password=feedlitech;</DBConnect>
+    <DutsLineNumber>8</DutsLineNumber>
+  </System>
+</Settings>

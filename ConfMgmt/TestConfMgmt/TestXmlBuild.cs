@@ -163,43 +163,5 @@ namespace TestConfMgmt
             JbAssert.Equal(conf[@"Level3/Item"], "3.0");
             JbAssert.Equal(conf[@"Level4/Item"], "4.0");
         }
-        [TestMethod]
-        public void TestXmlBuild_BuildRealConf()
-        {
-            Traverse(GlobalVar.RealConfPath, (path) =>
-            {
-                try
-                {
-                    Debug.WriteLine(path);
-                    
-                    ConfTree conf = XmlBuilder.Generate(path);
-                    Debug.WriteLine(conf.ToString());
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Failed to BuildConfTree for {path}");
-                }
-            });
-        }
-        private void Traverse(string path, Action<string> action)
-        {
-            DirectoryInfo root = new DirectoryInfo(path);
-            DirectoryInfo[] dirs = root.GetDirectories();
-            if (dirs.Length == 0)
-            {
-                var files = root.GetFiles();
-                foreach (var f in files)
-                {
-                    action(f.FullName);
-                }
-            }
-            else
-            {
-                foreach (DirectoryInfo dir in dirs)
-                {
-                    Traverse(dir.FullName, action);
-                }
-            }
-        }
     }
 }

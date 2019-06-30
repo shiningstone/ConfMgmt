@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <Equipments>
+    <K7001_Adr>7</K7001_Adr>
+    <K2000_Adr>16</K2000_Adr>
+    <DC_Com>COM3</DC_Com>
+    <R>0.5</R>
+  </Equipments>
+  <ChannelSettings>
+    <Channel1>1!1</Channel1>
+    <Channel2>1!2</Channel2>
+    <Channel3>1!3</Channel3>
+    <Channel4>1!4</Channel4>
+  </ChannelSettings>
+  <RSettings>
+    <Channel1>0.5</Channel1>
+    <Channel2>0.5</Channel2>
+    <Channel3>0.5</Channel3>
+    <Channel4>0.5</Channel4>
+  </RSettings>
+</Settings>
