@@ -17,28 +17,28 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestConfTree_Clone()
         {
-            ConfTree conf1 = DictionaryBuilder.Generate(new Dictionary<string, string> {
+            ConfTree conf1 = Builder.Code.Generate(new Dictionary<string, string> {
                 { "Item1", "Value1" },
                 { "Item2", "Value2" },
             }, "DictionaryConf");
-            (conf1 as ConfTree).Save($"{GlobalVar.ResultPath}/Conf1.xml");
+            Builder.Xml.Save(conf1, $"{GlobalVar.ResultPath}/Conf1.xml");
 
             var conf2 = conf1.Clone("new");
             Debug.WriteLine(conf2.ToString());
-            (conf2 as ConfTree).Save($"{GlobalVar.ResultPath}/Conf2.xml");
+            Builder.Xml.Save(conf2 as ConfTree, $"{GlobalVar.ResultPath}/Conf2.xml");
 
             ConfTree conf = new ConfTree("DictionaryConf");
             conf.Add(conf1);
             conf.Add(conf2);
             Debug.WriteLine(conf.ToString());
-            (conf as ConfTree).Save($"{GlobalVar.ResultPath}/Conf.xml");
+            Builder.Xml.Save(conf as ConfTree, $"{GlobalVar.ResultPath}/Conf.xml");
 
             var conf4 = conf.Clone("conf4");
 
             ConfTree super = new ConfTree("SuperConf");
             super.Add(conf);
             super.Add(conf4);
-            super.Save($"{GlobalVar.ResultPath}/Super.xml");
+            Builder.Xml.Save(super, $"{GlobalVar.ResultPath}/Super.xml");
         }
     }
 }

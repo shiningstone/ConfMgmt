@@ -65,7 +65,7 @@ namespace TestConfMgmt
         [TestMethod]
         public void TestDictionaryBuild_Basic()
         {
-            ConfTree conf = DictionaryBuilder.Generate(new Dictionary<string, string> {
+            ConfTree conf = Builder.Code.Generate(new Dictionary<string, string> {
                 { "Item1", "Value1" },
                 { "Item2", "Value2" },
             }, "DictConf1");
@@ -73,12 +73,12 @@ namespace TestConfMgmt
 
             Assert.IsTrue(conf["Item1"] == "Value1");
             Assert.IsTrue(conf["Item2"] == "Value2");
-            conf.Save($@"{GlobalVar.ResultPath}\DictConf1.xml");
+            Builder.Xml.Save(conf, $@"{GlobalVar.ResultPath}/DictConf1.xml");
         }
         [TestMethod]
         public void TestDictionaryBuild_Basic_Path()
         {
-            ConfTree conf = DictionaryBuilder.Generate(new Dictionary<string, string> {
+            ConfTree conf = Builder.Code.Generate(new Dictionary<string, string> {
                 { "Item1", "Value1" },
                 { "Item2", "Value2" },
             }, "DictConf1");

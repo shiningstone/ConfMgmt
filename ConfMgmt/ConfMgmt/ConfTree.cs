@@ -100,7 +100,7 @@ namespace JbConf
                 if (item != null)
                 {
                     item.Value = value;
-                    XmlBuilder.Modify(XmlFile, key, value);
+                    Builder.Xml.Modify(XmlFile, key, value);
                 }
                 else
                 {
@@ -112,14 +112,7 @@ namespace JbConf
         //如果是XML文件Load出来的ConfTree, path非必需参数
         public void Save(string path = null)
         {
-            if (Source == Source.Xml)
-            {
-                XmlBuilder.Save(this, path);
-            }
-            else
-            {
-                DictionaryBuilder.Save(this, path);
-            }
+            Builder.Xml.Save(this, path);
         }
 
         public ConfTree Merge(ConfTree tree)

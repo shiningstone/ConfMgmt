@@ -40,12 +40,12 @@ namespace JbConf
         {
             Act.Traverse(path, (file) =>
             {
-                ConfTree conf = XmlBuilder.Generate(file);
+                ConfTree conf = Builder.Xml.Generate(file);
             });
         }
         public static void Save(string path = null)
         {
-            Root.Save(path);
+            Builder.Xml.Save(Root, path);
         }
     }
 }
