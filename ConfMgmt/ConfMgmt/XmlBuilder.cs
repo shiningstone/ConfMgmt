@@ -102,28 +102,32 @@ namespace JbConf
                     node.Attributes.Append(attr);
                 }
             }
-            private static XmlNode CreateNode(XmlDocument xmlDoc, XmlNode parentNode, ConfItem conf)
+            private static XmlNode CreateNode(XmlDocument xmlDoc, ConfItem conf)
             {
-                XmlNode node = xmlDoc.CreateElement(conf.Name, null);
-                AddTag(xmlDoc, node, conf.Tag);
-                parentNode.AppendChild(node);
-                return node;
-            }
-            public static XmlNode CreateNode(XmlDocument xmlDoc, XmlNode parentNode, ConfTree conf)
-            {
-                var current = CreateNode(xmlDoc, parentNode, conf as ConfItem);
-                foreach (var son in conf.Sons)
+                XmlNode current = xmlDoc.CreateElement(conf.Name, null);
+                AddTag(xmlDoc, current, conf.Tag);
+
+                if (conf is ConfTree)
                 {
-                    if (son is ConfTree)
+                    foreach (var son in (conf as ConfTree).Sons)
                     {
-                        CreateNode(xmlDoc, current, son as ConfTree);
-                    }
-                    else
-                    {
-                        var newNode = CreateNode(xmlDoc, current, son);
-                        newNode.InnerText = son.Value;
+                        if (son is ConfTree)
+                        {
+                            current.AppendChild(CreateNode(xmlDoc, son));
+                        }
+                        else
+                        {
+                            var temp = CreateNode(xmlDoc, son);
+                            temp.InnerText = son.Value;
+                            current.AppendChild(temp);
+                        }
                     }
                 }
+                else
+                {
+                    current.InnerText = conf.Value;
+                }
+
                 return current;
             }
             public static XmlDocument GenerateXmlDoc(ConfTree conf)
@@ -132,7 +136,7 @@ namespace JbConf
                 XmlNode node = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", "");
                 xmlDoc.AppendChild(node);
 
-                CreateNode(xmlDoc, xmlDoc, conf);
+                xmlDoc.AppendChild(CreateNode(xmlDoc, conf));
 
                 return xmlDoc;
             }
@@ -183,8 +187,37 @@ namespace JbConf
                     }
                     else
                     {
-                        doc = GenerateXmlDoc(conf);
-                        doc.Save(path);
+                        if (path != null)
+                        {
+                            doc = GenerateXmlDoc(conf);
+                            doc.Save(path);
+                        }
+                        else if (!string.IsNullOrEmpty((conf.Refer.XmlFile as XmlDocument).BaseURI))
+                        {
+                            doc = conf.Refer.XmlFile;
+                            path = doc.BaseURI.Substring(@"file:///".Length);
+
+                            XmlNode sibling = Find(doc, conf.Refer.Name);
+                            if (sibling == doc.ChildNodes[doc.ChildNodes.Count - 1])
+                            {
+                                doc.RemoveChild(sibling);
+
+                                var parent = new ConfTree($"{conf.Refer.Name}s");
+                                parent.Add(conf.Refer);
+                                parent.Add(conf);
+                                doc.AppendChild(CreateNode(doc, parent));
+                            }
+                            else
+                            {
+                                sibling.ParentNode.AppendChild(CreateNode(doc, conf));
+                            }
+
+                            doc.Save(path);
+                        }
+                        else
+                        {
+                            throw new Exception($"Invalid param for Save");
+                        }
 
                         conf.XmlFile = Generate(path).XmlFile;
                     }

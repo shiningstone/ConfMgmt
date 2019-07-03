@@ -94,7 +94,7 @@ namespace TestConfMgmt
             Assert.IsTrue(tree1.Find("Item3-2").Path == "/Tree1/Tree2/Tree3");
         }
         [TestMethod]
-        public void TestConfTree_Clone()
+        public void TestConfTree_Clone_SaveToDiffFile()
         {
             ConfTree conf1 = Builder.Generate(new Dictionary<string, string> {
                 { "Item1", "Value1" },
@@ -126,16 +126,25 @@ namespace TestConfMgmt
             JbAssert.Equal(((super as ConfTree).XmlFile as XmlDocument).BaseURI, $"file:///{GlobalVar.ResultPath}/Super.xml");
         }
         [TestMethod]
-        public void TestConfTree_CloneSave()
+        public void TestConfTree_Clone_SaveToSameFile()
         {
             ConfTree conf1 = Builder.Generate(new Dictionary<string, string> {
                 { "Item1", "Value1" },
                 { "Item2", "Value2" },
             }, "DictionaryConf");
-            Builder.Xml.Save(conf1, $"{GlobalVar.ResultPath}/Conf1.xml");
+            Debug.WriteLine(conf1.ToString());
+            Builder.Xml.Save(conf1, $"{GlobalVar.ResultPath}/Conf.xml");
 
             ConfTree conf2 = conf1.Clone("new") as ConfTree;
-            conf2["Item1"] = "Value3";
+            Debug.WriteLine(conf2.ToString());
+            Builder.Xml.Save(conf2 as ConfTree);
+
+            Debug.WriteLine(conf1.ToString());
+            conf1["Item1"] = "Value3";
+            Builder.Xml.Save(conf1 as ConfTree);
+
+            Debug.WriteLine(conf2.ToString());
+            conf2["Item2"] = "Value4";
             Builder.Xml.Save(conf2 as ConfTree);
         }
     }

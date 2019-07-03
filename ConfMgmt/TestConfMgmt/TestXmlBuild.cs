@@ -2,10 +2,9 @@
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using JbConf;
-using System.IO;
-using Utils;
 using System.Collections.Generic;
+using Utils;
+using JbConf;
 
 namespace TestConfMgmt
 {

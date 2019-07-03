@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Utils;
 
 namespace JbConf
@@ -12,7 +13,9 @@ namespace JbConf
         public Source Source;
         public List<ConfItem> Sons = new List<ConfItem>();
 
-        public object XmlFile;
+        public XmlDocument XmlFile;     //Only valid if this ConfTree is generated from xml file
+        public ConfTree Refer;          //the prototype of this ConfTree(Clone)
+
         private int _depth = 0;
 
         public ConfTree(string name) : base(name, null)
@@ -141,6 +144,8 @@ namespace JbConf
                 Value = Value,
                 Path = Path,
                 Tag = tag == null ? Tag : tag,
+
+                Refer = this,
             };
 
             foreach (var son in Sons)
