@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JbConf;
 using System.IO;
 using Utils;
+using System.Collections.Generic;
 
 namespace TestConfMgmt
 {
@@ -15,6 +16,31 @@ namespace TestConfMgmt
         public void MyTestInitialize()
         {
             GlobalVar.Initialize();
+        }
+
+        [TestMethod]
+        public void TestBuild_Basic()
+        {
+            ConfTree conf = Builder.Generate(new Dictionary<string, string> {
+                { "Item1", "Value1" },
+                { "Item2", "Value2" },
+            }, "DictConf1");
+            Debug.WriteLine(conf.ToString());
+
+            Assert.IsTrue(conf["Item1"] == "Value1");
+            Assert.IsTrue(conf["Item2"] == "Value2");
+            Builder.Xml.Save(conf, $@"{GlobalVar.ResultPath}/DictConf1.xml");
+        }
+        [TestMethod]
+        public void TestBuild_Basic_Path()
+        {
+            ConfTree conf = Builder.Generate(new Dictionary<string, string> {
+                { "Item1", "Value1" },
+                { "Item2", "Value2" },
+            }, "DictConf1");
+            new Logger().Debug($"{conf.ToString()}");
+
+            JbAssert.Equal(conf.Find("Item1").Path, "/Root/DictConf1");
         }
 
         [TestMethod]

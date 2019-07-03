@@ -9,6 +9,23 @@ namespace JbConf
     {
         private static Logger _log = new Logger("Builder.Xml");
 
+        public static ConfTree Generate(Dictionary<string, string> kvs, string name)
+        {
+            ConfTree result = new ConfTree(name);
+            result.Path = "";
+            result.Source = Source.Dictionary;
+            result.Tag = "Default";
+
+            foreach (var kv in kvs)
+            {
+                result.Add(new ConfItem(kv.Key, kv.Value));
+            }
+
+            ConfMgmt.Add(result);
+
+            return result;
+        }
+
         public class Xml
         {
             #region Deserialize
@@ -162,38 +179,20 @@ namespace JbConf
                     if (doc != null)
                     {
                         path = path == null ? doc.BaseURI.Substring(@"file:///".Length) : path;
+                        doc.Save(path);
                     }
                     else
                     {
                         doc = GenerateXmlDoc(conf);
-                        conf.XmlFile = doc;
-                    }
+                        doc.Save(path);
 
-                    doc.Save(path);
+                        conf.XmlFile = Generate(path).XmlFile;
+                    }
                 }
                 catch (Exception ex)
                 {
                     _log.Error($"Save({conf.Name}, {path}) failed", ex);
                 }
-            }
-        }
-        public class Code
-        {
-            public static ConfTree Generate(Dictionary<string, string> kvs, string name)
-            {
-                ConfTree result = new ConfTree(name);
-                result.Path = "";
-                result.Source = Source.Dictionary;
-                result.Tag = "Default";
-
-                foreach (var kv in kvs)
-                {
-                    result.Add(new ConfItem(kv.Key, kv.Value));
-                }
-
-                ConfMgmt.Add(result);
-
-                return result;
             }
         }
     }
