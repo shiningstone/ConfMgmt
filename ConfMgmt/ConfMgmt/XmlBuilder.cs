@@ -171,7 +171,7 @@ namespace JbConf
 
             }
 
-            public static void Save(ConfTree conf, string path)
+            public static void Save(ConfTree conf, string path = null)
             {
                 try
                 {

@@ -17,6 +17,83 @@ namespace TestConfMgmt
         }
 
         [TestMethod]
+        public void TestConfTree_AddItemToTree()
+        {
+            ConfTree conf = new ConfTree("TestBuildTree");
+            Assert.IsTrue(conf.Name == "TestBuildTree");
+
+            conf.Add(new ConfItem("Item1", "Value1"));
+            Assert.IsTrue(conf["Item1"] == "Value1");
+            Assert.IsTrue(conf.Find("Item1").Path == "/TestBuildTree");
+        }
+        [TestMethod]
+        public void TestConfTree_AddTreeToTree()
+        {
+            ConfTree tree1 = new ConfTree("Tree1");
+            tree1.Add(new ConfItem("Item1", "Value1"));
+
+            ConfTree tree2 = new ConfTree("Tree2");
+            tree2.Add(new ConfItem("Item2", "Value2"));
+
+            tree1.Add(tree2);
+
+            Assert.IsTrue(tree1.Find("Item1").Path == "/Tree1");
+            Assert.IsTrue(tree1.Find("Tree2").Path == "/Tree1");
+            Assert.IsTrue(tree1.Find("Item2").Path == "/Tree1/Tree2");
+
+            Assert.IsTrue(tree1.Find("Item1").Parent.Name == "Tree1");
+            Assert.IsTrue(tree1.Find("Tree2").Parent.Name == "Tree1");
+            Assert.IsTrue(tree1.Find("Item2").Parent.Name == "Tree2");
+        }
+        [TestMethod]
+        public void TestConfTree_AddMixToTree()
+        {
+            ConfTree tree1 = new ConfTree("Tree1");
+            tree1.Add(new ConfItem("Item1-1", "Value1-1"));
+
+            ConfTree tree2 = new ConfTree("Tree2");
+            tree2.Add(new ConfItem("Item2-1", "Value2-1"));
+            tree2.Add(new ConfItem("Item2-2", "Value2-2"));
+
+            ConfTree tree3 = new ConfTree("Tree3");
+            tree3.Add(new ConfItem("Item3-1", "Value3-1"));
+            tree3.Add(new ConfItem("Item3-2", "Value3-2"));
+
+            tree2.Add(tree3);
+            tree1.Add(tree2);
+
+            Assert.IsTrue(tree1.Find("Item1-1").Path == "/Tree1");
+            Assert.IsTrue(tree1.Find("Tree2").Path == "/Tree1");
+            Assert.IsTrue(tree1.Find("Item2-1").Path == "/Tree1/Tree2");
+            Assert.IsTrue(tree1.Find("Tree3").Path == "/Tree1/Tree2");
+            Assert.IsTrue(tree1.Find("Item3-1").Path == "/Tree1/Tree2/Tree3");
+            Assert.IsTrue(tree1.Find("Item3-2").Path == "/Tree1/Tree2/Tree3");
+        }
+        [TestMethod]
+        public void TestConfTree_AddMixToTree2()
+        {
+            ConfTree tree1 = new ConfTree("Tree1");
+            tree1.Add(new ConfItem("Item1-1", "Value1-1"));
+
+            ConfTree tree2 = new ConfTree("Tree2");
+            tree2.Add(new ConfItem("Item2-1", "Value2-1"));
+            tree2.Add(new ConfItem("Item2-2", "Value2-2"));
+
+            ConfTree tree3 = new ConfTree("Tree3");
+            tree3.Add(new ConfItem("Item3-1", "Value3-1"));
+            tree3.Add(new ConfItem("Item3-2", "Value3-2"));
+
+            tree1.Add(tree2);
+            tree2.Add(tree3);
+
+            Assert.IsTrue(tree1.Find("Item1-1").Path == "/Tree1");
+            Assert.IsTrue(tree1.Find("Tree2").Path == "/Tree1");
+            Assert.IsTrue(tree1.Find("Item2-1").Path == "/Tree1/Tree2");
+            Assert.IsTrue(tree1.Find("Tree3").Path == "/Tree1/Tree2");
+            Assert.IsTrue(tree1.Find("Item3-1").Path == "/Tree1/Tree2/Tree3");
+            Assert.IsTrue(tree1.Find("Item3-2").Path == "/Tree1/Tree2/Tree3");
+        }
+        [TestMethod]
         public void TestConfTree_Clone()
         {
             ConfTree conf1 = Builder.Generate(new Dictionary<string, string> {
@@ -47,6 +124,19 @@ namespace TestConfMgmt
             super.Add(conf4);
             Builder.Xml.Save(super, $"{GlobalVar.ResultPath}/Super.xml");
             JbAssert.Equal(((super as ConfTree).XmlFile as XmlDocument).BaseURI, $"file:///{GlobalVar.ResultPath}/Super.xml");
+        }
+        [TestMethod]
+        public void TestConfTree_CloneSave()
+        {
+            ConfTree conf1 = Builder.Generate(new Dictionary<string, string> {
+                { "Item1", "Value1" },
+                { "Item2", "Value2" },
+            }, "DictionaryConf");
+            Builder.Xml.Save(conf1, $"{GlobalVar.ResultPath}/Conf1.xml");
+
+            ConfTree conf2 = conf1.Clone("new") as ConfTree;
+            conf2["Item1"] = "Value3";
+            Builder.Xml.Save(conf2 as ConfTree);
         }
     }
 }

@@ -100,7 +100,10 @@ namespace JbConf
                 if (item != null)
                 {
                     item.Value = value;
-                    Builder.Xml.Modify(XmlFile, key, value);
+                    if (XmlFile != null)
+                    {
+                        Builder.Xml.Modify(XmlFile, key, value);
+                    }
                 }
                 else
                 {

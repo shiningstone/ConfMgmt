@@ -19,7 +19,7 @@ namespace TestConfMgmt
         }
 
         [TestMethod]
-        public void TestBuild_Basic()
+        public void TestBuild_Dictionary_Save()
         {
             ConfTree conf = Builder.Generate(new Dictionary<string, string> {
                 { "Item1", "Value1" },
@@ -29,22 +29,15 @@ namespace TestConfMgmt
 
             Assert.IsTrue(conf["Item1"] == "Value1");
             Assert.IsTrue(conf["Item2"] == "Value2");
-            Builder.Xml.Save(conf, $@"{GlobalVar.ResultPath}/DictConf1.xml");
-        }
-        [TestMethod]
-        public void TestBuild_Basic_Path()
-        {
-            ConfTree conf = Builder.Generate(new Dictionary<string, string> {
-                { "Item1", "Value1" },
-                { "Item2", "Value2" },
-            }, "DictConf1");
-            new Logger().Debug($"{conf.ToString()}");
 
             JbAssert.Equal(conf.Find("Item1").Path, "/Root/DictConf1");
+            JbAssert.Equal(conf.Find("Item2").Path, "/Root/DictConf1");
+
+            Builder.Xml.Save(conf, $@"{GlobalVar.ResultPath}/DictConf1.xml");
         }
 
         [TestMethod]
-        public void TestXmlBuild_Basic()
+        public void TestBuild_Xml_Build_Modify_Save()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
             Debug.WriteLine(conf.ToString());
@@ -69,25 +62,7 @@ namespace TestConfMgmt
             JbAssert.Equal(conf["Item4"], "Value4");
         }
         [TestMethod]
-        public void TestXmlBuild_Basic_Save()
-        {
-            ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
-
-            conf["Item1"] = "Value5";
-            Builder.Xml.Save(conf, $@"{GlobalVar.ResultPath}/BasicResult.xml");
-            //conf.Save();
-
-            GlobalVar.Initialize();
-
-            conf = Builder.Xml.Generate($@"{GlobalVar.ResultPath}/BasicResult.xml");
-            Debug.WriteLine(conf.ToString());
-            JbAssert.Equal(conf["Item1"], "Value5");
-            JbAssert.Equal(conf["Item2"], "Value2");
-            JbAssert.Equal(conf["Item3"], "Value3");
-            JbAssert.Equal(conf["Item4"], "Value4");
-        }
-        [TestMethod]
-        public void TestXmlBuild_Basic_Path()
+        public void TestBuild_Xml_CheckPath()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
             Debug.WriteLine(conf.ToString());
@@ -102,13 +77,13 @@ namespace TestConfMgmt
             JbAssert.Equal(conf.Find("Item1").Path, "/Root/Basic/Function1");
         }
         [TestMethod]
-        public void TestXmlBuild_BasicNoExist()
+        public void TestBuild_Xml_ModifyException()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
             Assert.ThrowsException<Exception>(() => { var result = conf["NonExisting"]; });
         }
         [TestMethod]
-        public void TestXmlBuild_SameItemName()
+        public void TestBuild_Xml_SameItemName()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/SameItemName.xml");
 
@@ -118,7 +93,7 @@ namespace TestConfMgmt
             JbAssert.Equal(conf[@"Function3/Item1"], "Func3-1");
         }
         [TestMethod]
-        public void TestXmlBuild_Tag()
+        public void TestBuild_Xml_Tag()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Tag.xml");
             Debug.WriteLine(conf.ToString());
@@ -127,7 +102,7 @@ namespace TestConfMgmt
             JbAssert.Equal(conf[@"Tag2:Func/Item1"], "2.1");
         }
         [TestMethod]
-        public void TestXmlBuild_Tag_FindItem()
+        public void TestBuild_Xml_Tag_FindItem()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Tag.xml");
             JbAssert.Equal(conf[@"Default:Item1"], "0");
@@ -135,7 +110,7 @@ namespace TestConfMgmt
             JbAssert.Equal(conf[@"Tag2:Item1"], "2.1");
         }
         [TestMethod]
-        public void TestXmlBuild_MultiTag()
+        public void TestBuild_Xml_MultiTag()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/MultiTag.xml");
             Debug.WriteLine(conf.ToString());
@@ -151,7 +126,7 @@ namespace TestConfMgmt
             JbAssert.Equal(conf[@"T1.2&T1.2.2:Item2"], "1.2.2.2");
         }
         [TestMethod]
-        public void TestXmlBuild_MultiTagWithDefault()
+        public void TestBuild_Xml_MultiTagWithDefault()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/MultiTagWithDefault.xml");
             Debug.WriteLine(conf.ToString());
@@ -161,7 +136,7 @@ namespace TestConfMgmt
             JbAssert.Equal(conf[@"T1.2.1:Item1"], "1.2.1.3");
         }
         [TestMethod]
-        public void TestXmlBuild_MultiLevel()
+        public void TestBuild_Xml_MultiLevel()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/MultiLevel.xml");
 
@@ -179,7 +154,7 @@ namespace TestConfMgmt
             JbAssert.Equal(conf[@"MultiLevel/Level1/Level2/Level3/Item3"], "3.1");
         }
         [TestMethod]
-        public void TestXmlBuild_MultiLevel_SameItemName()
+        public void TestBuild_Xml_MultiLevel_SameItemName()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/MultiLevel.xml");
             Debug.Write(conf);
