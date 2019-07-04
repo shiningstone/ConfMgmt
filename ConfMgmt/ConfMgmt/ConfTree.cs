@@ -99,7 +99,8 @@ namespace JbConf
             }
             set
             {
-                var item = Find(key);
+                var tag_path = ExtractTag(key);
+                var item = Find(tag_path[1], tag_path[0] != null ? tag_path[0].Split('&').ToList() : null);
                 if (item != null)
                 {
                     item.Value = value;

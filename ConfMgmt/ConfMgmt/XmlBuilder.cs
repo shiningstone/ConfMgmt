@@ -97,7 +97,7 @@ namespace JbConf
             {
                 if (!string.IsNullOrEmpty(tag))
                 {
-                    XmlAttribute attr = xmlDoc.CreateAttribute("Tag");
+                    XmlAttribute attr = xmlDoc.CreateAttribute("tag");
                     attr.Value = tag;
                     node.Attributes.Append(attr);
                 }

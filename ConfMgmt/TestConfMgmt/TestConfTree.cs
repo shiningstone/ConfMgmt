@@ -132,11 +132,26 @@ namespace TestConfMgmt
                 { "Item1", "Value1" },
                 { "Item2", "Value2" },
             }, "DictionaryConf");
-            Debug.WriteLine(conf1.ToString());
             Builder.Xml.Save(conf1, $"{GlobalVar.ResultPath}/Conf.xml");
 
             ConfTree conf2 = conf1.Clone("new") as ConfTree;
-            Debug.WriteLine(conf2.ToString());
+            Builder.Xml.Save(conf2 as ConfTree);
+
+            ConfTree readback = Builder.Xml.Generate($"{GlobalVar.ResultPath}/Conf.xml");
+            Debug.WriteLine(readback.ToString());
+            JbAssert.Equal(readback["Default:Item1"], "Value1");
+            JbAssert.Equal(readback["new:Item1"], "Value1");
+        }
+        [TestMethod]
+        public void TestConfTree_Clone_Modify_Save()
+        {
+            ConfTree conf1 = Builder.Generate(new Dictionary<string, string> {
+                { "Item1", "Value1" },
+                { "Item2", "Value2" },
+            }, "DictionaryConf");
+            Builder.Xml.Save(conf1, $"{GlobalVar.ResultPath}/Conf.xml");
+
+            ConfTree conf2 = conf1.Clone("new") as ConfTree;
             Builder.Xml.Save(conf2 as ConfTree);
 
             Debug.WriteLine(conf1.ToString());
@@ -146,6 +161,13 @@ namespace TestConfMgmt
             Debug.WriteLine(conf2.ToString());
             conf2["Item2"] = "Value4";
             Builder.Xml.Save(conf2 as ConfTree);
+
+            ConfTree readback = Builder.Xml.Generate($"{GlobalVar.ResultPath}/Conf.xml");
+            Debug.WriteLine(readback.ToString());
+            JbAssert.Equal(readback["Default:Item1"], "Value3");
+            JbAssert.Equal(readback["Default:Item2"], "Value2");
+            JbAssert.Equal(readback["new:Item1"], "Value1");
+            JbAssert.Equal(readback["new:Item2"], "Value4");
         }
     }
 }
