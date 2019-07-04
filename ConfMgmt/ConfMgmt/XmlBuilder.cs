@@ -138,6 +138,52 @@ namespace JbConf
                 return xmlDoc;
             }
             #endregion
+            public static XmlNode Find(XmlDocument xmlFile, string path, string tag)
+            {
+                if (string.IsNullOrEmpty(path))
+                {
+                    return xmlFile;
+                }
+                else
+                {
+                    var nodes = FindItem(xmlFile, path.Substring(1).Split('/'), tag);
+                    return nodes[nodes.Length - 1];
+                }
+
+            }
+            private static XmlNode[] FindItem(XmlDocument xmlFile, string[] item, string tag)
+            {
+                XmlNode[] nodes = new XmlNode[item.Length];
+
+                XmlNode temp = xmlFile;
+                for (int i = 0; i < nodes.Length - 1; i++)
+                {
+                    nodes[i] = temp.SelectSingleNode(item[i]);
+                    if (nodes[i] != null)
+                    {
+                        temp = nodes[i];
+                    }
+                }
+
+                var name = item[nodes.Length - 1];
+                foreach (XmlNode node in temp.ChildNodes)
+                {
+                    var element = node as XmlElement;
+                    if (element != null)
+                    {
+                        if (element.Name == name)
+                        {
+                            if (string.IsNullOrEmpty(tag) || element.GetAttribute("tag") == tag)
+                            {
+                                nodes[nodes.Length - 1] = node;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return nodes;
+            }
 
             private static XmlNode Find(XmlNode node, string key)
             {
@@ -194,7 +240,7 @@ namespace JbConf
                             doc = conf.Refer.XmlFile;
                             path = doc.BaseURI.Substring(@"file:///".Length);
 
-                            XmlNode sibling = Find(doc, conf.Refer.Name);
+                            XmlNode sibling = Find(doc as XmlNode, conf.Refer.Name);
                             if (sibling == doc.ChildNodes[doc.ChildNodes.Count - 1])
                             {
                                 doc.RemoveChild(sibling);
@@ -216,7 +262,7 @@ namespace JbConf
                             throw new Exception($"Invalid param for Save");
                         }
 
-                        conf.XmlFile = Generate(path).XmlFile;
+                        conf.Refer.XmlFile = conf.XmlFile = Generate(path).XmlFile;
                     }
                 }
                 catch (Exception ex)
