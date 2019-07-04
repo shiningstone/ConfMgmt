@@ -21,8 +21,6 @@ namespace JbConf
                 result.Add(new ConfItem(kv.Key, kv.Value));
             }
 
-            ConfMgmt.Add(result);
-
             return result;
         }
 
@@ -82,7 +80,6 @@ namespace JbConf
                     result.XmlFile = xmlFile;
                     _log.Debug(Environment.NewLine + result.ToString());
 
-                    ConfMgmt.Add(result);
                     return result;
                 }
                 catch (Exception ex)

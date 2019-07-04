@@ -29,8 +29,8 @@ namespace TestConfMgmt
             Assert.IsTrue(conf["Item1"] == "Value1");
             Assert.IsTrue(conf["Item2"] == "Value2");
 
-            JbAssert.Equal(conf.Find("Item1").Path, "/Root/DictConf1");
-            JbAssert.Equal(conf.Find("Item2").Path, "/Root/DictConf1");
+            JbAssert.Equal(conf.Find("Item1").Path, "/DictConf1");
+            JbAssert.Equal(conf.Find("Item2").Path, "/DictConf1");
 
             Builder.Xml.Save(conf, $@"{GlobalVar.ResultPath}/DictConf1.xml");
         }
@@ -66,14 +66,14 @@ namespace TestConfMgmt
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
             Debug.WriteLine(conf.ToString());
 
-            JbAssert.Equal(conf.Find("Item1").Path, "/Root/Basic/Function1");
-            JbAssert.Equal(conf.Find("Item2").Path, "/Root/Basic/Function1");
-            JbAssert.Equal(conf.Find("Item3").Path, "/Root/Basic/Function2");
-            JbAssert.Equal(conf.Find("Item4").Path, "/Root/Basic/Function2");
-            JbAssert.Equal(conf.Find("Item5").Path, "/Root/Basic");
+            JbAssert.Equal(conf.Find("Item1").Path, "/Basic/Function1");
+            JbAssert.Equal(conf.Find("Item2").Path, "/Basic/Function1");
+            JbAssert.Equal(conf.Find("Item3").Path, "/Basic/Function2");
+            JbAssert.Equal(conf.Find("Item4").Path, "/Basic/Function2");
+            JbAssert.Equal(conf.Find("Item5").Path, "/Basic");
 
             conf["Item1"] = "Value5";
-            JbAssert.Equal(conf.Find("Item1").Path, "/Root/Basic/Function1");
+            JbAssert.Equal(conf.Find("Item1").Path, "/Basic/Function1");
         }
         [TestMethod]
         public void TestBuild_Xml_ModifyException()
