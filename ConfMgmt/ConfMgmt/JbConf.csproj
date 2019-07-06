@@ -46,6 +46,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConfTree.cs" />
     <Compile Include="XmlBuilder.cs" />
+    <Compile Include="XmlConf.cs" />
+    <Compile Include="XmlOp.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils\Utils.csproj">

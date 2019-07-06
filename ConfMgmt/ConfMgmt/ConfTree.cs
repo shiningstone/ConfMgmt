@@ -106,8 +106,8 @@ namespace JbConf
                     item.Value = value;
                     if (XmlFile != null)
                     {
-                        var xmlNode = Builder.Xml.Find(XmlFile, $"{Path}/{Name}", Tag);
-                        Builder.Xml.Modify(xmlNode, key, value);
+                        var xmlNode = XmlOp.Find(XmlFile, $"{Path}/{Name}", Tag);
+                        XmlOp.Modify(xmlNode, key, value);
                     }
                 }
                 else
