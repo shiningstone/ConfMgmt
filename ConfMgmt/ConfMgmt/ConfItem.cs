@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Utils;
 
@@ -17,6 +18,8 @@ namespace JbConf
 
         public string Name;
         public string Value;
+        public Dictionary<string, string> Attributes = new Dictionary<string, string>();
+
         public string Path;
         public string Tag;
         public ConfItem Parent;
@@ -39,17 +42,26 @@ namespace JbConf
         {
             return $"{Name}:{(Value != null ? Value : Environment.NewLine)}{(Value == null ? "" : Environment.NewLine)}";
         }
-        protected static string[] ExtractTag(string path)
+        protected static string[] SplitPath(string fullpath)
         {
+            string tag = null, attr = null;
+            string path = fullpath;
+
             if (path.Contains(":"))
             {
                 var strs = path.Split(':');
-                return new string[] { strs[0], strs[1] };
+                tag = strs[0];
+                path = strs[1];
             }
-            else
+
+            if (path.Contains("."))
             {
-                return new string[] { null, path };
+                var strs = path.Split('.');
+                path = strs[0];
+                attr = strs[1];
             }
+
+            return new string[] { path, tag, attr };
         }
         protected static string[] ExtractHead(string path)
         {

@@ -12,11 +12,31 @@ namespace JbConf
         #region deserialize
         public static bool IsItem(XmlNode node)
         {
-            return (node.ChildNodes.Count == 1 && node.FirstChild.NodeType == XmlNodeType.Text);
+            var ele = node as XmlElement;
+            if (ele != null && (ele.ChildNodes.Count == 0 || node.ChildNodes.Count == 1 && node.FirstChild.NodeType == XmlNodeType.Text) )
+            {
+                return true;
+            }
+
+            return false;
         }
         public static ConfItem ToItem(XmlNode node)
         {
-            return new ConfItem(node.Name, node.FirstChild.InnerText);
+            if (node.ChildNodes.Count == 0)
+            {
+                var item = new ConfItem(node.Name);
+
+                foreach (XmlAttribute attr in (node as XmlElement).Attributes)
+                {
+                    item.Attributes[attr.Name] = attr.Value;
+                }
+
+                return item;
+            }
+            else
+            {
+                return new ConfItem(node.Name, node.FirstChild.InnerText);
+            }
         }
         public static ConfTree ToTree(XmlNode node)
         {
@@ -61,7 +81,7 @@ namespace JbConf
         }
         public static XmlNode CreateNode(XmlDocument xmlDoc, ConfItem conf)
         {
-            XmlNode current = xmlDoc.CreateElement(conf.Name, null);
+            var current = xmlDoc.CreateElement(conf.Name, null);
             AddTag(xmlDoc, current, conf.Tag);
 
             if (conf is ConfTree)
@@ -82,7 +102,20 @@ namespace JbConf
             }
             else
             {
-                current.InnerText = conf.Value;
+                if (!string.IsNullOrEmpty(conf.Value))
+                {
+                    current.InnerText = conf.Value;
+                }
+
+                foreach (var attr in conf.Attributes)
+                {
+                    if (attr.Key != "tag")
+                    {
+                        var ele = xmlDoc.CreateAttribute(attr.Key);
+                        ele.Value = attr.Value;
+                        current.Attributes.Append(ele);
+                    }
+                }
             }
 
             return current;

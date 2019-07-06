@@ -86,11 +86,18 @@ namespace JbConf
         {
             get
             {
-                var tag_path = ExtractTag(key);
-                var item = Find(tag_path[1], tag_path[0] != null ? tag_path[0].Split('&').ToList() : null);
+                var path_tag = SplitPath(key);
+                var item = Find(path_tag[0], path_tag[1] != null ? path_tag[1].Split('&').ToList() : null);
                 if (item != null)
                 {
-                    return item.Value;
+                    if (path_tag[2] != null)
+                    {
+                        return item.Attributes[path_tag[2]];
+                    }
+                    else
+                    {
+                        return item.Value;
+                    }
                 }
                 else
                 {
@@ -99,15 +106,30 @@ namespace JbConf
             }
             set
             {
-                var tag_path = ExtractTag(key);
-                var item = Find(tag_path[1], tag_path[0] != null ? tag_path[0].Split('&').ToList() : null);
+                var tag_path = SplitPath(key);
+                var item = Find(tag_path[0], tag_path[1] != null ? tag_path[1].Split('&').ToList() : null);
                 if (item != null)
                 {
-                    item.Value = value;
+                    if (tag_path[2] == null)
+                    {
+                        item.Value = value;
+                    }
+                    else
+                    {
+                        item.Attributes[tag_path[2]] = value;
+                    }
+
                     if (XmlFile != null)
                     {
-                        var xmlNode = XmlOp.Find(XmlFile, $"{Path}/{Name}", Tag);
-                        XmlOp.Modify(xmlNode, key, value);
+                        var xmlNode = XmlOp.Find(XmlFile, tag_path[0], tag_path[1] != null ? tag_path[1] : null);
+                        if (tag_path[2] == null)
+                        {
+                            XmlOp.Modify(xmlNode, key, value);
+                        }
+                        else
+                        {
+                            XmlOp.ModifyAttribute(xmlNode, tag_path[2], value);
+                        }
                     }
                 }
                 else

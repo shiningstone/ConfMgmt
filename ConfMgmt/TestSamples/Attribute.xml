@@ -1,0 +1,12 @@
+<Specs>
+  <Spec Name="SANAN">
+    <CW>
+      <Ith Min="0" Max="10000" />
+      <Kink Min="-1000" Max="1000" />
+    </CW>
+    <PW>
+      <Ith Min="0" Max="10000" />
+      <Kink Min="-1000" Max="1000" />
+    </PW>
+  </Spec>
+</Specs>

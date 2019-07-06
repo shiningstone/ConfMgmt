@@ -54,6 +54,7 @@
     <Compile Include="TestConfTree.cs" />
     <Compile Include="TestXmlBuild.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestXmlConf.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

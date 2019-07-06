@@ -82,7 +82,8 @@ namespace JbConf
             }
             else
             {
-                var nodes = Find(xmlFile, path.Substring(1).Split('/'), tag);
+                path = path.Substring(0, 1) == @"/" ? path.Substring(1) : path;
+                var nodes = Find(xmlFile, path.Split('/'), tag);
                 return nodes[nodes.Length - 1];
             }
         }
@@ -90,6 +91,10 @@ namespace JbConf
         public static void Modify(XmlNode node, string key, string value)
         {
             Find(node, key).InnerText = value;
+        }
+        public static void ModifyAttribute(XmlNode node, string key, string value)
+        {
+            (node as XmlElement).GetAttributeNode(key).Value = value;
         }
     }
 }

@@ -163,5 +163,34 @@ namespace TestConfMgmt
             JbAssert.Equal(conf[@"Level3/Item"], "3.0");
             JbAssert.Equal(conf[@"Level4/Item"], "4.0");
         }
+        [TestMethod]
+        public void TestBuild_Xml_Attribute()
+        {
+            ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Attribute.xml");
+            Debug.WriteLine(conf.ToString());
+
+            JbAssert.Equal(conf[@"CW/Ith.Min"], "0");
+            JbAssert.Equal(conf[@"CW/Ith.Max"], "10000");
+        }
+        [TestMethod]
+        public void TestBuild_Xml_Attribute_Save()
+        {
+            ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Attribute.xml");
+            Debug.WriteLine(conf.ToString());
+            Builder.Xml.Save(conf, $@"{GlobalVar.ResultPath}/Attribute.xml");
+        }
+        [TestMethod]
+        public void TestBuild_Xml_Attribute_Modify()
+        {
+            ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Attribute.xml");
+            JbAssert.Equal(conf[@"CW/Ith.Min"], "0");
+
+            Debug.WriteLine(conf.ToString());
+            conf[@"Specs/Spec/CW/Ith.Min"] = "1";
+            Builder.Xml.Save(conf, $@"{GlobalVar.ResultPath}/Attribute.xml");
+
+            conf = Builder.Xml.Generate($@"{GlobalVar.ResultPath}/Attribute.xml");
+            JbAssert.Equal(conf[@"CW/Ith.Min"], "1");
+        }
     }
 }
