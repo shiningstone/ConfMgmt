@@ -18,10 +18,9 @@
       <M2 Min="1" Max="4" />
       <DivergencyAngle Min="10" Max="20" />
       <EmmieerPower Min="0" Max="3000" />
-
       <Emitter_Divergence_Angle Min="0" Max="3000" />
-	  <Beam_Waist_Diameter_um Min="0" Max="3000" />
-	  <Emission_Uniformity Min="0" Max="3000" />
+      <Beam_Waist_Diameter_um Min="0" Max="3000" />
+      <Emission_Uniformity Min="0" Max="3000" />
       <Dead_Emitters Min="0" Max="1" />
       <Failed_Weist Min="0" Max="3000" />
       <Failed_M2 Min="0" Max="3000" />

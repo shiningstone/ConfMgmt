@@ -3,6 +3,8 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JbConf;
+using System.Diagnostics;
+using Utils;
 
 namespace TestConfMgmt
 {
@@ -74,6 +76,29 @@ namespace TestConfMgmt
         {
             ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
             ConfMgmt.Save($@"{GlobalVar.ResultPath}/Root.xml");
+        }
+        [TestMethod]
+        public void TestConfMgmt_Modify()
+        {
+            ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
+            var conf = ConfMgmt.GetTree("SystemSetting");
+
+            conf["DutsCount"] = "0";
+            ConfMgmt.Save();
+
+            conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/ConfigFiles/Configs/SystemSetting.xml");
+            JbAssert.Equal(conf["DutsCount"], "0");
+
+            //restore
+            ConfMgmt.Clear();
+            ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
+            conf = ConfMgmt.GetTree("SystemSetting");
+
+            conf["DutsCount"] = "40";
+            ConfMgmt.Save();
+
+            conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/ConfigFiles/Configs/SystemSetting.xml");
+            JbAssert.Equal(conf["DutsCount"], "40");
         }
     }
 }

@@ -48,7 +48,6 @@
     <Compile Include="Xml\XmlBuilder.cs" />
     <Compile Include="Xml\XmlConf.cs" />
     <Compile Include="Xml\XmlDoc.cs" />
-    <Compile Include="Xml\XmlOp.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils\Utils.csproj">

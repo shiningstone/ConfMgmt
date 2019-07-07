@@ -3,7 +3,8 @@
   <SystemSetting>
     <TestStationName>Tester01</TestStationName>
     <SQLConncetStr1>Data Source=localhost;Initial Catalog=Tester3d;Persist Security Info=True;User ID=sa;Password=feedlitech;Pooling=False</SQLConncetStr1>
-	<SQLConncetStr></SQLConncetStr>
+    <SQLConncetStr>
+    </SQLConncetStr>
     <DataSavePath>E:\liv</DataSavePath>
     <NFTBMPSavePath>E:\nft</NFTBMPSavePath>
     <FFTBMPSavePath>E:\fft</FFTBMPSavePath>
@@ -11,8 +12,9 @@
   </SystemSetting>
   <EquipmentSetting>
     <NFTCameraSN>M8051,07866</NFTCameraSN>
-    <FFTCameraSN></FFTCameraSN>
-	  <Camera>Bobcat6620,M8051</Camera>
+    <FFTCameraSN>
+    </FFTCameraSN>
+    <Camera>Bobcat6620,M8051</Camera>
     <MotionCom>7</MotionCom>
     <MotionSpeed>60,5000</MotionSpeed>
     <PDK>10115</PDK>

@@ -41,11 +41,27 @@ namespace JbConf
 
         public static ConfTree GetTree(string file)
         {
-            return Root[file];
+            foreach (var kv in Root)
+            {
+                if (kv.Key.Contains(file))
+                {
+                    return kv.Value;
+                }
+            }
+
+            return null;
         }
         public static string GetItem(string file, string path)
         {
-            return Root[file][path];
+            foreach (var kv in Root)
+            {
+                if (kv.Key.Contains(file))
+                {
+                    return kv.Value[path];
+                }
+            }
+
+            return null;
         }
     }
 }
