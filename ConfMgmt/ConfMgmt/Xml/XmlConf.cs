@@ -47,6 +47,11 @@ namespace JbConf
                 result.Tag = tag.Value;
             }
 
+            foreach (XmlAttribute attr in (node as XmlElement).Attributes)
+            {
+                result.Attributes[attr.Name] = attr.Value;
+            }
+
             foreach (XmlNode n in node.ChildNodes)
             {
                 if (IsItem(n))
@@ -86,6 +91,16 @@ namespace JbConf
 
             if (conf is ConfTree)
             {
+                foreach (var attr in conf.Attributes)
+                {
+                    if (attr.Key != "tag")
+                    {
+                        var ele = xmlDoc.CreateAttribute(attr.Key);
+                        ele.Value = attr.Value;
+                        current.Attributes.Append(ele);
+                    }
+                }
+
                 foreach (var son in (conf as ConfTree).Sons)
                 {
                     if (son is ConfTree)
