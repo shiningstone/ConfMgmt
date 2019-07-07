@@ -86,18 +86,12 @@ namespace JbConf
         {
             get
             {
-                var path_tag = SplitPath(key);
-                var item = Find(path_tag[0], path_tag[1] != null ? path_tag[1].Split('&').ToList() : null);
+                var index = new Index(key);
+
+                var item = Find(index.Path, index.Tag != null ? index.Tag.Split('&').ToList() : null);
                 if (item != null)
                 {
-                    if (path_tag[2] != null)
-                    {
-                        return item.Attributes[path_tag[2]];
-                    }
-                    else
-                    {
-                        return item.Value;
-                    }
+                    return index.Attr != null ? item.Attributes[index.Attr] : item.Value;
                 }
                 else
                 {
@@ -106,29 +100,27 @@ namespace JbConf
             }
             set
             {
-                var tag_path = SplitPath(key);
-                var item = Find(tag_path[0], tag_path[1] != null ? tag_path[1].Split('&').ToList() : null);
+                var index = new Index(key);
+
+                var item = Find(index.Path, index.Tag != null ? index.Tag.Split('&').ToList() : null);
                 if (item != null)
                 {
-                    if (tag_path[2] == null)
+                    if (index.Attr == null)
                     {
                         item.Value = value;
+                        if (XmlFile != null)
+                        {
+                            var xmlNode = XmlOp.Find(XmlFile, $"{item.Path}", Tag);
+                            XmlOp.Modify(xmlNode, key, value);
+                        }
                     }
                     else
                     {
-                        item.Attributes[tag_path[2]] = value;
-                    }
-
-                    if (XmlFile != null)
-                    {
-                        var xmlNode = XmlOp.Find(XmlFile, tag_path[0], tag_path[1] != null ? tag_path[1] : null);
-                        if (tag_path[2] == null)
+                        item.Attributes[index.Attr] = value;
+                        if (XmlFile != null)
                         {
-                            XmlOp.Modify(xmlNode, key, value);
-                        }
-                        else
-                        {
-                            XmlOp.ModifyAttribute(xmlNode, tag_path[2], value);
+                            var xmlNode = XmlOp.Find(XmlFile, $"{item.Path}/{item.Name}", index.Tag != null ? index.Tag : null);
+                            XmlOp.ModifyAttribute(xmlNode, index.Attr, value);
                         }
                     }
                 }

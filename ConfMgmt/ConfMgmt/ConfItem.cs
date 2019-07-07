@@ -11,7 +11,31 @@ namespace JbConf
         Xml,
         Dictionary,
     }
+    public class Index
+    {
+        public string Path;
+        public string Tag;
+        public string Attr;
 
+        public Index(string fullpath)
+        {
+            Path = fullpath;
+
+            if (Path.Contains(":"))
+            {
+                var strs = Path.Split(':');
+                Tag = strs[0];
+                Path = strs[1];
+            }
+
+            if (Path.Contains("."))
+            {
+                var strs = Path.Split('.');
+                Path = strs[0];
+                Attr = strs[1];
+            }
+        }
+    }
     public class ConfItem
     {
         protected static Logger _log = new Logger("ConfTree");
@@ -41,27 +65,6 @@ namespace JbConf
         public override string ToString()
         {
             return $"{Name}:{(Value != null ? Value : Environment.NewLine)}{(Value == null ? "" : Environment.NewLine)}";
-        }
-        protected static string[] SplitPath(string fullpath)
-        {
-            string tag = null, attr = null;
-            string path = fullpath;
-
-            if (path.Contains(":"))
-            {
-                var strs = path.Split(':');
-                tag = strs[0];
-                path = strs[1];
-            }
-
-            if (path.Contains("."))
-            {
-                var strs = path.Split('.');
-                path = strs[0];
-                attr = strs[1];
-            }
-
-            return new string[] { path, tag, attr };
         }
         protected static string[] ExtractHead(string path)
         {

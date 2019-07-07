@@ -92,9 +92,9 @@ namespace JbConf
         {
             Find(node, key).InnerText = value;
         }
-        public static void ModifyAttribute(XmlNode node, string key, string value)
+        public static void ModifyAttribute(XmlNode node, string attr, string value)
         {
-            (node as XmlElement).GetAttributeNode(key).Value = value;
+            (node as XmlElement).GetAttributeNode(attr).Value = value;
         }
     }
 }
