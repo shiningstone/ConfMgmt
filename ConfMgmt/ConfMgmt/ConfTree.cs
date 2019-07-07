@@ -3,8 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
-using Utils;
 
 namespace JbConf
 {
@@ -13,7 +11,7 @@ namespace JbConf
         public Source Source;
         public List<ConfItem> Sons = new List<ConfItem>();
 
-        public XmlDocument XmlFile;     //Only valid if this ConfTree is generated from xml file
+        public XmlDoc XmlDoc;           //Only valid if this ConfTree is generated from xml file
         public ConfTree Refer;          //the prototype of this ConfTree(Clone)
 
         private int _depth = 0;
@@ -108,20 +106,19 @@ namespace JbConf
                     if (index.Attr == null)
                     {
                         item.Value = value;
-                        if (XmlFile != null)
-                        {
-                            var xmlNode = XmlOp.Find(XmlFile, $"{item.Path}", Tag);
-                            XmlOp.Modify(xmlNode, key, value);
-                        }
                     }
                     else
                     {
                         item.Attributes[index.Attr] = value;
-                        if (XmlFile != null)
-                        {
-                            var xmlNode = XmlOp.Find(XmlFile, $"{item.Path}/{item.Name}", index.Tag != null ? index.Tag : null);
-                            XmlOp.ModifyAttribute(xmlNode, index.Attr, value);
-                        }
+                    }
+
+                    if (index.Attr == null)
+                    {
+                        XmlDoc?.Modify($"{item.Path}", Tag, key, value);
+                    }
+                    else
+                    {
+                        XmlDoc?.ModifyAttr($"{item.Path}/{item.Name}", index.Tag != null ? index.Tag : null, index.Attr, value);
                     }
                 }
                 else

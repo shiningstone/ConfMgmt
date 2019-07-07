@@ -32,13 +32,13 @@ namespace JbConf
 
                 try
                 {
-                    var xmlFile = new XmlDocument();
-                    xmlFile.Load(xmlPath);
+                    var xmlDoc = new XmlDoc();
+                    xmlDoc.Load(xmlPath);
 
-                    var node = xmlFile.ChildNodes[xmlFile.ChildNodes.Count - 1];
+                    var node = xmlDoc.ChildNodes[xmlDoc.ChildNodes.Count - 1];
                     var result = XmlConf.ToTree(node);
                     result.Source = Source.Xml;
-                    result.XmlFile = xmlFile;
+                    result.XmlDoc = xmlDoc;
                     _log.Debug(Environment.NewLine + result.ToString());
 
                     return result;
@@ -50,36 +50,11 @@ namespace JbConf
                 }
             }
 
-            public static void Add(XmlDocument xmlDoc, XmlNode parentNode, ConfTree tree)
-            {
-
-            }
-            private static XmlDocument AddSibling(ConfTree refer, ConfTree tree)
-            {
-                XmlDocument doc = refer.XmlFile;
-
-                XmlNode sibling = XmlOp.Find(doc, refer.Name);
-                if (sibling == doc.ChildNodes[doc.ChildNodes.Count - 1])//非唯一
-                {
-                    doc.RemoveChild(sibling);
-
-                    var parent = new ConfTree($"{refer.Name}s");
-                    parent.Add(refer);
-                    parent.Add(tree);
-                    doc.AppendChild(XmlConf.CreateNode(doc, parent));
-                }
-                else
-                {
-                    sibling.ParentNode.AppendChild(XmlConf.CreateNode(doc, tree));
-                }
-
-                return doc;
-            }
             public static void Save(ConfTree conf, string path = null)
             {
                 try
                 {
-                    XmlDocument doc = conf.XmlFile as XmlDocument;
+                    XmlDocument doc = conf.XmlDoc as XmlDocument;
                     if (doc != null)
                     {
                         path = path == null ? doc.BaseURI.Substring(@"file:///".Length) : path;
@@ -93,9 +68,9 @@ namespace JbConf
                             doc.AppendChild(XmlConf.CreateNode(doc, conf));
                             doc.Save(path);
                         }
-                        else if (!string.IsNullOrEmpty((conf.Refer.XmlFile as XmlDocument).BaseURI))
+                        else if (!string.IsNullOrEmpty((conf.Refer.XmlDoc as XmlDocument).BaseURI))
                         {
-                            doc = AddSibling(conf.Refer, conf);
+                            doc = conf.Refer.XmlDoc.AddSibling(conf.Refer, conf);
                             path = doc.BaseURI.Substring(@"file:///".Length);
                             doc.Save(path);
                         }
@@ -104,7 +79,7 @@ namespace JbConf
                             throw new Exception($"Invalid param for Save");
                         }
 
-                        conf.Refer.XmlFile = conf.XmlFile = Generate(path).XmlFile;
+                        conf.Refer.XmlDoc = conf.XmlDoc = Generate(path).XmlDoc;
                     }
                 }
                 catch (Exception ex)
