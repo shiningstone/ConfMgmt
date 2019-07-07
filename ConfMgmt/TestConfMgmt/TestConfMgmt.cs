@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JbConf;
 using System.Diagnostics;
 using Utils;
-using System.Xml;
 
 namespace TestConfMgmt
 {
@@ -113,6 +111,8 @@ namespace TestConfMgmt
             newconf["DutsCount"] = "20";
             Builder.Xml.Save(newconf as ConfTree);
 
+            //restore
+            ConfMgmt.Clear();
             ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
             conf = ConfMgmt.GetTree("SystemSetting");
             JbAssert.Equal(conf["DutsCount"], "40");
