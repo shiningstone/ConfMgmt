@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 
 namespace JbConf
 {
@@ -29,15 +24,101 @@ namespace JbConf
             return this;
         }
 
-        public void Modify(string path, string tag, string name, string value)
+        private XmlNode[] Find(string[] item)
         {
-            var xmlNode = XmlOp.Find2(this, path);
-            XmlOp.Modify(xmlNode, name, value);
+            XmlNode[] nodes = new XmlNode[item.Length];
+            int i = 0;
+            string[] name_tag;
+
+            XmlNode temp = this;
+            for (; i < nodes.Length - 1; i++)
+            {
+                name_tag = item[i].Split('(');
+                if (name_tag.Length > 1)
+                {
+                    name_tag[1] = name_tag[1].Substring(0, name_tag[1].Length - 1);
+                }
+
+                foreach (XmlNode son in temp.ChildNodes)
+                {
+                    if (son.Name == name_tag[0] && (name_tag.Length == 1 || (son as XmlElement).GetAttribute("tag") == name_tag[1]))
+                    {
+                        nodes[i] = son;
+                        temp = son;
+                        break;
+                    }
+                }
+            }
+
+            name_tag = item[i].Split('(');
+            if (name_tag.Length > 1)
+            {
+                name_tag[1] = name_tag[1].Substring(0, name_tag[1].Length - 1);
+            }
+            foreach (XmlNode node in temp.ChildNodes)
+            {
+                var element = node as XmlElement;
+                if (element != null)
+                {
+                    if (element.Name == name_tag[0] && (name_tag.Length == 1 || element.GetAttribute("tag") == name_tag[1]))
+                    {
+                        nodes[i] = node;
+                    }
+                }
+            }
+
+            return nodes;
         }
-        public void ModifyAttr(string path, string tag, string attr, string value)
+
+        public void Modify(string path, string value, string attr = null)
         {
-            var xmlNode = XmlOp.Find(this, path, tag);
-            XmlOp.ModifyAttribute(xmlNode, attr, value);
+            path = path.Substring(0, 1) == @"/" ? path.Substring(1) : path;
+
+            var nodes = Find(path.Split('/'));
+            var node = nodes[nodes.Length - 1];
+
+            if (attr == null)
+            {
+                node.InnerText = value;
+            }
+            else
+            {
+                (node as XmlElement).GetAttributeNode(attr).Value = value;
+            }
+        }
+    }
+    public class XmlOp
+    {
+        public static XmlDocument CreateDoc()
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            XmlNode node = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", "");
+            xmlDoc.AppendChild(node);
+            return xmlDoc;
+        }
+        public static XmlNode Find(XmlNode node, string key)
+        {
+            XmlNode result = null;
+
+            XmlNodeList subNodes = node.ChildNodes;
+            foreach (XmlNode n in subNodes)
+            {
+                if (n.Name == key)
+                {
+                    result = n;
+                    break;
+                }
+                else if (n.HasChildNodes)
+                {
+                    result = Find(n, key);
+                    if (result != null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

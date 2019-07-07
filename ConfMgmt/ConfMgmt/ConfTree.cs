@@ -113,14 +113,7 @@ namespace JbConf
                         item.Attributes[index.Attr] = value;
                     }
 
-                    if (index.Attr == null)
-                    {
-                        XmlDoc?.Modify($"{item.Path}", Tag, key, value);
-                    }
-                    else
-                    {
-                        XmlDoc?.ModifyAttr($"{item.Path}/{item.Name}", index.Tag != null ? index.Tag : null, index.Attr, value);
-                    }
+                    XmlDoc?.Modify($"{item.Path}/{item.Name}", value, index.Attr);
                 }
                 else
                 {
