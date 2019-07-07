@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using JbConf;
 using System.Diagnostics;
 using Utils;
+using System.Xml;
 
 namespace TestConfMgmt
 {
@@ -99,6 +100,26 @@ namespace TestConfMgmt
 
             conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/ConfigFiles/Configs/SystemSetting.xml");
             JbAssert.Equal(conf["DutsCount"], "40");
+        }
+        [TestMethod]
+        public void TestConfMgmt_AddNewConf()
+        {
+            ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
+            var conf = ConfMgmt.GetTree("SystemSetting");
+            Debug.WriteLine(conf.ToString());
+            Assert.ThrowsException<Exception>(() => { var result = conf["new:DutsCount"]; });
+
+            var newconf = conf.Find("System").Clone("new") as ConfTree;
+            newconf["DutsCount"] = "20";
+            Builder.Xml.Save(newconf as ConfTree);
+
+            ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
+            conf = ConfMgmt.GetTree("SystemSetting");
+            JbAssert.Equal(conf["DutsCount"], "40");
+            JbAssert.Equal(conf["new:DutsCount"], "20");
+
+            conf.XmlDoc.Remove(conf.Find("DutsCount", new List<string>() { "new" }).Path);
+            conf.XmlDoc.Save($@"{GlobalVar.SamplePath}/ConfigFiles/Configs/SystemSetting.xml");
         }
     }
 }

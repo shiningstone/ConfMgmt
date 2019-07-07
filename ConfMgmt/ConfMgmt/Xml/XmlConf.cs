@@ -38,9 +38,11 @@ namespace JbConf
                 return new ConfItem(node.Name, node.FirstChild.InnerText);
             }
         }
-        public static ConfTree ToTree(XmlNode node)
+        public static ConfTree ToTree(XmlNode node, XmlDoc doc = null)
         {
             var result = new ConfTree(node.Name);
+            result.XmlDoc = doc;
+
             var tag = (node as XmlElement).Attributes.GetNamedItem("tag");
             if (tag != null)
             {
@@ -62,11 +64,11 @@ namespace JbConf
                 {
                     if (n.ChildNodes.Count > 1)
                     {
-                        result.Add(ToTree(n));
+                        result.Add(ToTree(n, doc));
                     }
                     else if (n.ChildNodes.Count == 1 && IsItem(n.ChildNodes[0]))
                     {
-                        result.Add(ToTree(n));
+                        result.Add(ToTree(n, doc));
                     }
                 }
             }

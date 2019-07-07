@@ -24,7 +24,7 @@ namespace JbConf
             return this;
         }
 
-        private XmlNode[] Find(string[] item)
+        public XmlNode[] Find(string[] item)
         {
             XmlNode[] nodes = new XmlNode[item.Length];
             int i = 0;
@@ -85,6 +85,12 @@ namespace JbConf
             {
                 (node as XmlElement).GetAttributeNode(attr).Value = value;
             }
+        }
+        public void Remove(string path)
+        {
+            path = path.Substring(0, 1) == @"/" ? path.Substring(1) : path;
+            var nodes = Find(path.Split('/'));
+            nodes[nodes.Length - 2].RemoveChild(nodes[nodes.Length - 1]);
         }
     }
     public class XmlOp

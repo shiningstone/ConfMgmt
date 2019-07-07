@@ -36,7 +36,7 @@ namespace JbConf
                     xmlDoc.Load(xmlPath);
 
                     var node = xmlDoc.ChildNodes[xmlDoc.ChildNodes.Count - 1];
-                    var result = XmlConf.ToTree(node);
+                    var result = XmlConf.ToTree(node, xmlDoc);
                     result.Source = Source.Xml;
                     result.XmlDoc = xmlDoc;
                     _log.Debug(Environment.NewLine + result.ToString());
