@@ -71,13 +71,14 @@ namespace JbConf
             item.Parent = this;
 
             var subtree = item as ConfTree;
+            string tag = !string.IsNullOrEmpty(Tag) ? $"({Tag})" : "";
             if (subtree != null)
             {
-                subtree.PrefixPath($"{Path}/{Name}");
+                subtree.PrefixPath($"{Path}/{Name}{tag}");
             }
             else
             {
-                item.Path = $"{Path}/{Name}";
+                item.Path = $"{Path}/{Name}{tag}";
             }
         }
         public string this[string key]

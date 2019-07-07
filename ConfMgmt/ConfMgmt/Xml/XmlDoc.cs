@@ -31,7 +31,7 @@ namespace JbConf
 
         public void Modify(string path, string tag, string name, string value)
         {
-            var xmlNode = XmlOp.Find(this, path, tag);
+            var xmlNode = XmlOp.Find2(this, path);
             XmlOp.Modify(xmlNode, name, value);
         }
         public void ModifyAttr(string path, string tag, string attr, string value)

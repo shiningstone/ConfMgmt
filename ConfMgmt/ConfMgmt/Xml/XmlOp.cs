@@ -87,7 +87,57 @@ namespace JbConf
                 return nodes[nodes.Length - 1];
             }
         }
+        public static XmlNode[] Find2(XmlDocument doc, string[] item)
+        {
+            XmlNode[] nodes = new XmlNode[item.Length];
+            int i = 0;
+            string[] name_tag;
 
+            XmlNode temp = doc;
+            for (; i < nodes.Length - 1; i++)
+            {
+                name_tag = item[i].Split('(');
+                if (name_tag.Length > 1)
+                {
+                    name_tag[1] = name_tag[1].Substring(0, name_tag[1].Length - 1);
+                }
+
+                foreach (XmlNode son in temp.ChildNodes)
+                {
+                    if (son.Name == name_tag[0] && (name_tag.Length == 1 || (nodes[i] as XmlElement).GetAttribute("tag") == name_tag[1]))
+                    {
+                        nodes[i] = son;
+                        temp = son;
+                        break;
+                    }
+                }
+            }
+
+            name_tag = item[i].Split('(');
+            if (name_tag.Length > 1)
+            {
+                name_tag[1] = name_tag[1].Substring(0, name_tag[1].Length - 1);
+            }
+            foreach (XmlNode node in temp.ChildNodes)
+            {
+                var element = node as XmlElement;
+                if (element != null)
+                {
+                    if (element.Name == name_tag[0] && (name_tag.Length == 1 || element.GetAttribute("tag") == name_tag[1]))
+                    {
+                        nodes[i] = node;
+                    }
+                }
+            }
+
+            return nodes;
+        }
+        public static XmlNode Find2(XmlDocument xmlFile, string path)
+        {
+            path = path.Substring(0, 1) == @"/" ? path.Substring(1) : path;
+            var nodes = Find2(xmlFile, path.Split('/'));
+            return nodes[nodes.Length - 1];
+        }
         public static void Modify(XmlNode node, string key, string value)
         {
             Find(node, key).InnerText = value;

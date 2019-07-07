@@ -29,8 +29,8 @@ namespace TestConfMgmt
             Assert.IsTrue(conf["Item1"] == "Value1");
             Assert.IsTrue(conf["Item2"] == "Value2");
 
-            JbAssert.Equal(conf.Find("Item1").Path, "/DictConf1");
-            JbAssert.Equal(conf.Find("Item2").Path, "/DictConf1");
+            JbAssert.Equal(conf.Find("Item1").Path, "/DictConf1(Default)");
+            JbAssert.Equal(conf.Find("Item2").Path, "/DictConf1(Default)");
 
             Builder.Xml.Save(conf, $@"{GlobalVar.ResultPath}/DictConf1.xml");
         }
