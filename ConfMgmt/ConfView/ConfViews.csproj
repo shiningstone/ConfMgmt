@@ -55,6 +55,10 @@
       <Project>{AA627527-6A1A-4758-9117-BA3D41E1D6A8}</Project>
       <Name>JbConf</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils\Utils.csproj">
+      <Project>{F074B62B-6DD3-40AE-B9A6-0FBFA984733E}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ConfView.resx">

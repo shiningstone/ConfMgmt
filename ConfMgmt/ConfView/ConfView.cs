@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Timer = System.Timers.Timer;
-
-using JbConf;
 using System.Drawing;
 using System.Linq;
+
+using Utils;
+using JbConf;
 
 namespace ConfViews
 {
     public partial class ConfView : UserControl
     {
+        private static Logger _log = new Logger("ConfView");
         public ConfView()
         {
             InitializeComponent();
@@ -20,53 +21,19 @@ namespace ConfViews
         {
             InitializeComponent();
 
+            _log.Debug("Load ConfTree");
             Conf = conf;
             DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf);
             DGV_ConfigItems.Enabled = false;
-
-            Timer t = new Timer(1000);
-            t.AutoReset = true;
-            t.Elapsed += (s, e) =>
-            {
-                SetCellEditMode();
-                Invoke(new Action(() => {
-                    DGV_ConfigItems.Enabled = true;
-                }));
-            };
-            t.Start();
         }
         protected override void OnPaint(PaintEventArgs e)
         {
-            //Console.WriteLine("Readonly : " + DGV_ConfigItems.Rows[0].Cells[0].ReadOnly);
-            //SetCellEditMode();
-            //Console.WriteLine("Readonly : " + DGV_ConfigItems.Rows[0].Cells[0].ReadOnly);
+            _log.Debug("OnPaint");
             base.OnPaint(e);
-        }
-        private void SetCellEditMode()
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(SetCellEditMode));
-            }
-            else
-            {
-                for (int row = 0; row < DGV_ConfigItems.Rows.Count; row++)
-                {
-                    for (int col = 0; col < DGV_ConfigItems.Columns.Count; col++)
-                    {
-                        if (IsValueOfItem(row, col))
-                        {
-                            DGV_ConfigItems.Rows[row].Cells[col].ReadOnly = false;
-                            DGV_ConfigItems.Rows[row].Cells[col].Style.Font = new Font(this.Font, FontStyle.Regular);
-                        }
-                        else
-                        {
-                            DGV_ConfigItems.Rows[row].Cells[col].ReadOnly = true;
-                            DGV_ConfigItems.Rows[row].Cells[col].Style.Font = new Font(this.Font, FontStyle.Bold);
-                        }
-                    }
-                }
-            }
+            _log.Debug("OnPaint Done");
+            SetCellEditMode();
+            _log.Debug("SetCellEditMode Done");
+            DGV_ConfigItems.Enabled = true;
         }
 
         private bool IsValueOfItem(int row, int col)
@@ -78,7 +45,34 @@ namespace ConfViews
 
             return (!string.IsNullOrEmpty(DGV_ConfigItems[col, row].Value as string)) && (!string.IsNullOrEmpty(DGV_ConfigItems[col - 1, row].Value as string));
         }
-        private string GetPath(DataGridViewCellEventArgs activeCell)
+        private void SetCellEditMode()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(SetCellEditMode));
+            }
+            else
+            {
+                var valueFont = new Font(this.Font, FontStyle.Regular);
+                var labelFont = new Font(this.Font, FontStyle.Bold);
+
+                DGV_ConfigItems.SuspendLayout();
+                for (int row = 0; row < DGV_ConfigItems.Rows.Count; row++)
+                {
+                    for (int col = 0; col < DGV_ConfigItems.Columns.Count; col++)
+                    {
+                        if (IsValueOfItem(row, col))
+                        {
+                            DGV_ConfigItems.Rows[row].Cells[col].ReadOnly = false;
+                            DGV_ConfigItems.Rows[row].Cells[col].Style.Font = valueFont;
+                        }
+                    }
+                }
+                DGV_ConfigItems.ResumeLayout();
+            }
+        }
+
+        private string GetPath(DataGridView gridview, DataGridViewCellEventArgs activeCell)
         {
             List<string> nodePath = new List<string>();
 
@@ -87,7 +81,7 @@ namespace ConfViews
             {
                 for (int row = scanedRow; row >= 0; row--)
                 {
-                    string nodeName = DGV_ConfigItems[col, row].Value as string;
+                    string nodeName = gridview[col, row].Value as string;
                     if (!string.IsNullOrEmpty(nodeName))
                     {
                         nodePath.Add(nodeName);
@@ -102,7 +96,7 @@ namespace ConfViews
         }
         private void DGV_ConfigItems_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            string path = GetPath(e);
+            string path = GetPath(sender as DataGridView, e);
             Conf[path] = DGV_ConfigItems[e.ColumnIndex, e.RowIndex].Value as string;
         }
         public void Save(string file)
