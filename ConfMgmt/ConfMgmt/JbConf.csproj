@@ -45,6 +45,7 @@
     <Compile Include="Core\ConfTreeFind.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\ConfTree.cs" />
+    <Compile Include="UiSupport\ConfTreeEx.cs" />
     <Compile Include="Xml\XmlBuilder.cs" />
     <Compile Include="Xml\XmlConf.cs" />
     <Compile Include="Xml\XmlDoc.cs" />

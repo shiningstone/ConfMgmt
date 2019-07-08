@@ -11,7 +11,9 @@ namespace TestJbConfUi
             InitializeComponent();
 
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
-            Controls.Add(new ConfView(conf));
+            var view = new ConfView(conf);
+            view.Dock = DockStyle.Fill;
+            Controls.Add(view);
         }
     }
 }
