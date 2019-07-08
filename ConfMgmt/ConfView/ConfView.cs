@@ -5,6 +5,7 @@ using Timer = System.Timers.Timer;
 
 using JbConf;
 using System.Drawing;
+using System.Linq;
 
 namespace ConfViews
 {
@@ -14,11 +15,13 @@ namespace ConfViews
         {
             InitializeComponent();
         }
+        public ConfTree Conf;
         public ConfView(ConfTree conf)
         {
             InitializeComponent();
 
-            DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(conf);
+            Conf = conf;
+            DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf);
             DGV_ConfigItems.Enabled = false;
 
             Timer t = new Timer(1000);
@@ -75,14 +78,12 @@ namespace ConfViews
 
             return (!string.IsNullOrEmpty(DGV_ConfigItems[col, row].Value as string)) && (!string.IsNullOrEmpty(DGV_ConfigItems[col - 1, row].Value as string));
         }
-        private void DGV_ConfigItems_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private string GetPath(DataGridViewCellEventArgs activeCell)
         {
-            string value = DGV_ConfigItems[e.ColumnIndex, e.RowIndex].Value as string;
-
             List<string> nodePath = new List<string>();
 
-            int scanedRow = e.RowIndex;
-            for (int col = e.ColumnIndex - 1; col >= 0; col--)
+            int scanedRow = activeCell.RowIndex;
+            for (int col = activeCell.ColumnIndex - 1; col >= 0; col--)
             {
                 for (int row = scanedRow; row >= 0; row--)
                 {
@@ -96,8 +97,13 @@ namespace ConfViews
                 }
             }
 
-            nodePath.Reverse();
-            //reader.SetItem(nodePath.ToArray(), value);
+            var nodes = nodePath.Take(nodePath.Count - 1);
+            return string.Join(@"/", nodes.Reverse());
+        }
+        private void DGV_ConfigItems_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            string path = GetPath(e);
+            Conf[path] = DGV_ConfigItems[e.ColumnIndex, e.RowIndex].Value as string;
         }
         public void Save(string file)
         {
