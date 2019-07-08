@@ -51,11 +51,26 @@
     <Compile Include="Basic.Designer.cs">
       <DependentUpon>Basic.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConfigFiles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigFiles.Designer.cs">
+      <DependentUpon>ConfigFiles.cs</DependentUpon>
+    </Compile>
     <Compile Include="GlobalVariables.cs" />
+    <Compile Include="MultiLevel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MultiLevel.Designer.cs">
+      <DependentUpon>MultiLevel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Basic.resx">
       <DependentUpon>Basic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigFiles.resx">
+      <DependentUpon>ConfigFiles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

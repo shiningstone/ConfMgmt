@@ -14,6 +14,7 @@ namespace JbConf
         public XmlDoc XmlDoc;           //Only valid if this ConfTree is generated from xml file
         public ConfTree Refer;          //the prototype of this ConfTree(Clone)
 
+        public int _maxDepth;
         private int _depth = 0;
 
         public ConfTree(string name) : base(name, null)
@@ -34,6 +35,14 @@ namespace JbConf
                 return false;
             });
             return output;
+        }
+        public int MaxDepth
+        {
+            get
+            {
+                var str = ToString();
+                return _maxDepth + 1;
+            }
         }
 
         public List<ConfItem> Items

@@ -9,14 +9,10 @@ namespace JbConf
 {
     public class UiSupport
     {
-        private static int MaxDepth(ConfTree conf)
-        {
-            return 3;
-        }
         public static DataTable ConvertToTable(ConfTree conf)
         {
             DataTable table = new DataTable();
-            for (int i = 0; i < MaxDepth(conf); i++)
+            for (int i = 0; i < conf.MaxDepth + 1; i++)
             {
                 table.Columns.Add();
             }
@@ -24,10 +20,22 @@ namespace JbConf
             conf.Visit("ToTable", (item, level) =>
             {
                 var row = table.NewRow();
-                row[0] = item.Name;
-                row[1] = !string.IsNullOrEmpty(item.Value) ? item.Value : "";
+
+                if (string.IsNullOrEmpty(item.Path))
+                {
+                    row[0] = item.Name;
+                    row[1] = !string.IsNullOrEmpty(item.Value) ? item.Value : "";
+                }
+                else
+                {
+                    var nodes = item.Path.Split('/');
+
+                    row[nodes.Length - 1] = item.Name;
+                    row[nodes.Length] = !string.IsNullOrEmpty(item.Value) ? item.Value : "";
+                }
 
                 table.Rows.Add(row);
+
                 return false;
             });
 

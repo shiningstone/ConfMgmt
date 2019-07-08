@@ -16,7 +16,7 @@ namespace TestJbConfUi
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Basic());
+            Application.Run(new ConfigFiles());
         }
     }
 }

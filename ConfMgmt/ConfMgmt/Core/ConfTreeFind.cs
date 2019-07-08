@@ -68,6 +68,7 @@ namespace JbConf
                 foreach (var c in tree.Sons)
                 {
                     _depth++;
+                    _maxDepth = _depth > _maxDepth ? _depth : _maxDepth;
                     var ret = Visit(func, executor, c);
                     _depth--;
 
