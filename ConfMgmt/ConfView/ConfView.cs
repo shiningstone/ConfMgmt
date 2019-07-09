@@ -56,10 +56,11 @@ namespace ConfViews
                 var valueFont = new Font(this.Font, FontStyle.Regular);
                 var labelFont = new Font(this.Font, FontStyle.Bold);
 
-                DGV_ConfigItems.SuspendLayout();
-                for (int row = 0; row < DGV_ConfigItems.Rows.Count; row++)
+                for (int col = 0; col < DGV_ConfigItems.Columns.Count; col++)
                 {
-                    for (int col = 0; col < DGV_ConfigItems.Columns.Count; col++)
+                    DGV_ConfigItems.Columns[col].ReadOnly = true;
+
+                    for (int row = 0; row < DGV_ConfigItems.Rows.Count; row++)
                     {
                         if (IsValueOfItem(row, col))
                         {
@@ -68,7 +69,6 @@ namespace ConfViews
                         }
                     }
                 }
-                DGV_ConfigItems.ResumeLayout();
             }
         }
 

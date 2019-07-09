@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using Utils;
 
@@ -37,6 +38,11 @@ namespace JbConf
 
                     var node = xmlDoc.ChildNodes[xmlDoc.ChildNodes.Count - 1];
                     var result = XmlConf.ToTree(node, xmlDoc);
+                    if (string.IsNullOrEmpty(result.Tag))
+                    {
+                        result.Tag = Path.GetFileNameWithoutExtension(xmlPath);
+                        XmlConf.AddTag(xmlDoc, node, result.Tag);
+                    }
                     result.Source = Source.Xml;
                     result.XmlDoc = xmlDoc;
                     _log.Debug(Environment.NewLine + result.ToString());
