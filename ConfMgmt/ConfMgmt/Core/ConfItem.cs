@@ -62,6 +62,11 @@ namespace JbConf
             };
         }
 
+        public virtual bool Equals(ConfItem item)
+        {
+            return (Name == item.Name) && (Value == item.Value);
+        }
+
         public override string ToString()
         {
             return $"{Name}:{(Value != null ? Value : Environment.NewLine)}{(Value == null ? "" : Environment.NewLine)}";
@@ -73,7 +78,7 @@ namespace JbConf
         }
         protected static void DebugDetail(string str)
         {
-#if DebugDetailEnable
+#if !DebugDetailEnable
             _log.Debug(str);
 #endif
         }

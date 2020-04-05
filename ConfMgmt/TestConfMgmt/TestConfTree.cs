@@ -94,6 +94,48 @@ namespace TestConfMgmt
             Assert.IsTrue(tree1.Find("Item3-2").Path == "/Tree1/Tree2/Tree3");
         }
         [TestMethod]
+        public void TestConfTree_Compare_SimpleTreeEqual()
+        {
+            ConfTree tree1 = new ConfTree("Tree1");
+            tree1.Add(new ConfItem("Item1-1", "Value1-1"));
+
+            ConfTree tree2 = new ConfTree("Tree2");
+            tree2.Add(new ConfItem("Item1-1", "Value1-1"));
+
+            Assert.IsTrue(tree1.Equals(tree2));
+        }
+        [TestMethod]
+        public void TestConfTree_Compare_SimpleTreeNotEqual()
+        {
+            ConfTree tree1 = new ConfTree("Tree1");
+            tree1.Add(new ConfItem("Item1-1", "Value1-1"));
+            tree1.Add(new ConfItem("Item1-2", "Value1-2"));
+
+            ConfTree tree2 = new ConfTree("Tree2");
+            tree2.Add(new ConfItem("Item1-1", "Value1-1"));
+
+            Assert.IsFalse(tree1.Equals(tree2));
+        }
+        [TestMethod]
+        public void TestConfTree_Compare_MixedTree()
+        {
+            ConfTree a1 = new ConfTree("Tree1");
+            a1.Add(new ConfItem("Item1-1", "Value1-1"));
+            ConfTree a2 = new ConfTree("Tree2");
+            a2.Add(new ConfItem("Item2-1", "Value2-1"));
+            a2.Add(new ConfItem("Item2-2", "Value2-2"));
+            a1.Add(a2);
+
+            ConfTree b1 = new ConfTree("Tree1");
+            b1.Add(new ConfItem("Item1-1", "Value1-1"));
+            ConfTree b2 = new ConfTree("Tree2");
+            b2.Add(new ConfItem("Item2-1", "Value2-1"));
+            b2.Add(new ConfItem("Item2-2", "Value2-2"));
+            b1.Add(b2);
+
+            Assert.IsTrue(a1.Equals(b1));
+        }
+        [TestMethod]
         public void TestConfTree_Clone_SaveToDiffFile()
         {
             ConfTree conf1 = Builder.Generate(new Dictionary<string, string> {

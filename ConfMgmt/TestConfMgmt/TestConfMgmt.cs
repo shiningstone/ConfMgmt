@@ -66,21 +66,10 @@ namespace TestConfMgmt
         #endregion
 
         [TestMethod]
-        public void TestConfMgmt_Generate()
-        {
-            ConfMgmt.Generate(GlobalVar.RealConfPath);
-        }
-        [TestMethod]
         public void TestConfMgmt_Save()
         {
             ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
             ConfMgmt.Save($@"{GlobalVar.ResultPath}/Root.xml");
-        }
-        [TestMethod]
-        public void TestConfMgmt_SaveWithFiles()
-        {
-            ConfMgmt.Generate(GlobalVar.RealConfPath);
-            ConfMgmt.Save($@"{GlobalVar.ResultPath}");
         }
         [TestMethod]
         public void TestConfMgmt_Modify()

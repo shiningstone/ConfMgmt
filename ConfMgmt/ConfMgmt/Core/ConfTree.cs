@@ -21,7 +21,7 @@ namespace JbConf
         {
         }
 
-        public override string ToString()
+        public string Show()
         {
             string output = "";
             Visit("ToString", (item, level) =>
@@ -36,6 +36,12 @@ namespace JbConf
             });
             return output;
         }
+
+        public override string ToString()
+        {
+            return $"{Name}:{(Value != null ? Value : Environment.NewLine)}{(Value == null ? "" : Environment.NewLine)}";
+        }
+
         public int MaxDepth
         {
             get
@@ -170,6 +176,40 @@ namespace JbConf
             }
 
             return conf;
+        }
+        public override bool Equals(ConfItem tree)
+        {
+            var target = tree as ConfTree;
+            if (target != null)
+            {
+                bool result = true;
+                foreach (var son in Sons)
+                {
+                    var subtree = son as ConfTree;
+                    if (subtree != null)
+                    {
+                        result &= subtree.Equals(target.Find(subtree.Name));
+                    }
+                    else
+                    {
+                        var item = target.Find(son.Name);
+                        if (item != null)
+                        {
+                            result &= son.Equals(target.Find(son.Name));
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return result;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

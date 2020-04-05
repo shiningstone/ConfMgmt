@@ -55,6 +55,7 @@
     <Compile Include="TestXmlBuild.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestXmlConf.cs" />
+    <Compile Include="TestRealConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
