@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using JbConf;
+using Utils;
 
 namespace TestConfMgmt
 {
@@ -23,5 +24,6 @@ namespace TestConfMgmt
         {
             ConfMgmt.Clear();
         }
+        public static Logger Log = new Logger("Tester");
     }
 }

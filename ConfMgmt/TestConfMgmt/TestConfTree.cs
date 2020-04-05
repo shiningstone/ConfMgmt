@@ -25,6 +25,8 @@ namespace TestConfMgmt
             conf.Add(new ConfItem("Item1", "Value1"));
             Assert.IsTrue(conf["Item1"] == "Value1");
             Assert.IsTrue(conf.Find("Item1").Path == "/TestBuildTree");
+
+            GlobalVar.Log.Debug(conf.Show());
         }
         [TestMethod]
         public void TestConfTree_AddTreeToTree()
@@ -44,6 +46,8 @@ namespace TestConfMgmt
             Assert.IsTrue(tree1.Find("Item1").Parent.Name == "Tree1");
             Assert.IsTrue(tree1.Find("Tree2").Parent.Name == "Tree1");
             Assert.IsTrue(tree1.Find("Item2").Parent.Name == "Tree2");
+
+            GlobalVar.Log.Debug(tree1.Show());
         }
         [TestMethod]
         public void TestConfTree_AddMixToTree()
@@ -68,6 +72,8 @@ namespace TestConfMgmt
             Assert.IsTrue(tree1.Find("Tree3").Path == "/Tree1/Tree2");
             Assert.IsTrue(tree1.Find("Item3-1").Path == "/Tree1/Tree2/Tree3");
             Assert.IsTrue(tree1.Find("Item3-2").Path == "/Tree1/Tree2/Tree3");
+
+            GlobalVar.Log.Debug(tree1.Show());
         }
         [TestMethod]
         public void TestConfTree_AddMixToTree2()
@@ -92,6 +98,8 @@ namespace TestConfMgmt
             Assert.IsTrue(tree1.Find("Tree3").Path == "/Tree1/Tree2");
             Assert.IsTrue(tree1.Find("Item3-1").Path == "/Tree1/Tree2/Tree3");
             Assert.IsTrue(tree1.Find("Item3-2").Path == "/Tree1/Tree2/Tree3");
+
+            GlobalVar.Log.Debug(tree1.Show());
         }
         [TestMethod]
         public void TestConfTree_Compare_SimpleTreeEqual()
@@ -192,11 +200,11 @@ namespace TestConfMgmt
                 { "Item2", "Value2" },
             }, "DictionaryConf");
             Builder.Xml.Save(conf1, $"{GlobalVar.ResultPath}/Conf.xml");
+            GlobalVar.Log.Debug(conf1.Show());
 
             ConfTree conf2 = conf1.Clone("new") as ConfTree;
             Builder.Xml.Save(conf2 as ConfTree);
 
-            Debug.WriteLine(conf1.ToString());
             conf1["Item1"] = "Value3";
             Builder.Xml.Save(conf1 as ConfTree);
 

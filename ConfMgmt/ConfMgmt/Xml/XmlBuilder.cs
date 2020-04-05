@@ -13,7 +13,6 @@ namespace JbConf
         public static ConfTree Generate(Dictionary<string, string> kvs, string name)
         {
             ConfTree result = new ConfTree(name);
-            result.Path = "";
             result.Source = Source.Dictionary;
             result.Tag = "Default";
 
@@ -85,7 +84,11 @@ namespace JbConf
                             throw new Exception($"Invalid param for Save");
                         }
 
-                        conf.Refer.XmlDoc = conf.XmlDoc = Generate(path).XmlDoc;
+                        conf.XmlDoc = Generate(path).XmlDoc;
+                        if (conf.Refer != null)
+                        {
+                            conf.Refer.XmlDoc = conf.XmlDoc;
+                        }
                     }
                 }
                 catch (Exception ex)

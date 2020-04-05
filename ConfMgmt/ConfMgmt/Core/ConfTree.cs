@@ -30,8 +30,7 @@ namespace JbConf
                 {
                     output += "--";
                 }
-                var tag = !string.IsNullOrEmpty(item.Tag) ? item.Tag : "";
-                output += $"({item.Path}){item.Name}({tag}):{(item.Value != null ? item.Value : Environment.NewLine)}{(item.Value == null ? "" : Environment.NewLine)}";
+                output += $"{item}";
                 return false;
             });
             return output;
@@ -39,7 +38,7 @@ namespace JbConf
 
         public override string ToString()
         {
-            return $"{Name}:{(Value != null ? Value : Environment.NewLine)}{(Value == null ? "" : Environment.NewLine)}";
+            return $"{Name}({(Tag != null ? Tag : "")}){Environment.NewLine}";
         }
 
         public int MaxDepth
@@ -65,18 +64,12 @@ namespace JbConf
         }
         public void PrefixPath(string prefix)
         {
-            Path = !string.IsNullOrEmpty(Path) ? $"{prefix}{Path}" : $"{prefix}";
-
             foreach (var son in Sons)
             {
                 var subtree = son as ConfTree;
                 if (subtree != null)
                 {
                     subtree.PrefixPath(prefix);
-                }
-                else
-                {
-                    son.Path = !string.IsNullOrEmpty(son.Path) ? $"{prefix}{son.Path}" : $"{prefix}/{son.Path}";
                 }
             }
         }
@@ -90,10 +83,6 @@ namespace JbConf
             if (subtree != null)
             {
                 subtree.PrefixPath($"{Path}/{Name}{tag}");
-            }
-            else
-            {
-                item.Path = $"{Path}/{Name}{tag}";
             }
         }
         public string this[string key]
@@ -164,7 +153,6 @@ namespace JbConf
             {
                 Source = Source,
                 Value = Value,
-                Path = Path,
                 Tag = tag == null ? Tag : tag,
 
                 Refer = this,

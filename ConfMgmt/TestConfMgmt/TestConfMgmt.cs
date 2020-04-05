@@ -99,7 +99,8 @@ namespace TestConfMgmt
         {
             ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
             var conf = ConfMgmt.GetTree("SystemSetting");
-            Debug.WriteLine(conf.ToString());
+            GlobalVar.Log.Debug(conf.Show());
+
             Assert.ThrowsException<Exception>(() => { var result = conf["new:DutsCount"]; });
 
             var newconf = conf.Find("System").Clone("new") as ConfTree;

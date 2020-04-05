@@ -44,7 +44,21 @@ namespace JbConf
         public string Value;
         public Dictionary<string, string> Attributes = new Dictionary<string, string>();
 
-        public string Path;
+        public string Path
+        {
+            get
+            {
+                if (Parent == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    string tag = string.IsNullOrEmpty(Parent.Tag) ? "" : $"({Parent.Tag})";
+                    return $"{Parent.Path}/{Parent.Name}{tag}";
+                }
+            }
+        }
         public string Tag;
         public ConfItem Parent;
 
@@ -56,8 +70,7 @@ namespace JbConf
         public virtual ConfItem Clone(string tag = null)
         {
             return new ConfItem(Name, Value)
-            {
-                Path = Path,
+            { 
                 Tag = tag == null ? Tag : tag,
             };
         }

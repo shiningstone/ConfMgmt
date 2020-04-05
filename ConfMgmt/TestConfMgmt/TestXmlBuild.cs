@@ -24,7 +24,7 @@ namespace TestConfMgmt
                 { "Item1", "Value1" },
                 { "Item2", "Value2" },
             }, "DictConf1");
-            Debug.WriteLine(conf.ToString());
+            GlobalVar.Log.Debug(conf.Show());
 
             Assert.IsTrue(conf["Item1"] == "Value1");
             Assert.IsTrue(conf["Item2"] == "Value2");
@@ -39,7 +39,7 @@ namespace TestConfMgmt
         public void TestBuild_Xml_Build_Modify_Save()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
-            Debug.WriteLine(conf.ToString());
+            GlobalVar.Log.Debug(conf.Show());
 
             JbAssert.Equal(conf["Item1"], "Value1");
             JbAssert.Equal(conf["Item2"], "Value2");
@@ -64,16 +64,16 @@ namespace TestConfMgmt
         public void TestBuild_Xml_CheckPath()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
-            Debug.WriteLine(conf.ToString());
+            GlobalVar.Log.Debug(conf.Show());
 
-            JbAssert.Equal(conf.Find("Item1").Path, "/Basic/Function1");
-            JbAssert.Equal(conf.Find("Item2").Path, "/Basic/Function1");
-            JbAssert.Equal(conf.Find("Item3").Path, "/Basic/Function2");
-            JbAssert.Equal(conf.Find("Item4").Path, "/Basic/Function2");
-            JbAssert.Equal(conf.Find("Item5").Path, "/Basic");
+            JbAssert.Equal(conf.Find("Item1").Path, "/Basic(Basic)/Function1");
+            JbAssert.Equal(conf.Find("Item2").Path, "/Basic(Basic)/Function1");
+            JbAssert.Equal(conf.Find("Item3").Path, "/Basic(Basic)/Function2");
+            JbAssert.Equal(conf.Find("Item4").Path, "/Basic(Basic)/Function2");
+            JbAssert.Equal(conf.Find("Item5").Path, "/Basic(Basic)");
 
             conf["Item1"] = "Value5";
-            JbAssert.Equal(conf.Find("Item1").Path, "/Basic/Function1");
+            JbAssert.Equal(conf.Find("Item1").Path, "/Basic(Basic)/Function1");
         }
         [TestMethod]
         public void TestBuild_Xml_ModifyException()
