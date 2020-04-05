@@ -77,6 +77,12 @@ namespace TestConfMgmt
             ConfMgmt.Save($@"{GlobalVar.ResultPath}/Root.xml");
         }
         [TestMethod]
+        public void TestConfMgmt_SaveWithFiles()
+        {
+            ConfMgmt.Generate(GlobalVar.RealConfPath);
+            ConfMgmt.Save($@"{GlobalVar.ResultPath}");
+        }
+        [TestMethod]
         public void TestConfMgmt_Modify()
         {
             ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
