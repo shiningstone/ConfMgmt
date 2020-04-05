@@ -99,7 +99,7 @@ namespace TestConfMgmt
             ConfTree tree1 = new ConfTree("Tree1");
             tree1.Add(new ConfItem("Item1-1", "Value1-1"));
 
-            ConfTree tree2 = new ConfTree("Tree2");
+            ConfTree tree2 = new ConfTree("Tree1");
             tree2.Add(new ConfItem("Item1-1", "Value1-1"));
 
             Assert.IsTrue(tree1.Equals(tree2));

@@ -186,16 +186,17 @@ namespace JbConf
                 foreach (var son in Sons)
                 {
                     var subtree = son as ConfTree;
+                    var path = son.Path.Substring(target.Path == null ? 1 : target.Path.Length + 1);
                     if (subtree != null)
                     {
-                        result &= subtree.Equals(target.Find(subtree.Name));
+                        result &= subtree.Equals(target.Find($"{path}/{subtree.Name}"));
                     }
                     else
                     {
-                        var item = target.Find(son.Name);
+                        var item = target.Find($"{path}/{son.Name}");
                         if (item != null)
                         {
-                            result &= son.Equals(target.Find(son.Name));
+                            result &= son.Equals(item);
                         }
                         else
                         {
