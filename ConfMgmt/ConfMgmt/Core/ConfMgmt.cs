@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Utils;
 
 namespace JbConf
@@ -37,6 +38,30 @@ namespace JbConf
                 }
                 Builder.Xml.Save(root, path);
             }
+        }
+
+        public static ConfItem Find(string item, List<string> tag = null)
+        {
+            foreach (var kv in Root)
+            {
+                var target = kv.Value.Find(item, tag);
+                if (target != null)
+                {
+                    return target;
+                }
+            }
+
+            return null;
+        }
+
+        public static ConfTree Clone(string target, string tag)
+        {
+            var tree = GetTree(target);
+            var newtree = tree.Clone(tag);
+
+            Builder.Xml.Save(newtree as ConfTree, $@"{Path.GetDirectoryName(FileOp.ExtractUrl(tree.XmlDoc.BaseURI))}\{tag}.xml");
+
+            return newtree as ConfTree;
         }
 
         public static ConfTree GetTree(string file)

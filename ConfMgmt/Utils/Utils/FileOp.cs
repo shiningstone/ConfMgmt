@@ -7,6 +7,15 @@ namespace Utils
     {
         private static Logger _log = new Logger("FileOp");
 
+        public static string ExtractUrl(string url)
+        {
+            if (url.StartsWith(@"file:///"))
+            {
+                return url.Substring(@"file:///".Length);
+            }
+
+            return url;
+        }
         public static bool CopyDir(string src, string dest, bool overwriteexisting = true)
         {
             bool ret = false;
