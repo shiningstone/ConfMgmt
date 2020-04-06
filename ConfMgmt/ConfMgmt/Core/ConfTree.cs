@@ -37,7 +37,6 @@ namespace JbConf
         {
             return $"{Name}({(Tag != null ? Tag : "")}){Environment.NewLine}";
         }
-
         public List<ConfItem> Items
         {
             get

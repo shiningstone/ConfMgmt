@@ -117,5 +117,37 @@ namespace TestConfMgmt
             conf.XmlDoc.Remove(conf.Find("DutsCount", new List<string>() { "new" }).Path);
             conf.XmlDoc.Save($@"{GlobalVar.SamplePath}/ConfigFiles/Configs/SystemSetting.xml");
         }
+
+        [TestMethod]
+        public void TestConfMgmt_Getter()
+        {
+            ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
+
+            JbAssert.Equal(ConfMgmt.GetItem("K7001_Adr"), "7");
+            JbAssert.Equal(ConfMgmt.GetItem("Equipments/K7001_Adr"), "7");
+
+            //暂不支持冲突检测
+            //Assert.ThrowsException<Exception>(() => { var result = ConfMgmt.Item("Channel1"); });
+            JbAssert.Equal(ConfMgmt.GetItem("ChannelSettings/Channel1"), "1!1");
+            JbAssert.Equal(ConfMgmt.GetItem("RSettings/Channel1"), "0.5");
+        }
+
+        [TestMethod]
+        public void TestConfMgmt_Setter()
+        {
+            FileOp.RmDir(GlobalVar.ResultPath);
+            FileOp.CopyDir(GlobalVar.RealConfPath, GlobalVar.ResultPath);
+
+            ConfMgmt.Clear();
+            ConfMgmt.Generate(GlobalVar.ResultPath);
+
+            JbAssert.Equal(ConfMgmt.GetItem("K7001_Adr"), "7");
+            ConfMgmt.SetItem("K7001_Adr", "0");
+            ConfMgmt.Save();
+
+            ConfMgmt.Clear();
+            ConfMgmt.Generate(GlobalVar.ResultPath);
+            JbAssert.Equal(ConfMgmt.GetItem("K7001_Adr"), "0");
+        }
     }
 }
