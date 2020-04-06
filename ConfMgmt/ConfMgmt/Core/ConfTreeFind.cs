@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Utils;
 
 namespace JbConf
 {
     public partial class ConfTree
     {
+        private static Logger _log = new Logger("ConfTreeVisit");
+
         private class TagRecorder
         {
             public List<string> Tags = new List<string>();
@@ -49,6 +53,42 @@ namespace JbConf
         }
         private TagRecorder RunningTag = new TagRecorder();
 
+        private int _maxDepth;
+        private int _depth = 0;
+        public int MaxDepth
+        {
+            get
+            {
+                var str = ToString();
+                return _maxDepth + 1;
+            }
+        }
+
+        private bool VisitTree(string func, Func<ConfItem, int, bool> executor, ConfTree tree)
+        {
+            _log.Debug($@"Visit({func}) ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
+            RunningTag.Register(tree);
+
+            executor(tree, _depth);
+
+            foreach (var c in tree.Sons)
+            {
+                _depth++;
+                _maxDepth = _depth > _maxDepth ? _depth : _maxDepth;
+                var ret = Visit(func, executor, c);
+                _depth--;
+
+                if (ret)
+                {
+                    RunningTag.Unregister(tree);
+                    return true;
+                }
+            }
+
+            RunningTag.Unregister(tree);
+
+            return false;
+        }
         public bool Visit(string func, Func<ConfItem, int, bool> executor, ConfItem item = null)
         {
             if (item == null)
@@ -60,30 +100,15 @@ namespace JbConf
             var tree = item as ConfTree;
             if (tree != null)
             {
-                DebugDetail($@"Visit({func}) ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
-                RunningTag.Register(tree);
-
-                executor(item, _depth);
-
-                foreach (var c in tree.Sons)
+                var fastQuit = VisitTree(func, executor, tree);
+                if (fastQuit)
                 {
-                    _depth++;
-                    _maxDepth = _depth > _maxDepth ? _depth : _maxDepth;
-                    var ret = Visit(func, executor, c);
-                    _depth--;
-
-                    if (ret)
-                    {
-                        RunningTag.Unregister(tree);
-                        return true;
-                    }
+                    return true;
                 }
-
-                RunningTag.Unregister(tree);
             }
             else
             {
-                DebugDetail($"Visit({func}) ConfItem: {item.Name}({item.Value})");
+                _log.Debug($"Visit({func}) ConfItem: {item.Name}({item.Value})");
                 if (executor(item, _depth))
                 {
                     return true;
@@ -92,15 +117,16 @@ namespace JbConf
 
             return false;
         }
-        public ConfItem Find(string itemName, List<string> tags = null)
+
+        public ConfItem Find(string target, List<string> tags = null)
         {
             ConfItem result = null;
 
-            if (!itemName.Contains(@"/"))
+            if (!target.Contains(@"/"))
             {
                 Visit("Find", (item, level) =>
                 {
-                    if (item.Name == itemName && RunningTag.IsMatch(tags))
+                    if (item.Name == target && RunningTag.IsMatch(tags))
                     {
                         DebugDetail($"Find {item.Path}/{item.Name}");
                         result = item;
@@ -114,7 +140,7 @@ namespace JbConf
             }
             else
             {
-                var head_tail = ExtractHead(itemName);
+                var head_tail = ExtractHead(target);
 
                 var tree = Find(head_tail[0], tags) as ConfTree;
                 if (tree != null)
@@ -127,6 +153,12 @@ namespace JbConf
                 }
             }
             return result;
+        }
+
+        private static string[] ExtractHead(string path)
+        {
+            var strs = path.Split('/').ToList();
+            return new string[] { strs[0], string.Join(@"/", strs.Skip(1).ToArray()) };
         }
     }
 }

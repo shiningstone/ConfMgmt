@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Utils;
 
 namespace JbConf
@@ -42,7 +41,9 @@ namespace JbConf
 
         public string Name;
         public string Value;
+        public ConfItem Parent;
         public Dictionary<string, string> Attributes = new Dictionary<string, string>();
+        public string Tag;
 
         public string Path
         {
@@ -59,8 +60,6 @@ namespace JbConf
                 }
             }
         }
-        public string Tag;
-        public ConfItem Parent;
 
         public ConfItem(string name, string value = null)
         {
@@ -83,11 +82,6 @@ namespace JbConf
         public override string ToString()
         {
             return $"{Name}:{(Value != null ? Value : Environment.NewLine)}{(Value == null ? "" : Environment.NewLine)}";
-        }
-        protected static string[] ExtractHead(string path)
-        {
-            var strs = path.Split('/').ToList();
-            return new string[] { strs[0], string.Join(@"/", strs.Skip(1).ToArray()) };
         }
         protected static void DebugDetail(string str)
         {

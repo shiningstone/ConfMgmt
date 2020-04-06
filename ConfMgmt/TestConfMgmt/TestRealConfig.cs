@@ -54,7 +54,7 @@ namespace TestConfMgmt
 
             ConfMgmt.Clear();
             ConfMgmt.Generate(GlobalVar.ResultPath);
-            ConfMgmt.GetTree("BICalibration")["JMDM40_com"] = "";
+            ConfMgmt.ReadFile("BICalibration")["JMDM40_com"] = "";
             ConfMgmt.Save();
 
             ConfMgmt.Generate(GlobalVar.ResultPath);

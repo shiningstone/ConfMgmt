@@ -54,7 +54,6 @@ namespace JbConf
                     return null;
                 }
             }
-
             public static void Save(ConfTree conf, string path = null)
             {
                 try

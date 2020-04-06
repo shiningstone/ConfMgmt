@@ -75,7 +75,7 @@ namespace TestConfMgmt
         public void TestConfMgmt_Modify()
         {
             ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
-            var conf = ConfMgmt.GetTree("SystemSetting");
+            var conf = ConfMgmt.ReadFile("SystemSetting");
 
             conf["DutsCount"] = "0";
             ConfMgmt.Save();
@@ -86,7 +86,7 @@ namespace TestConfMgmt
             //restore
             ConfMgmt.Clear();
             ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
-            conf = ConfMgmt.GetTree("SystemSetting");
+            conf = ConfMgmt.ReadFile("SystemSetting");
 
             conf["DutsCount"] = "40";
             ConfMgmt.Save();
@@ -98,8 +98,8 @@ namespace TestConfMgmt
         public void TestConfMgmt_AddNewConf()
         {
             ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
-            var conf = ConfMgmt.GetTree("SystemSetting");
-            GlobalVar.Log.Debug(conf.Show());
+            var conf = ConfMgmt.ReadFile("SystemSetting");
+            GlobalVar.Log.Debug(conf.ShowAll());
 
             Assert.ThrowsException<Exception>(() => { var result = conf["new:DutsCount"]; });
 
@@ -110,7 +110,7 @@ namespace TestConfMgmt
             //restore
             ConfMgmt.Clear();
             ConfMgmt.Generate($@"{GlobalVar.SamplePath}/ConfigFiles");
-            conf = ConfMgmt.GetTree("SystemSetting");
+            conf = ConfMgmt.ReadFile("SystemSetting");
             JbAssert.Equal(conf["DutsCount"], "40");
             JbAssert.Equal(conf["new:DutsCount"], "20");
 

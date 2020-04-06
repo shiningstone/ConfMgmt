@@ -14,17 +14,15 @@ namespace JbConf
         public XmlDoc XmlDoc;           //Only valid if this ConfTree is generated from xml file
         public ConfTree Refer;          //the prototype of this ConfTree(Clone)
 
-        public int _maxDepth;
-        private int _depth = 0;
-
         public ConfTree(string name) : base(name, null)
         {
         }
 
-        public string Show()
+        public string ShowAll()
         {
-            string output = "";
-            Visit("ToString", (item, level) =>
+            string output = $"{Environment.NewLine}";
+
+            Visit("ShowAll", (item, level) =>
             {
                 for (int i = 0; i < level; i++)
                 {
@@ -35,19 +33,9 @@ namespace JbConf
             });
             return output;
         }
-
         public override string ToString()
         {
             return $"{Name}({(Tag != null ? Tag : "")}){Environment.NewLine}";
-        }
-
-        public int MaxDepth
-        {
-            get
-            {
-                var str = ToString();
-                return _maxDepth + 1;
-            }
         }
 
         public List<ConfItem> Items
@@ -62,28 +50,11 @@ namespace JbConf
                 return result;
             }
         }
-        public void PrefixPath(string prefix)
-        {
-            foreach (var son in Sons)
-            {
-                var subtree = son as ConfTree;
-                if (subtree != null)
-                {
-                    subtree.PrefixPath(prefix);
-                }
-            }
-        }
+
         public void Add(ConfItem item)
         {
-            Sons.Add(item);
             item.Parent = this;
-
-            var subtree = item as ConfTree;
-            string tag = !string.IsNullOrEmpty(Tag) ? $"({Tag})" : "";
-            if (subtree != null)
-            {
-                subtree.PrefixPath($"{Path}/{Name}{tag}");
-            }
+            Sons.Add(item);
         }
         public string this[string key]
         {
@@ -132,21 +103,6 @@ namespace JbConf
             Builder.Xml.Save(this, path);
         }
 
-        public ConfTree Merge(ConfTree tree)
-        {
-            foreach (var item in tree.Items)
-            {
-                if (null == Find(item.Name))
-                {
-                    Add(item);
-                }
-                else
-                {
-                    _log.Warn($"ConfTree({this.Name}) Merge Failed : Item({item.Name}) already exist({item.Value})");
-                }
-            }
-            return this;
-        }
         public override ConfItem Clone(string tag = null)
         {
             var conf = new ConfTree(Name)
@@ -199,6 +155,22 @@ namespace JbConf
             {
                 return false;
             }
+        }
+
+        public ConfTree Merge(ConfTree tree)
+        {
+            foreach (var item in tree.Items)
+            {
+                if (null == Find(item.Name))
+                {
+                    Add(item);
+                }
+                else
+                {
+                    _log.Warn($"ConfTree({this.Name}) Merge Failed : Item({item.Name}) already exist({item.Value})");
+                }
+            }
+            return this;
         }
     }
 }

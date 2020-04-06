@@ -7,6 +7,8 @@ namespace JbConf
 {
     public class ConfMgmt
     {
+        private static Logger _log = new Logger("ConfMgmt");
+
         public static Dictionary<string, ConfTree> Root = new Dictionary<string, ConfTree>();
         public static void Clear()
         {
@@ -18,6 +20,7 @@ namespace JbConf
             Act.Traverse(path, (file) =>
             {
                 Root[file] = Builder.Xml.Generate(file);
+                _log.Debug($"{Root[file].ShowAll()}");
             });
         }
         public static void Save(string path = null)
@@ -39,50 +42,21 @@ namespace JbConf
                 Builder.Xml.Save(root, path);
             }
         }
-
-        public static ConfItem Find(string item, List<string> tag = null)
-        {
-            foreach (var kv in Root)
-            {
-                var target = kv.Value.Find(item, tag);
-                if (target != null)
-                {
-                    return target;
-                }
-            }
-
-            return null;
-        }
-
         public static ConfTree Clone(string target, string tag)
         {
-            var tree = GetTree(target);
+            var tree = ReadFile(target);
             var newtree = tree.Clone(tag);
-
             Builder.Xml.Save(newtree as ConfTree, $@"{Path.GetDirectoryName(FileOp.ExtractUrl(tree.XmlDoc.BaseURI))}\{tag}.xml");
-
             return newtree as ConfTree;
         }
 
-        public static ConfTree GetTree(string file)
+        public static ConfTree ReadFile(string file)
         {
             foreach (var kv in Root)
             {
                 if (kv.Key.Contains(file))
                 {
                     return kv.Value;
-                }
-            }
-
-            return null;
-        }
-        public static string GetItem(string file, string path)
-        {
-            foreach (var kv in Root)
-            {
-                if (kv.Key.Contains(file))
-                {
-                    return kv.Value[path];
                 }
             }
 

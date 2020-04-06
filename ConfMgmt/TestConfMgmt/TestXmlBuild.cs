@@ -24,7 +24,7 @@ namespace TestConfMgmt
                 { "Item1", "Value1" },
                 { "Item2", "Value2" },
             }, "DictConf1");
-            GlobalVar.Log.Debug(conf.Show());
+            GlobalVar.Log.Debug(conf.ShowAll());
 
             Assert.IsTrue(conf["Item1"] == "Value1");
             Assert.IsTrue(conf["Item2"] == "Value2");
@@ -39,7 +39,7 @@ namespace TestConfMgmt
         public void TestBuild_Xml_Build_Modify_Save()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
-            GlobalVar.Log.Debug(conf.Show());
+            GlobalVar.Log.Debug(conf.ShowAll());
 
             JbAssert.Equal(conf["Item1"], "Value1");
             JbAssert.Equal(conf["Item2"], "Value2");
@@ -64,7 +64,7 @@ namespace TestConfMgmt
         public void TestBuild_Xml_CheckPath()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Basic.xml");
-            GlobalVar.Log.Debug(conf.Show());
+            GlobalVar.Log.Debug(conf.ShowAll());
 
             JbAssert.Equal(conf.Find("Item1").Path, "/Basic(Basic)/Function1");
             JbAssert.Equal(conf.Find("Item2").Path, "/Basic(Basic)/Function1");
