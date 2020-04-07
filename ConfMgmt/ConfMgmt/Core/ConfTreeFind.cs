@@ -9,6 +9,7 @@ namespace JbConf
     {
         private static Logger _log = new Logger("ConfTreeVisit");
 
+        //没有考虑重复的tag
         private class TagRecorder
         {
             public List<string> Tags = new List<string>();
@@ -120,44 +121,12 @@ namespace JbConf
 
         public ConfItem Find(string target, List<string> tags = null)
         {
-            ConfItem result = null;
-
-            if (!target.Contains(@"/"))
-            {
-                Visit("Find", (item, level) =>
-                {
-                    if (item.Name == target && RunningTag.IsMatch(tags))
-                    {
-                        _log.Debug($"Find {item.Path}/{item.Name}");
-                        result = item;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                });
-            }
-            else
-            {
-                var head_tail = ExtractHead(target);
-
-                var tree = Find(head_tail[0], tags) as ConfTree;
-                if (tree != null)
-                {
-                    var item = tree.Find(head_tail[1]);
-                    if (item != null)
-                    {
-                        return item;
-                    }
-                }
-            }
-
-            return result;
+            return FindStrict(target, tags, false);
         }
-        public ConfItem FindStrict(string target, List<string> tags = null)
+
+        public ConfItem FindStrict(string target, List<string> tags = null, bool strict = true)
         {
-            ConfItem result = null;
+            List<ConfItem> items = new List<ConfItem>();
 
             if (!target.Contains(@"/"))
             {
@@ -166,20 +135,21 @@ namespace JbConf
                     if (item.Name == target && RunningTag.IsMatch(tags))
                     {
                         _log.Debug($"Find {item.Path}/{item.Name}");
-                        result = item;
-                        return true;
+                        items.Add(item);
+                        if (!strict)
+                        {
+                            return true;
+                        }
                     }
-                    else
-                    {
-                        return false;
-                    }
+
+                    return false;
                 });
             }
             else
             {
                 var head_tail = ExtractHead(target);
 
-                var tree = Find(head_tail[0], tags) as ConfTree;
+                var tree = FindStrict(head_tail[0], tags, strict) as ConfTree;
                 if (tree != null)
                 {
                     var item = tree.Find(head_tail[1]);
@@ -190,7 +160,18 @@ namespace JbConf
                 }
             }
 
-            return result;
+            if (items.Count == 1)
+            {
+                return items[0];
+            }
+            else if (items.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                throw new Exception($"FindStrict: {string.Join(Environment.NewLine, items.Select(x => $"{x.Path}"))}");
+            }
         }
 
         private static string[] ExtractHead(string path)
