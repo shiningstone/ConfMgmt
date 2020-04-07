@@ -133,10 +133,10 @@ namespace TestConfMgmt
         }
 
         [TestMethod]
-        public void TestConfMgmt_Setter()
+        public void TestConfMgmt_Setter_NoConflict()
         {
             FileOp.RmDir(GlobalVar.ResultPath);
-            FileOp.CopyDir(GlobalVar.RealConfPath, GlobalVar.ResultPath);
+            FileOp.CopyDir($@"{GlobalVar.SamplePath}/ConfigFiles", GlobalVar.ResultPath);
 
             ConfMgmt.Clear();
             ConfMgmt.Generate(GlobalVar.ResultPath);
@@ -148,6 +148,18 @@ namespace TestConfMgmt
             ConfMgmt.Clear();
             ConfMgmt.Generate(GlobalVar.ResultPath);
             JbAssert.Equal(ConfMgmt.GetItem("K7001_Adr"), "0");
+        }
+        [TestMethod]
+        public void TestConfMgmt_GetterSetter_Conflict()
+        {
+            FileOp.RmDir(GlobalVar.ResultPath);
+            FileOp.CopyDir($@"{GlobalVar.RealConfPath}", GlobalVar.ResultPath);
+
+            ConfMgmt.Clear();
+            ConfMgmt.Generate(GlobalVar.ResultPath);
+            
+            Assert.ThrowsException<Exception>(() => { var result = ConfMgmt.GetItem("K7001_Adr"); });
+            Assert.ThrowsException<Exception>(() => { ConfMgmt.SetItem("K7001_Adr", "0"); });
         }
     }
 }

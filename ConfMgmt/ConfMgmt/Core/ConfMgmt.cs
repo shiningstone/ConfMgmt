@@ -69,15 +69,33 @@ namespace JbConf
         }
         public static void SetItem(string key, string value)
         {
-            List<ConfItem> items = new List<ConfItem>();
+            Dictionary<ConfItem, ConfTree> items = new Dictionary<ConfItem, ConfTree>();
 
             foreach (var tree in Root.Values)
             {
                 var conf = tree.Find(key);
                 if (conf != null)
                 {
-                    tree[key] = value;
+                    items[conf] = tree;
                 }
+            }
+
+            if (items.Count == 1)
+            {
+                var kv = items.First();
+                kv.Value[key] = value;
+            }
+            else if (items.Count == 0)
+            {
+                _log.Error($"No item({key}) found");
+                throw new Exception($"No item({key}) found");
+            }
+            else
+            {
+                string errInfo = $"More than 1 item({key}) found: " +
+                    $"{string.Join(Environment.NewLine, items.Select(x => $"{x.Key.Path}/{x.Key.Name}: {x.Key.Value}"))}";
+                _log.Error(errInfo);
+                throw new Exception(errInfo);
             }
         }
 

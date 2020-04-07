@@ -83,11 +83,5 @@ namespace JbConf
         {
             return $"{Name}:{(Value != null ? Value : Environment.NewLine)}{(Value == null ? "" : Environment.NewLine)}";
         }
-        protected static void DebugDetail(string str)
-        {
-#if !DebugDetailEnable
-            _log.Debug(str);
-#endif
-        }
     }
 }

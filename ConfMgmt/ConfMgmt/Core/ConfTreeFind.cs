@@ -128,7 +128,7 @@ namespace JbConf
                 {
                     if (item.Name == target && RunningTag.IsMatch(tags))
                     {
-                        DebugDetail($"Find {item.Path}/{item.Name}");
+                        _log.Debug($"Find {item.Path}/{item.Name}");
                         result = item;
                         return true;
                     }
@@ -152,6 +152,44 @@ namespace JbConf
                     }
                 }
             }
+
+            return result;
+        }
+        public ConfItem FindStrict(string target, List<string> tags = null)
+        {
+            ConfItem result = null;
+
+            if (!target.Contains(@"/"))
+            {
+                Visit("Find", (item, level) =>
+                {
+                    if (item.Name == target && RunningTag.IsMatch(tags))
+                    {
+                        _log.Debug($"Find {item.Path}/{item.Name}");
+                        result = item;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                });
+            }
+            else
+            {
+                var head_tail = ExtractHead(target);
+
+                var tree = Find(head_tail[0], tags) as ConfTree;
+                if (tree != null)
+                {
+                    var item = tree.Find(head_tail[1]);
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+            }
+
             return result;
         }
 
