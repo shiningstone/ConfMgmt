@@ -26,15 +26,6 @@ namespace ConfViews
             DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf);
             DGV_ConfigItems.Enabled = false;
         }
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            _log.Debug("OnPaint");
-            base.OnPaint(e);
-            _log.Debug("OnPaint Done");
-            SetCellEditMode();
-            _log.Debug("SetCellEditMode Done");
-            DGV_ConfigItems.Enabled = true;
-        }
 
         private bool IsValueOfItem(int row, int col)
         {
@@ -53,20 +44,20 @@ namespace ConfViews
             }
             else
             {
-                var valueFont = new Font(this.Font, FontStyle.Regular);
                 var labelFont = new Font(this.Font, FontStyle.Bold);
+                var valueFont = new Font(this.Font, FontStyle.Regular);
 
                 for (int col = 0; col < DGV_ConfigItems.Columns.Count; col++)
                 {
-                    DGV_ConfigItems.Columns[col].ReadOnly = true;
-
-                    for (int row = 0; row < DGV_ConfigItems.Rows.Count; row++)
+                    if (col < DGV_ConfigItems.ColumnCount - 1)
                     {
-                        if (IsValueOfItem(row, col))
-                        {
-                            DGV_ConfigItems.Rows[row].Cells[col].ReadOnly = false;
-                            DGV_ConfigItems.Rows[row].Cells[col].Style.Font = valueFont;
-                        }
+                        DGV_ConfigItems.Columns[col].ReadOnly = true;
+                        DGV_ConfigItems.Columns[col].DefaultCellStyle.Font = labelFont;
+                    }
+                    else
+                    {
+                        DGV_ConfigItems.Columns[col].ReadOnly = false;
+                        DGV_ConfigItems.Columns[col].DefaultCellStyle.Font = valueFont;
                     }
                 }
             }
@@ -102,6 +93,11 @@ namespace ConfViews
         public void Save(string file)
         {
             //reader.Save(file);
+        }
+
+        private void DGV_ConfigItems_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            SetCellEditMode();
         }
     }
 }

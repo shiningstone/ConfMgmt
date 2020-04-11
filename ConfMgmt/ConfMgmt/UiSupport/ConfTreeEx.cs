@@ -29,9 +29,8 @@ namespace JbConf
                 else
                 {
                     var nodes = item.Path.Split('/');
-
-                    row[nodes.Length - 1] = item.Name;
-                    row[nodes.Length] = !string.IsNullOrEmpty(item.Value) ? item.Value : "";
+                    row[nodes.Length - 1] = item.Name + (string.IsNullOrEmpty(item.Tag) ? "" : $"(tag: {item.Tag})");
+                    row[table.Columns.Count - 1] = !string.IsNullOrEmpty(item.Value) ? item.Value : "";
                 }
 
                 table.Rows.Add(row);

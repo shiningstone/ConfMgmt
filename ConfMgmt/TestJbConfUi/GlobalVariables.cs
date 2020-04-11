@@ -6,8 +6,8 @@ namespace TestJbConfUi
     internal class GlobalVar
     {
         public static string SamplePath = @"D:/ConfMgmt/ConfMgmt/TestSamples";
-        public static string ResultPath = $@"{SamplePath}/Result";
-        public static string RealConfPath = @"D:/TestSystem/Configurations/";
+        public static string ResultPath = $@"TestResults";
+        public static string RealConfPath = @"D:\DailyWork\20200213-Test3D重构\TestSystemConfigs";
         static GlobalVar()
         {
             if (!Directory.Exists(SamplePath))

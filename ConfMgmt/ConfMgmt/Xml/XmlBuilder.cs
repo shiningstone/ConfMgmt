@@ -44,7 +44,7 @@ namespace JbConf
                     }
                     result.Source = Source.Xml;
                     result.XmlDoc = xmlDoc;
-                    _log.Debug(Environment.NewLine + result.ToString());
+                    _log.Debug(Environment.NewLine + result.ShowAll());
 
                     return result;
                 }

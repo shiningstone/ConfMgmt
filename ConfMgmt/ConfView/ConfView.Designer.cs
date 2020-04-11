@@ -51,22 +51,25 @@
             this.DGV_ConfigItems.DefaultCellStyle = dataGridViewCellStyle1;
             this.DGV_ConfigItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DGV_ConfigItems.Location = new System.Drawing.Point(0, 0);
+            this.DGV_ConfigItems.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.DGV_ConfigItems.MultiSelect = false;
             this.DGV_ConfigItems.Name = "DGV_ConfigItems";
             this.DGV_ConfigItems.RowHeadersVisible = false;
             this.DGV_ConfigItems.RowTemplate.Height = 24;
             this.DGV_ConfigItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DGV_ConfigItems.Size = new System.Drawing.Size(490, 380);
+            this.DGV_ConfigItems.Size = new System.Drawing.Size(436, 317);
             this.DGV_ConfigItems.TabIndex = 0;
             this.DGV_ConfigItems.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_ConfigItems_CellValueChanged);
+            this.DGV_ConfigItems.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DGV_ConfigItems_DataBindingComplete);
             // 
             // ConfView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.DGV_ConfigItems);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "ConfView";
-            this.Size = new System.Drawing.Size(490, 380);
+            this.Size = new System.Drawing.Size(436, 317);
             ((System.ComponentModel.ISupportInitialize)(this.DGV_ConfigItems)).EndInit();
             this.ResumeLayout(false);
 
