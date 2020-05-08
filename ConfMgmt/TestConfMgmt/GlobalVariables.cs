@@ -20,9 +20,10 @@ namespace TestConfMgmt
                 Directory.CreateDirectory(ResultPath);
             }
         }
-        public static void Initialize()
+
+        public static void Initialize(ConfMgmt conf)
         {
-            ConfMgmt.Clear();
+            conf.Clear();
         }
         public static Logger Log = new Logger("Tester");
     }

@@ -24,7 +24,13 @@ namespace ConfViews
             _log.Debug("Load ConfTree");
             Conf = conf;
             DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf);
-            DGV_ConfigItems.Enabled = false;
+        }
+
+        public void LoadConf(ConfTree conf)
+        {
+            _log.Debug("Load ConfTree");
+            Conf = conf;
+            DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf);
         }
 
         private bool IsValueOfItem(int row, int col)

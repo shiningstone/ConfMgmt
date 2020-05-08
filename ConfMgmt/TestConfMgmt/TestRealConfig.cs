@@ -7,6 +7,7 @@ namespace TestConfMgmt
     [TestClass]
     public class TestRealConfig
     {
+        private ConfMgmt ConfMgmt = new ConfMgmt();
         [TestMethod]
         public void TestRealConfig_Generate()
         {

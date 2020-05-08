@@ -19,6 +19,7 @@ namespace TestJbConfUi
                 Directory.CreateDirectory(ResultPath);
             }
         }
+        private static ConfMgmt ConfMgmt;
         public static void Initialize()
         {
             ConfMgmt.Clear();

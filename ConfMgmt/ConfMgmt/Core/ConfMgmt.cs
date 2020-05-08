@@ -10,13 +10,13 @@ namespace JbConf
     {
         private static Logger _log = new Logger("ConfMgmt");
 
-        public static Dictionary<string, ConfTree> Root = new Dictionary<string, ConfTree>();
-        public static void Clear()
+        public Dictionary<string, ConfTree> Root = new Dictionary<string, ConfTree>();
+        public void Clear()
         {
             Root = new Dictionary<string, ConfTree>();
         }
 
-        public static void Generate(string path)
+        public void Generate(string path)
         {
             Act.Traverse(path, (file) =>
             {
@@ -24,7 +24,7 @@ namespace JbConf
                 _log.Debug($"{Root[file].ShowAll()}");
             });
         }
-        public static ConfTree ReadFile(string file)
+        public ConfTree ReadFile(string file)
         {
             foreach (var kv in Root)
             {
@@ -36,7 +36,7 @@ namespace JbConf
 
             return null;
         }
-        public static string GetItem(string key)
+        public string GetItem(string key)
         {
             List<ConfItem> items = new List<ConfItem>();
 
@@ -67,7 +67,7 @@ namespace JbConf
                 throw new Exception(errInfo);
             }
         }
-        public static void SetItem(string key, string value)
+        public void SetItem(string key, string value)
         {
             Dictionary<ConfItem, ConfTree> items = new Dictionary<ConfItem, ConfTree>();
 
@@ -99,14 +99,14 @@ namespace JbConf
             }
         }
 
-        public static ConfTree Clone(string target, string tag)
+        public ConfTree Clone(string target, string tag)
         {
             var tree = ReadFile(target);
             var newtree = tree.Clone(tag);
             Builder.Xml.Save(newtree as ConfTree, $@"{Path.GetDirectoryName(FileOp.ExtractUrl(tree.XmlDoc.BaseURI))}\{tag}.xml");
             return newtree as ConfTree;
         }
-        public static void Save(string path = null)
+        public void Save(string path = null)
         {
             if (path == null)
             {

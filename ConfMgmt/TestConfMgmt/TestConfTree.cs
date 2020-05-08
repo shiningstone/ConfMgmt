@@ -13,9 +13,10 @@ namespace TestConfMgmt
         [TestInitialize()]
         public void MyTestInitialize()
         {
-            GlobalVar.Initialize();
+            GlobalVar.Initialize(ConfMgmt);
         }
 
+        private ConfMgmt ConfMgmt = new ConfMgmt();
         [TestMethod]
         public void TestConfTree_AddItemToTree()
         {

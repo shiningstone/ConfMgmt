@@ -16,7 +16,7 @@ namespace TestConfMgmt
         [TestInitialize()]
         public void MyTestInitialize()
         {
-            GlobalVar.Initialize();
+            GlobalVar.Initialize(ConfMgmt);
         }
         public TestConfMgmt()
         {
@@ -65,6 +65,7 @@ namespace TestConfMgmt
         //
         #endregion
 
+        private ConfMgmt ConfMgmt = new ConfMgmt();
         [TestMethod]
         public void TestConfMgmt_Save()
         {

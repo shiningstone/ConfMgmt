@@ -14,9 +14,10 @@ namespace TestConfMgmt
         [TestInitialize()]
         public void MyTestInitialize()
         {
-            GlobalVar.Initialize();
+            GlobalVar.Initialize(ConfMgmt);
         }
 
+        private ConfMgmt ConfMgmt = new ConfMgmt();
         [TestMethod]
         public void TestBuild_Dictionary_Save()
         {
@@ -50,7 +51,7 @@ namespace TestConfMgmt
             Builder.Xml.Save(conf, $@"{GlobalVar.ResultPath}/BasicResult.xml");
             //conf.Save();
 
-            GlobalVar.Initialize();
+            GlobalVar.Initialize(ConfMgmt);
 
             conf = Builder.Xml.Generate($@"{GlobalVar.ResultPath}/BasicResult.xml");
             JbAssert.Equal(conf["Item1"], "Value5");
