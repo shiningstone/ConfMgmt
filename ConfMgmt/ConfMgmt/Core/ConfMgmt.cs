@@ -8,9 +8,36 @@ namespace JbConf
 {
     public class ConfMgmt
     {
-        private static Logger _log = new Logger("ConfMgmt");
+        #region factory
+        private static Dictionary<string, ConfMgmt> _inst = new Dictionary<string, ConfMgmt>()
+        {
+            { "Default", new ConfMgmt("Default") },
+        };
+        public static ConfMgmt Default
+        {
+            get
+            {
+                return _inst["Default"];
+            }
+        }
+        public static ConfMgmt Inst(string name)
+        {
+            if (!_inst.ContainsKey(name))
+            {
+                _inst[name] = new ConfMgmt(name);
+            }
+
+            return _inst[name];
+        }
+        #endregion
+
+        private Logger _log;
 
         public Dictionary<string, ConfTree> Root = new Dictionary<string, ConfTree>();
+        public ConfMgmt(string name = "Default")
+        {
+            _log = new Logger(name);
+        }
         public void Clear()
         {
             Root = new Dictionary<string, ConfTree>();
