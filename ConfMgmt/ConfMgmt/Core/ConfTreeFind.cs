@@ -7,8 +7,7 @@ namespace JbConf
 {
     public partial class ConfTree
     {
-        private static Logger _log = new Logger("ConfTreeVisit");
-
+        private static Logger _dbgLog = new Logger("ConfTreeVisit");
         //没有考虑重复的tag
         private class TagRecorder
         {
@@ -67,7 +66,7 @@ namespace JbConf
 
         private bool VisitTree(string func, Func<ConfItem, int, bool> executor, ConfTree tree)
         {
-            _log.Debug($@"Visit({func}) ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
+            _dbgLog.Debug($@"Visit({func}) ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
             RunningTag.Register(tree);
 
             executor(tree, _depth);
@@ -109,7 +108,7 @@ namespace JbConf
             }
             else
             {
-                _log.Debug($"Visit({func}) ConfItem: {item.Name}({item.Value})");
+                _dbgLog.Debug($"Visit({func}) ConfItem: {item.Name}({item.Value})");
                 if (executor(item, _depth))
                 {
                     return true;
@@ -134,7 +133,7 @@ namespace JbConf
                 {
                     if (item.Name == target && RunningTag.IsMatch(tags))
                     {
-                        _log.Debug($"Find {item.Path}/{item.Name}");
+                        _dbgLog.Debug($"Find {item.Path}/{item.Name}");
                         items.Add(item);
                         if (!strict)
                         {

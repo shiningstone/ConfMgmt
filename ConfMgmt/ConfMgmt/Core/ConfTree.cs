@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Utils;
 
 namespace JbConf
 {
@@ -18,7 +19,7 @@ namespace JbConf
         {
         }
 
-        public string ShowAll()
+        public void ShowAll(Logger log = null)
         {
             string output = $"{Environment.NewLine}";
 
@@ -31,7 +32,8 @@ namespace JbConf
                 output += $"{item}";
                 return false;
             });
-            return output;
+
+            (log == null ? _log : log).Debug(output);
         }
         public override string ToString()
         {

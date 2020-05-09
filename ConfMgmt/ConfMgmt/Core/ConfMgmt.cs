@@ -8,15 +8,16 @@ namespace JbConf
 {
     public class ConfMgmt
     {
-        #region factory
-        private static Dictionary<string, ConfMgmt> _inst = new Dictionary<string, ConfMgmt>()
-        {
-            { "Default", new ConfMgmt("Default") },
-        };
+        #region singleton
+        private static Dictionary<string, ConfMgmt> _inst = new Dictionary<string, ConfMgmt>();
         public static ConfMgmt Default
         {
             get
             {
+                if (!_inst.ContainsKey("Default"))
+                {
+                    _inst["Default"] = new ConfMgmt("Default");
+                }
                 return _inst["Default"];
             }
         }
@@ -29,14 +30,27 @@ namespace JbConf
 
             return _inst[name];
         }
+        public static void Register(string name, ConfMgmt conf)
+        {
+            if (_inst.ContainsKey(name))
+            {
+                conf._log.Warn($"ConfMgmt({name}) already exist");
+            }
+
+            _inst[name] = conf;
+        }
         #endregion
 
         private Logger _log;
 
+        public string Name;
         public Dictionary<string, ConfTree> Root = new Dictionary<string, ConfTree>();
         public ConfMgmt(string name = "Default")
         {
-            _log = new Logger(name);
+            Name = name;
+            _log = new Logger($"{name}Conf");
+
+            Register(name, this);
         }
         public void Clear()
         {
@@ -48,8 +62,14 @@ namespace JbConf
             Act.Traverse(path, (file) =>
             {
                 Root[file] = Builder.Xml.Generate(file);
-                _log.Debug($"{Root[file].ShowAll()}");
             });
+        }
+        public void ShowAll(Logger log = null)
+        {
+            foreach (var tree in Root.Values)
+            {
+                tree.ShowAll(log == null ? _log : log);
+            }
         }
         public ConfTree ReadFile(string file)
         {

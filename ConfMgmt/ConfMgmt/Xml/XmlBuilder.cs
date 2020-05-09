@@ -28,7 +28,7 @@ namespace JbConf
         {
             public static ConfTree Generate(string xmlPath)
             {
-                _log.Info($"Generate({xmlPath})");
+                //_log.Info($"Generate({xmlPath})");
 
                 try
                 {
@@ -44,7 +44,6 @@ namespace JbConf
                     }
                     result.Source = Source.Xml;
                     result.XmlDoc = xmlDoc;
-                    _log.Debug(Environment.NewLine + result.ShowAll());
 
                     return result;
                 }

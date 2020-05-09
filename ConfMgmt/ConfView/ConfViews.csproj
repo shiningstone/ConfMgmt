@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfMgmtComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ConfView.cs">
       <SubType>UserControl</SubType>
     </Compile>
