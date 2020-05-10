@@ -19,17 +19,27 @@ namespace JbConf
         {
         }
 
-        public void ShowAll(Logger log = null)
+        public void ShowAll(Logger log = null, bool compact = true)
         {
-            string output = $"{Environment.NewLine}";
+            string output = compact ? "" : $"{Environment.NewLine}";
 
             Visit("ShowAll", (item, level) =>
             {
-                for (int i = 0; i < level; i++)
+                if (compact)
                 {
-                    output += "--";
+                    if (!string.IsNullOrEmpty(item.Value))
+                    {
+                        output += $"{item.ToString().Trim()};";
+                    }
                 }
-                output += $"{item}";
+                else
+                {
+                    for (int i = 0; i < level; i++)
+                    {
+                        output += "--";
+                    }
+                    output += $"{item}";
+                }
                 return false;
             });
 
