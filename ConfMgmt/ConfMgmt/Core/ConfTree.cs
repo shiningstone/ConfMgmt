@@ -19,7 +19,7 @@ namespace JbConf
         {
         }
 
-        public void ShowAll(Logger log = null, bool compact = true)
+        public string ShowAll(Logger log = null, bool compact = true)
         {
             string output = compact ? "" : $"{Environment.NewLine}";
 
@@ -44,6 +44,7 @@ namespace JbConf
             });
 
             (log == null ? _log : log).Debug(output);
+            return output;
         }
         public override string ToString()
         {

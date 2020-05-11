@@ -85,11 +85,23 @@ namespace JbConf
         }
         public string GetItem(string key)
         {
+            var tags_key = key.Split(':');
+            var tags = new List<string>();
+            if (tags_key.Length > 1)
+            {
+                key = tags_key[1];
+                tags.Add(tags_key[0]);
+            }
+            else
+            {
+                tags = null;
+            }
+
             List<ConfItem> items = new List<ConfItem>();
 
             foreach (var tree in Root.Values)
             {
-                var conf = tree.Find(key);
+                var conf = tree.Find(key, tags);
                 if (conf != null)
                 {
                     items.Add(conf);
