@@ -9,7 +9,9 @@ namespace ConfViews
     {
         public void Bind(ConfMgmt conf)
         {
-            DataSource = conf.Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
+            var list = conf.Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
+            list.Insert(0, "");
+            DataSource = list;
         }
     }
 }

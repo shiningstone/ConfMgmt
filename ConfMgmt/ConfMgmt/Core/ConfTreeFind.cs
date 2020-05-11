@@ -59,7 +59,10 @@ namespace JbConf
         {
             get
             {
-                var str = ToString();
+                if (_maxDepth == 0)
+                {
+                    Visit("Walk", (item, level) => { return false; });
+                }
                 return _maxDepth + 1;
             }
         }
