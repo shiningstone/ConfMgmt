@@ -169,7 +169,7 @@ namespace JbConf
             }
         }
 
-        public ConfTree Merge(ConfTree tree)
+        public ConfTree Append(ConfTree tree)
         {
             foreach (var item in tree.Items)
             {
@@ -179,9 +179,38 @@ namespace JbConf
                 }
                 else
                 {
-                    _log.Warn($"ConfTree({this.Name}) Merge Failed : Item({item.Name}) already exist({item.Value})");
+                    _log.Warn($"ConfTree({this.Name}) Append Failed : Item({item.Name}) already exist({item.Value})");
                 }
             }
+            return this;
+        }
+
+        //tree覆盖this
+        public ConfTree Merge(ConfTree tree, List<string> targets = null)
+        {
+            foreach (var item in tree.Items)
+            {
+                if (targets != null && !targets.Contains(item.Name))
+                {
+                    continue;
+                }
+
+                if (item is ConfTree)
+                {
+                    continue;
+                }
+
+                var orig = Find(item.Name);
+                if (null != orig)
+                {
+                    orig.Value = item.Value;
+                }
+                else
+                {
+                    Add(new ConfItem(item.Name, item.Value));
+                }
+            }
+
             return this;
         }
     }

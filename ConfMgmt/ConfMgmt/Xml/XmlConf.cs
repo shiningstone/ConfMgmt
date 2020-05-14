@@ -35,7 +35,12 @@ namespace JbConf
             }
             else
             {
-                return new ConfItem(node.Name, node.FirstChild.InnerText);
+                var item = new ConfItem(node.Name, node.FirstChild.InnerText);
+                foreach (XmlAttribute attr in (node as XmlElement).Attributes)
+                {
+                    item.Attributes[attr.Name] = attr.Value;
+                }
+                return item;
             }
         }
         public static ConfTree ToTree(XmlNode node, XmlDoc doc = null)
