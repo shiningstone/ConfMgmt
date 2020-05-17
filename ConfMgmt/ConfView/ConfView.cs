@@ -91,14 +91,11 @@ namespace ConfViews
             var nodes = nodePath.Take(nodePath.Count - 1);
             return string.Join(@"/", nodes.Reverse());
         }
+
         private void DGV_ConfigItems_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             string path = GetPath(sender as DataGridView, e);
             Conf[path] = DGV_ConfigItems[e.ColumnIndex, e.RowIndex].Value as string;
-        }
-        public void Save(string file)
-        {
-            //reader.Save(file);
         }
 
         private void DGV_ConfigItems_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)

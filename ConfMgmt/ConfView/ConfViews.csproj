@@ -45,13 +45,15 @@
     <Compile Include="ConfMgmtComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ConfUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="ConfView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ConfView.Designer.cs">
       <DependentUpon>ConfView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
