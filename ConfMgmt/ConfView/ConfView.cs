@@ -20,10 +20,12 @@ namespace ConfViews
         public ConfView(ConfTree conf)
         {
             InitializeComponent();
+            Dock = DockStyle.Fill;
 
             _log.Debug("Load ConfTree");
             Conf = conf;
             DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf);
+            DGV_ConfigItems.Columns[DGV_ConfigItems.ColumnCount - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
 
         public void LoadConf(ConfTree conf)
@@ -31,6 +33,7 @@ namespace ConfViews
             _log.Debug("Load ConfTree");
             Conf = conf;
             DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf);
+            DGV_ConfigItems.Columns[DGV_ConfigItems.ColumnCount - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
 
         private bool IsValueOfItem(int row, int col)

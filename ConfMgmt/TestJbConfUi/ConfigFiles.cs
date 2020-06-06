@@ -6,14 +6,14 @@ namespace TestJbConfUi
 {
     public partial class ConfigFiles : Form
     {
+        ConfView confView;
         public ConfigFiles()
         {
             InitializeComponent();
 
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/MultiLevel.xml");
-            var view = new ConfView(conf);
-            view.Dock = DockStyle.Fill;
-            Controls.Add(view);
+            confView = new ConfView(conf);
+            Controls.Add(confView);
         }
     }
 }
