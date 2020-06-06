@@ -71,7 +71,7 @@ namespace JbConf
                 tree.ShowAll(log == null ? _log : log);
             }
         }
-        public ConfTree ReadFile(string file)
+        public ConfTree GetTree(string file)
         {
             foreach (var kv in Root)
             {
@@ -160,7 +160,7 @@ namespace JbConf
 
         public ConfTree Clone(string target, string tag)
         {
-            var tree = ReadFile(target);
+            var tree = GetTree(target);
             var newtree = tree.Clone(tag);
             Builder.Xml.Save(newtree as ConfTree, $@"{Path.GetDirectoryName(FileOp.ExtractUrl(tree.XmlDoc.BaseURI))}\{tag}.xml");
             return newtree as ConfTree;
