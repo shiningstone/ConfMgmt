@@ -17,12 +17,15 @@ namespace ConfViews
         }
 
         private bool IsBinded = false;
+        private string InstName;
+        private string RootPath;
         private Action<ConfTree> OnChange;
         private Func<bool> OnSave;
 
         private void Backup(string file)
         {
-            var backdir = $@"{Path.GetDirectoryName(file)}\..\ProductFileHistory";
+            var dir = $@"{Path.GetDirectoryName(file)}\";
+            var backdir = $@"{RootPath}History";
             if (!Directory.Exists(backdir))
             {
                 Directory.CreateDirectory(backdir);
@@ -38,31 +41,32 @@ namespace ConfViews
                 Utils.UI.Help.NoticeFailure($"当前配置文件（{file}）备份失败: {ex}");
             }
         }
-        public void Bind(string path, Action<ConfTree> onChange, Func<bool> onSave = null)
+        public void Bind(string name, string path, Action<ConfTree> onChange, Func<bool> onSave = null)
         {
             IsBinded = true;
 
             OnChange = onChange;
             OnSave = onSave;
 
-            path = @"Configs\ProductFile";
             if (path == null)
             {
                 return;
             }
 
-            ConfMgmt.Inst("ProductFile").Generate(path);
-            CMB_ProductFileList.DataSource = ConfMgmt.Inst("ProductFile").Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
+            InstName = name;
+            RootPath = path;
+            ConfMgmt.Inst(InstName).Generate(path, true);
+            CMB_ProductFileList.DataSource = ConfMgmt.Inst(InstName).Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
             OnChange?.Invoke(SelectedConf);
         }
 
         private string SelectedName => CMB_ProductFileList.Text;
-        private string SelectedPath => ConfMgmt.Inst("ProductFile").Root.Keys.ToList().Find(x => CMB_ProductFileList.Text == Path.GetFileNameWithoutExtension(x));
-        public ConfTree SelectedConf => ConfMgmt.Inst("ProductFile").Root[SelectedPath];//jiangbo: dangerous
+        private string SelectedPath => ConfMgmt.Inst(InstName).Root.Keys.ToList().Find(x => CMB_ProductFileList.Text == Path.GetFileNameWithoutExtension(x));
+        public ConfTree SelectedConf => ConfMgmt.Inst(InstName).Root[SelectedPath];//jiangbo: dangerous
 
         private void Save()
         {
-            ConfMgmt.Inst("ProductFile").Root[SelectedPath].Save();
+            ConfMgmt.Inst(InstName).Root[SelectedPath].Save();
             Backup(SelectedPath);
 
             OnChange?.Invoke(SelectedConf);
@@ -77,12 +81,12 @@ namespace ConfViews
 
             var path = SelectedPath.Replace(SelectedName, name);
 
-            var newconf = ConfMgmt.Inst("ProductFile").Root[SelectedPath].Clone() as ConfTree;
+            var newconf = ConfMgmt.Inst(InstName).Root[SelectedPath].Clone() as ConfTree;
             newconf.Save(path);
             Backup(path);
 
-            ConfMgmt.Inst("ProductFile").Generate(Path.GetDirectoryName(path));
-            CMB_ProductFileList.DataSource = ConfMgmt.Inst("ProductFile").Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
+            ConfMgmt.Inst(InstName).Generate(Path.GetDirectoryName(path), true);
+            CMB_ProductFileList.DataSource = ConfMgmt.Inst(InstName).Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
             CMB_ProductFileList.Text = name;
             
             OnChange?.Invoke(SelectedConf);
