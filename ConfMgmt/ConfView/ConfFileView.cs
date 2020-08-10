@@ -9,9 +9,9 @@ using Utils;
 
 namespace ConfViews
 {
-    public partial class PFileCtrlView : UserControl
+    public partial class ConfFileView : UserControl
     {
-        public PFileCtrlView()
+        public ConfFileView()
         {
             InitializeComponent();
         }

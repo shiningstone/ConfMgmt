@@ -1,6 +1,6 @@
 ﻿namespace ConfViews
 {
-    partial class PFileCtrlView
+    partial class ConfFileView
     {
         /// <summary> 
         /// 必需的设计器变量。

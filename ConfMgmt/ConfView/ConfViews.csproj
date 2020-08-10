@@ -56,11 +56,11 @@
     <Compile Include="ConfView.Designer.cs">
       <DependentUpon>ConfView.cs</DependentUpon>
     </Compile>
-    <Compile Include="PfileCtrlView.cs">
+    <Compile Include="ConfFileView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="PfileCtrlView.Designer.cs">
-      <DependentUpon>PfileCtrlView.cs</DependentUpon>
+    <Compile Include="ConfFileView.Designer.cs">
+      <DependentUpon>ConfFileView.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -78,8 +78,8 @@
     <EmbeddedResource Include="ConfView.resx">
       <DependentUpon>ConfView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PfileCtrlView.resx">
-      <DependentUpon>PfileCtrlView.cs</DependentUpon>
+    <EmbeddedResource Include="ConfFileView.resx">
+      <DependentUpon>ConfFileView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
