@@ -57,12 +57,18 @@ namespace JbConf
             Root = new Dictionary<string, ConfTree>();
         }
 
-        public void Generate(string path)
+        public void Generate(string path, bool forceUpdate = false)
         {
-            Act.Traverse(path, (file) =>
+            if (forceUpdate || Root.Count == 0)
             {
-                Root[file] = Builder.Xml.Generate(file);
-            });
+                Act.Traverse(path, (file) =>
+                {
+                    if (file.Contains(".xml"))
+                    {
+                        Root[file] = Builder.Xml.Generate(file);
+                    }
+                });
+            }
         }
         public void ShowAll(Logger log = null)
         {
