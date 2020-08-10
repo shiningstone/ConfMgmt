@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -54,6 +56,12 @@
     <Compile Include="ConfView.Designer.cs">
       <DependentUpon>ConfView.cs</DependentUpon>
     </Compile>
+    <Compile Include="PfileCtrlView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PfileCtrlView.Designer.cs">
+      <DependentUpon>PfileCtrlView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +77,9 @@
   <ItemGroup>
     <EmbeddedResource Include="ConfView.resx">
       <DependentUpon>ConfView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PfileCtrlView.resx">
+      <DependentUpon>PfileCtrlView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
