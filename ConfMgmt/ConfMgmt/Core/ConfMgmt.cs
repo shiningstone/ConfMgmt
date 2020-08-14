@@ -89,7 +89,7 @@ namespace JbConf
 
             return null;
         }
-        public string GetItem(string key)
+        public string GetItem(string key, bool strict = true)
         {
             var tags_key = key.Split(':');
             var tags = new List<string>();
@@ -122,7 +122,12 @@ namespace JbConf
             if (items.Count == 0)
             {
                 _log.Error($"No item({key}) found");
-                throw new Exception($"No item({key}) found");
+                if (strict)
+                {
+                    throw new Exception($"No item({key}) found");
+                }
+
+                return null;
             }
             else
             {
