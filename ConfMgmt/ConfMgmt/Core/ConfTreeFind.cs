@@ -121,6 +121,41 @@ namespace JbConf
             return false;
         }
 
+        public List<ConfItem> FindClassify(string target, List<string> tags = null)
+        {
+            List<ConfItem> items = new List<ConfItem>();
+
+            if (!target.Contains(@"/"))
+            {
+                Visit("Find", (item, level) =>
+                {
+                    if (item.Name == target && RunningTag.IsMatch(tags))
+                    {
+                        _dbgLog.Debug($"Find {item.Path}/{item.Name}");
+                        items.Add(item);
+                    }
+
+                    return false;
+                });
+            }
+            else
+            {
+                var head_tail = ExtractHead(target);
+
+                var tree = FindStrict(head_tail[0], tags, true) as ConfTree;
+                if (tree != null)
+                {
+                    var item = tree.FindClassify(head_tail[1], tags);
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            return items;
+        }
+
         public ConfItem Find(string target, List<string> tags = null)
         {
             return FindStrict(target, tags, false);
