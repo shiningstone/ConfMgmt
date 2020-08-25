@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DefaultSpec>
+	<ViolationCode>
+		<Ok>0</Ok>
+		<Invalid>1</Invalid>
+		<AboveMax>2</AboveMax>
+		<BelowMin>3</BelowMin>
+	</ViolationCode>
+	<Specs>
+		<Spec>
+		  <Item>Ith</Item>
+		  <Max>0</Max>
+		  <Min>-99999</Min>
+		</Spec>
+		<Spec>
+		  <Item>SE</Item>
+		  <Max>99999</Max>
+		  <Min>-99999</Min>
+		</Spec>
+  </Specs>
+  <Specs tag ="HighTemp">
+    <Spec>
+      <Item>SE</Item>
+      <Max>99999</Max>
+      <Min>-99999</Min>
+    </Spec>
+  </Specs>
+</DefaultSpec>

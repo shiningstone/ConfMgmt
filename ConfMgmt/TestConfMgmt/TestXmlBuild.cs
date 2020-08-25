@@ -99,6 +99,12 @@ namespace TestConfMgmt
             JbAssert.Equal(conf[@"Tag2:Func/Item1"], "2.1");
         }
         [TestMethod]
+        public void TestBuild_Xml_Tag_Derive()
+        {
+            ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/TagDerive.xml");
+            Debug.WriteLine(conf.ToString());
+        }
+        [TestMethod]
         public void TestBuild_Xml_Tag_FindItem()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/Tag.xml");

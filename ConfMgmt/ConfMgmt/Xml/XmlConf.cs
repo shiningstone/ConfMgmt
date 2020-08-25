@@ -75,6 +75,14 @@ namespace JbConf
                     {
                         result.Add(ToTree(n, doc));
                     }
+                    else
+                    {
+                        var ele = (n as XmlElement);
+                        if (ele != null && ele.Attributes.GetNamedItem("tag") != null)
+                        {
+                            result.Add(ToTree(n, doc));
+                        }
+                    }
                 }
             }
 
