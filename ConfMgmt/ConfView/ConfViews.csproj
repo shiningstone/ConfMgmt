@@ -44,23 +44,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfMgmtComboBox.cs">
+    <Compile Include="ConfSelector.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ConfUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ConfView.cs">
+    <Compile Include="ConfMgmtView\ConfView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ConfView.Designer.cs">
+    <Compile Include="ConfMgmtView\ConfView.Designer.cs">
       <DependentUpon>ConfView.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConfFileView.cs">
+    <Compile Include="ConfMgmtView\ConfFileController.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ConfFileView.Designer.cs">
-      <DependentUpon>ConfFileView.cs</DependentUpon>
+    <Compile Include="ConfMgmtView\ConfFileController.Designer.cs">
+      <DependentUpon>ConfFileController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConfMgmtView\ConfMgmtView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ConfMgmtView\ConfMgmtView.Designer.cs">
+      <DependentUpon>ConfMgmtView.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -75,11 +81,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConfView.resx">
+    <EmbeddedResource Include="ConfMgmtView\ConfView.resx">
       <DependentUpon>ConfView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ConfFileView.resx">
-      <DependentUpon>ConfFileView.cs</DependentUpon>
+    <EmbeddedResource Include="ConfMgmtView\ConfFileController.resx">
+      <DependentUpon>ConfFileController.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfMgmtView\ConfMgmtView.resx">
+      <DependentUpon>ConfMgmtView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

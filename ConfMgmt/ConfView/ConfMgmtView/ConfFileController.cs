@@ -9,9 +9,9 @@ using Utils;
 
 namespace ConfViews
 {
-    public partial class ConfFileView : UserControl
+    public partial class ConfFileController : UserControl
     {
-        public ConfFileView()
+        public ConfFileController()
         {
             InitializeComponent();
         }

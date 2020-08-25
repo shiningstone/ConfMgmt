@@ -5,7 +5,7 @@ using JbConf;
 
 namespace ConfViews
 {
-    public class ConfMgmtComboBox : ComboBox
+    public class ConfSelector : ComboBox
     {
         public void Bind(ConfMgmt conf)
         {
