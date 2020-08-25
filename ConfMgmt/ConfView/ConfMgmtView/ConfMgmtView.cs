@@ -4,6 +4,10 @@ using JbConf;
 
 namespace ConfViews
 {
+    /// <summary>
+    /// 1. 通过ConfFileController在ConfView显示ConfItem
+    /// 2. 通过ConfFileController修改/新建ConfTree
+    /// </summary>
     public partial class ConfMgmtView : UserControl
     {
         public ConfMgmtView()
@@ -14,12 +18,12 @@ namespace ConfViews
         private bool IsBinded = false;
         private Action OnUpdate;
 
-        public void Bind(string path, Action onUpdate = null)
+        public void Bind(string title, string confType, string path, Action onUpdate = null)
         {
             IsBinded = true;
             OnUpdate = onUpdate;
 
-            pfileCtrlView.Bind("ProductFile", path, Change);
+            fileController.Bind(title, confType, path, Change);
         }
 
         private void Change(ConfTree conf)

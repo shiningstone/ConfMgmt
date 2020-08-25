@@ -9,6 +9,9 @@ using JbConf;
 
 namespace ConfViews
 {
+    /// <summary>
+    /// 显示ConfTree下所有ConfItem
+    /// </summary>
     public partial class ConfView : UserControl
     {
         private static Logger _log = new Logger("ConfView");

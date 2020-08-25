@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.confView1 = new ConfViews.ConfView();
-            this.pfileCtrlView = new ConfViews.ConfFileController();
+            this.fileController = new ConfViews.ConfFileController();
             this.SuspendLayout();
             // 
             // confView1
@@ -42,17 +42,17 @@
             // 
             // productFileListView1
             // 
-            this.pfileCtrlView.Location = new System.Drawing.Point(19, 14);
-            this.pfileCtrlView.Margin = new System.Windows.Forms.Padding(4);
-            this.pfileCtrlView.Name = "productFileListView1";
-            this.pfileCtrlView.Size = new System.Drawing.Size(651, 36);
-            this.pfileCtrlView.TabIndex = 24;
+            this.fileController.Location = new System.Drawing.Point(19, 14);
+            this.fileController.Margin = new System.Windows.Forms.Padding(4);
+            this.fileController.Name = "productFileListView1";
+            this.fileController.Size = new System.Drawing.Size(651, 36);
+            this.fileController.TabIndex = 24;
             // 
             // ProductMgmtView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.pfileCtrlView);
+            this.Controls.Add(this.fileController);
             this.Controls.Add(this.confView1);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ProductMgmtView";
@@ -64,6 +64,6 @@
         #endregion
 
         private ConfViews.ConfView confView1;
-        private ConfViews.ConfFileController pfileCtrlView;
+        private ConfViews.ConfFileController fileController;
     }
 }

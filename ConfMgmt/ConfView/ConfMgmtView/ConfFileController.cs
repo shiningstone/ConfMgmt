@@ -9,8 +9,15 @@ using Utils;
 
 namespace ConfViews
 {
+    /// <summary>
+    /// 1. 选择ConfTree(OnChange)
+    /// 2. 修改/新建ConfTree(OnSave)
+    /// </summary>
     public partial class ConfFileController : UserControl
     {
+        private Action<ConfTree> OnChange;
+        private Func<bool> OnSave;
+
         public ConfFileController()
         {
             InitializeComponent();
@@ -19,8 +26,6 @@ namespace ConfViews
         private bool IsBinded = false;
         private string InstName;
         private string RootPath;
-        private Action<ConfTree> OnChange;
-        private Func<bool> OnSave;
 
         private void Backup(string file)
         {
@@ -41,7 +46,8 @@ namespace ConfViews
                 Utils.UI.Help.NoticeFailure($"当前配置文件（{file}）备份失败: {ex}");
             }
         }
-        public void Bind(string name, string path, Action<ConfTree> onChange, Func<bool> onSave = null)
+
+        public void Bind(string title, string confType, string path, Action<ConfTree> onChange, Func<bool> onSave = null)
         {
             IsBinded = true;
 
@@ -53,7 +59,9 @@ namespace ConfViews
                 return;
             }
 
-            InstName = name;
+            LBL_Title.Text = title;
+
+            InstName = confType;
             RootPath = path;
             ConfMgmt.Inst(InstName).Generate(path, true);
             CMB_ProductFileList.DataSource = ConfMgmt.Inst(InstName).Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();

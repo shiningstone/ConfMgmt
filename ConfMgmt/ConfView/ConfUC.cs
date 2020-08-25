@@ -4,9 +4,11 @@ using JbConf;
 
 namespace ConfViews
 {
+    /// <summary>
+    /// 查找conf内各个item的同名控件并赋值
+    /// </summary>
     public class ConfUC : UserControl
     {
-        //查找conf内各个item的同名控件并赋值
         public void Apply(ConfTree conf)
         {
             conf.Visit("Apply", (item, level) =>
