@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using JbConf;
 
@@ -24,6 +25,11 @@ namespace ConfViews
             OnUpdate = onUpdate;
 
             fileController.Bind(title, confType, path, Change);
+        }
+
+        public void SetOrder(List<string> names)
+        {
+            fileController.SetOrder(names);
         }
 
         private void Change(ConfTree conf)
