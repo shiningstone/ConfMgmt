@@ -5,7 +5,10 @@ using JbConf;
 
 namespace ConfViews
 {
-    public class ConfMgmtComboBox : ComboBox
+    /// <summary>
+    /// 提供ConfMgmt下所有ConfTree选项
+    /// </summary>
+    public class ConfSelector : ComboBox
     {
         public void Bind(ConfMgmt conf)
         {

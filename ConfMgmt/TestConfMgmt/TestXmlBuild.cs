@@ -45,6 +45,7 @@ namespace TestConfMgmt
             JbAssert.Equal(conf["Item3"], "Value3");
             JbAssert.Equal(conf["Item4"], "Value4");
             JbAssert.Equal(conf["Item5"], "Value5");
+            JbAssert.Equal(conf["Item6"], "");
 
             conf["Item1"] = "Value5";
             JbAssert.Equal(conf["Item1"], "Value5");
@@ -97,6 +98,12 @@ namespace TestConfMgmt
             JbAssert.Equal(conf[@"Default:Func/Item1"], "0");
             JbAssert.Equal(conf[@"Tag1:Func/Item1"], "1.1");
             JbAssert.Equal(conf[@"Tag2:Func/Item1"], "2.1");
+        }
+        [TestMethod]
+        public void TestBuild_Xml_Tag_Derive()
+        {
+            ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/TagDerive.xml");
+            Debug.WriteLine(conf.ToString());
         }
         [TestMethod]
         public void TestBuild_Xml_Tag_FindItem()

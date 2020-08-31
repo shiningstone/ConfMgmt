@@ -24,7 +24,7 @@ namespace JbConf
         {
             if (node.ChildNodes.Count == 0)
             {
-                var item = new ConfItem(node.Name);
+                var item = new ConfItem(node.Name, "");
 
                 foreach (XmlAttribute attr in (node as XmlElement).Attributes)
                 {
@@ -74,6 +74,14 @@ namespace JbConf
                     else if (n.ChildNodes.Count == 1 && IsItem(n.ChildNodes[0]))
                     {
                         result.Add(ToTree(n, doc));
+                    }
+                    else
+                    {
+                        var ele = (n as XmlElement);
+                        if (ele != null && ele.Attributes.GetNamedItem("tag") != null)
+                        {
+                            result.Add(ToTree(n, doc));
+                        }
                     }
                 }
             }

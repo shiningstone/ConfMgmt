@@ -6,12 +6,20 @@ using System.IO;
 using Microsoft.VisualBasic;
 using JbConf;
 using Utils;
+using System.Collections.Generic;
 
 namespace ConfViews
 {
-    public partial class ConfFileView : UserControl
+    /// <summary>
+    /// 1. 选择ConfTree(OnChange)
+    /// 2. 修改/新建ConfTree(OnSave)
+    /// </summary>
+    public partial class ConfFileController : UserControl
     {
-        public ConfFileView()
+        private Action<ConfTree> OnChange;
+        private Func<bool> OnSave;
+
+        public ConfFileController()
         {
             InitializeComponent();
         }
@@ -19,8 +27,60 @@ namespace ConfViews
         private bool IsBinded = false;
         private string InstName;
         private string RootPath;
-        private Action<ConfTree> OnChange;
-        private Func<bool> OnSave;
+        private List<string> Order = new List<string>();
+        private List<string> ReOrder(List<string> names)
+        {
+            var reorder = new List<string>();
+
+            foreach (var name in Order)
+            {
+                if (names.Contains(name))
+                {
+                    reorder.Add(name);
+                }
+            }
+
+            foreach (var name in names)
+            {
+                if (!reorder.Contains(name))
+                {
+                    reorder.Add(name);
+                }
+            }
+
+            return reorder;
+        }
+
+        public void Bind(string title, string confType, string path, Action<ConfTree> onChange, Func<bool> onSave = null)
+        {
+            IsBinded = true;
+
+            OnChange = onChange;
+            OnSave = onSave;
+
+            if (path == null)
+            {
+                return;
+            }
+
+            LBL_Title.Text = title;
+            InstName = confType;
+            RootPath = path;
+
+            ConfMgmt.Inst(InstName).Generate(path, true);
+            var names = ReOrder(ConfMgmt.Inst(InstName).Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList());
+            
+            CMB_ProductFileList.DataSource = names;
+            OnChange?.Invoke(SelectedConf);
+        }
+        public void SetOrder(List<string> names)
+        {
+            Order = names;
+        }
+
+        private string SelectedName => CMB_ProductFileList.Text;
+        private string SelectedPath => ConfMgmt.Inst(InstName).Root.Keys.ToList().Find(x => CMB_ProductFileList.Text == Path.GetFileNameWithoutExtension(x));
+        public ConfTree SelectedConf => ConfMgmt.Inst(InstName).Root[SelectedPath];//jiangbo: dangerous
 
         private void Backup(string file)
         {
@@ -41,29 +101,6 @@ namespace ConfViews
                 Utils.UI.Help.NoticeFailure($"当前配置文件（{file}）备份失败: {ex}");
             }
         }
-        public void Bind(string name, string path, Action<ConfTree> onChange, Func<bool> onSave = null)
-        {
-            IsBinded = true;
-
-            OnChange = onChange;
-            OnSave = onSave;
-
-            if (path == null)
-            {
-                return;
-            }
-
-            InstName = name;
-            RootPath = path;
-            ConfMgmt.Inst(InstName).Generate(path, true);
-            CMB_ProductFileList.DataSource = ConfMgmt.Inst(InstName).Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
-            OnChange?.Invoke(SelectedConf);
-        }
-
-        private string SelectedName => CMB_ProductFileList.Text;
-        private string SelectedPath => ConfMgmt.Inst(InstName).Root.Keys.ToList().Find(x => CMB_ProductFileList.Text == Path.GetFileNameWithoutExtension(x));
-        public ConfTree SelectedConf => ConfMgmt.Inst(InstName).Root[SelectedPath];//jiangbo: dangerous
-
         private void Save()
         {
             ConfMgmt.Inst(InstName).Root[SelectedPath].Save();
@@ -73,7 +110,7 @@ namespace ConfViews
         }
         private void SaveAs()
         {
-            var name = Interaction.InputBox("", "ProductFile名称", "", 100, 200);
+            var name = Interaction.InputBox("", "配置名称", "", 100, 200);
             if (string.IsNullOrEmpty(name))
             {
                 return;
