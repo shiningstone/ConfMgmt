@@ -24,7 +24,7 @@ namespace JbConf
         {
             if (node.ChildNodes.Count == 0)
             {
-                var item = new ConfItem(node.Name);
+                var item = new ConfItem(node.Name, "");
 
                 foreach (XmlAttribute attr in (node as XmlElement).Attributes)
                 {
