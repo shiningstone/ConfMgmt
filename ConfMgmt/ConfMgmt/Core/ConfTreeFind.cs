@@ -197,17 +197,29 @@ namespace JbConf
                 }
             }
 
-            if (items.Count == 1)
-            {
-                return items[0];
-            }
-            else if (items.Count == 0)
+            if (items.Count == 0)
             {
                 return null;
             }
+            else if (items.Count == 1)
+            {
+                return items[0];
+            }
             else
             {
-                throw new Exception($"FindStrict: {string.Join(Environment.NewLine, items.Select(x => $"{x.Path}"))}");
+                if (tags == null)
+                {
+                    items = items.FindAll(x => string.IsNullOrEmpty(x.Tag));
+                }
+
+                if (items.Count == 1)
+                {
+                    return items[0];
+                }
+                else
+                {
+                    throw new Exception($"FindStrict: {string.Join(Environment.NewLine, items.Select(x => $"{x.Path}"))}");
+                }
             }
         }
 

@@ -28,9 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.DGV_ConfigItems = new System.Windows.Forms.DataGridView();
+            this.MNU_Add = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.MNU_Del = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.添加ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.DGV_ConfigItems)).BeginInit();
+            this.MNU_Add.SuspendLayout();
+            this.MNU_Del.SuspendLayout();
             this.SuspendLayout();
             // 
             // DGV_ConfigItems
@@ -59,8 +66,37 @@
             this.DGV_ConfigItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DGV_ConfigItems.Size = new System.Drawing.Size(178, 116);
             this.DGV_ConfigItems.TabIndex = 0;
+            this.DGV_ConfigItems.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DGV_ConfigItems_CellMouseDown);
             this.DGV_ConfigItems.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_ConfigItems_CellValueChanged);
             this.DGV_ConfigItems.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DGV_ConfigItems_DataBindingComplete);
+            // 
+            // MNU_Add
+            // 
+            this.MNU_Add.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.MNU_Add.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.添加ToolStripMenuItem});
+            this.MNU_Add.Name = "MNU_Add";
+            this.MNU_Add.Size = new System.Drawing.Size(109, 28);
+            // 
+            // MNU_Del
+            // 
+            this.MNU_Del.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.MNU_Del.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.删除ToolStripMenuItem});
+            this.MNU_Del.Name = "MNU_Del";
+            this.MNU_Del.Size = new System.Drawing.Size(211, 56);
+            // 
+            // 添加ToolStripMenuItem
+            // 
+            this.添加ToolStripMenuItem.Name = "添加ToolStripMenuItem";
+            this.添加ToolStripMenuItem.Size = new System.Drawing.Size(108, 24);
+            this.添加ToolStripMenuItem.Text = "添加";
+            // 
+            // 删除ToolStripMenuItem
+            // 
+            this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.删除ToolStripMenuItem.Text = "删除";
             // 
             // ConfView
             // 
@@ -71,6 +107,8 @@
             this.Name = "ConfView";
             this.Size = new System.Drawing.Size(178, 116);
             ((System.ComponentModel.ISupportInitialize)(this.DGV_ConfigItems)).EndInit();
+            this.MNU_Add.ResumeLayout(false);
+            this.MNU_Del.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -78,5 +116,9 @@
         #endregion
 
         private System.Windows.Forms.DataGridView DGV_ConfigItems;
+        private System.Windows.Forms.ContextMenuStrip MNU_Add;
+        private System.Windows.Forms.ToolStripMenuItem 添加ToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip MNU_Del;
+        private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem;
     }
 }

@@ -62,6 +62,21 @@ namespace JbConf
                 return result;
             }
         }
+        public List<ConfTree> SubTrees
+        {
+            get
+            {
+                var result = new List<ConfTree>();
+                Visit("SubTrees", (item, level) => {
+                    if (level > 0 && item is ConfTree)
+                    {
+                        result.Add(item as ConfTree);
+                    }
+                    return false;
+                });
+                return result;
+            }
+        }
 
         public void Add(ConfItem item)
         {
