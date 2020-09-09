@@ -127,34 +127,87 @@ namespace ConfViews
             SetCellEditMode();
         }
 
-        private void DGV_ConfigItems_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        private int GetValidColIdx(int rowIdx, int colIdx)
+        {
+            var row = (DGV_ConfigItems.DataSource as DataTable).Rows[rowIdx];
+            if (colIdx == row.Table.Columns.Count - 1 && !string.IsNullOrEmpty(row[colIdx] as string))
+            {
+                return colIdx;
+            }
+            else
+            {
+                for (int i = row.Table.Columns.Count - 1; i >= 0; i--)
+                {
+                    if (!string.IsNullOrEmpty(row[i] as string))
+                    {
+                        return i + 1;
+                    }
+                }
+
+                return row.Table.Columns.Count - 1;
+            }
+        }
+
+        private ConfItem SelectedItem;
+        private void DGV_ConfigItems_CellRightClicked(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                //若行已是选中状态就不再进行设置
-                if (DGV_ConfigItems.Rows[e.RowIndex].Selected == false)
+                if (e.RowIndex == 0)
                 {
-                    DGV_ConfigItems.ClearSelection();
-                    DGV_ConfigItems.Rows[e.RowIndex].Selected = true;
-                }
-                //只选中一行时设置活动单元格
-                if (DGV_ConfigItems.SelectedRows.Count == 1)
-                {
-                    DGV_ConfigItems.CurrentCell = DGV_ConfigItems.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    return;
                 }
 
-                string path = GetPath(sender as DataGridView, e.RowIndex, e.ColumnIndex);
+                try
+                {
+                    //若行已是选中状态就不再进行设置
+                    if (DGV_ConfigItems.Rows[e.RowIndex].Selected == false)
+                    {
+                        DGV_ConfigItems.ClearSelection();
+                        DGV_ConfigItems.Rows[e.RowIndex].Selected = true;
+                    }
+                    //只选中一行时设置活动单元格
+                    if (DGV_ConfigItems.SelectedRows.Count == 1)
+                    {
+                        DGV_ConfigItems.CurrentCell = DGV_ConfigItems.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    }
 
-                var item = Conf.Find(path);
-                if (item is ConfTree)
-                {
-                    MNU_Del.Show(MousePosition.X, MousePosition.Y);
+                    var colIdx = GetValidColIdx(e.RowIndex, e.ColumnIndex);
+                    string path = GetPath(sender as DataGridView, e.RowIndex, colIdx);
+                    SelectedItem = Conf.GetItem(path);
+
+                    if (SelectedItem is ConfTree)
+                    {
+                        if (SelectedItem.Attributes.ContainsKey("allow-edit"))
+                        {
+                            MNU_TreeOps.Show(MousePosition.X, MousePosition.Y);
+                        }
+                    }
+                    else
+                    {
+                        if (SelectedItem.Parent.Attributes.ContainsKey("allow-edit"))
+                        {
+                            MNU_ItemOps.Show(MousePosition.X, MousePosition.Y);
+                        }
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MNU_Add.Show(MousePosition.X, MousePosition.Y);
+                    _log.Warn($"DGV_ConfigItems_CellMouseDown({e.RowIndex},{e.ColumnIndex})", ex);
                 }
             }
+        }
+
+        private void TreeOp_AddSon_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void TreeOp_RemoveThis_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void ItemOp_RemoveThis_Click(object sender, EventArgs e)
+        {
         }
     }
 }

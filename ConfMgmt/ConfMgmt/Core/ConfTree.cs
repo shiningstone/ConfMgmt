@@ -83,6 +83,22 @@ namespace JbConf
             item.Parent = this;
             Sons.Add(item);
         }
+
+        public ConfItem GetItem(string key)
+        {
+            var index = new Index(key);
+
+            var item = Find(index.Path, index.Tag != null ? index.Tag.Split('&').ToList() : null);
+            if (item != null)
+            {
+                return item;
+            }
+            else
+            {
+                throw new Exception($"ConfTree({Name}) doesn't contains key {key}");
+            }
+        }
+
         public string this[string key]
         {
             get
