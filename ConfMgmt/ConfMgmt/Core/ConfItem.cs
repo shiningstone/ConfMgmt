@@ -60,7 +60,14 @@ namespace JbConf
                 }
             }
         }
-
+        public string SelfPath
+        {
+            get
+            {
+                string tag = string.IsNullOrEmpty(Tag) ? "" : $"({Parent.Tag})";
+                return $"{Path}/{Name}{tag}";
+            }
+        }
         public ConfItem(string name, string value = null)
         {
             Name = name;

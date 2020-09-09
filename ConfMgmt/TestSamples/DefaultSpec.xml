@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DefaultSpec>
+  <Specs allow-edit = "True">
+    <Ith allow-edit = "True">
+      <Max>2</Max>
+      <Min>1.5</Min>
+    </Ith>
+    <SE allow-edit = "True">
+      <Max>0</Max>
+      <Min>-1</Min>
+    </SE>
+  </Specs>
+  <Specs allow-edit = "True" tag = "HighTemp">
+    <Ith allow-edit = "True">
+      <Max>99999</Max>
+      <Min>-99999</Min>
+    </Ith>
+  </Specs>
+  <ViolationCode>
+    <Ok>0</Ok>
+    <Invalid>1</Invalid>
+    <AboveMax>2</AboveMax>
+    <BelowMin>3</BelowMin>
+  </ViolationCode>
+</DefaultSpec>

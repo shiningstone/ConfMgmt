@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="GlobalVariables.cs" />
     <Compile Include="TestConfMgmt.cs" />
+    <Compile Include="TestConfNodeEditor.cs" />
     <Compile Include="TestConfTree.cs" />
     <Compile Include="TestConfTreeFind.cs" />
     <Compile Include="TestXmlBuild.cs" />

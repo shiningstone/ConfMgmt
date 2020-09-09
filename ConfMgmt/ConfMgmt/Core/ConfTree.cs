@@ -83,6 +83,16 @@ namespace JbConf
             item.Parent = this;
             Sons.Add(item);
         }
+        public void Remove(ConfItem item)
+        {
+            Sons.Remove(item);
+
+            if (XmlDoc != null)
+            {
+                XmlDoc.Remove(item.SelfPath);
+                Save();
+            }
+        }
 
         public ConfItem GetItem(string key)
         {
