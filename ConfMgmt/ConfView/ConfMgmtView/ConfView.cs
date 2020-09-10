@@ -201,10 +201,10 @@ namespace ConfViews
 
         private void Menu_AddSon_Click(object sender, EventArgs e)
         {
-            var form = new ConfEditForm(Conf, SelectedItem);
-            form.ShowDialog();
-
-            LoadConf(Builder.Xml.Generate(Conf.XmlDoc.BaseURI.Substring(@"file:///".Length)));
+            var form = new ConfEditForm(Conf, SelectedItem, () => {
+                LoadConf(Builder.Xml.Generate(Conf.XmlDoc.BaseURI.Substring(@"file:///".Length)));
+            });
+            form.Show();
         }
 
         private void Menu_RemoveThis_Click(object sender, EventArgs e)

@@ -71,7 +71,7 @@ namespace JbConf
                     {
                         result.Add(ToTree(n, doc));
                     }
-                    else if (n.ChildNodes.Count == 1 && IsItem(n.ChildNodes[0]))
+                    else if (n.ChildNodes.Count == 1 && n.ChildNodes[0] is XmlElement)
                     {
                         result.Add(ToTree(n, doc));
                     }

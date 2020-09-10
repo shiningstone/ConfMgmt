@@ -27,11 +27,13 @@ namespace ConfViews
 
         private ConfTree _root;
         private ConfTree _tree;
+        private Action _onChange;
 
-        public void Bind(ConfTree root, ConfItem item)
+        public void Bind(ConfTree root, ConfItem item, Action onChange)
         {
             _root = root;
             _tree = item as ConfTree;
+            _onChange = onChange;
 
             LBL_FileInfo.Text = Path.GetFileNameWithoutExtension(root.XmlDoc.BaseURI);
             LBL_SelectedNode.Text = $"为{ExtractTopNode(item.SelfPath)}添加";
@@ -94,6 +96,8 @@ namespace ConfViews
 
             _tree.AddNode(newnode);
             _root.Save();
+
+            _onChange.Invoke();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace TestJbConfUi
         {
             InitializeComponent();
 
-            ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/MultiLevel.xml");
+            ConfTree conf = Builder.Xml.Generate($@"D:\DieTester\DieTester\DieTester\bin\Debug\Configs\SpecFile\DefaultSpec.xml");
             confView = new ConfView(conf);
             Controls.Add(confView);
         }

@@ -34,7 +34,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(510, 329);
+            this.ClientSize = new System.Drawing.Size(930, 511);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "ConfigFiles";
             this.Text = "ConfigFiles";

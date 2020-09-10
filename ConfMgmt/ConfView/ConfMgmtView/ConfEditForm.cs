@@ -18,11 +18,13 @@ namespace ConfViews
             InitializeComponent();
         }
 
-        public ConfEditForm(ConfTree root, ConfItem item)
+        public ConfEditForm(ConfTree root, ConfItem item, Action onChange)
         {
             InitializeComponent();
 
-            confEditor1.Bind(root, item);
+            confEditor1.Bind(root, item, () => {
+                onChange.Invoke();
+            });
         }
     }
 }
