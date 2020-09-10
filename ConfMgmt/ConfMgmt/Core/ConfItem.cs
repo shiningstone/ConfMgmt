@@ -75,10 +75,18 @@ namespace JbConf
         }
         public virtual ConfItem Clone(string tag = null)
         {
-            return new ConfItem(Name, Value)
-            { 
+            var item = new ConfItem(Name, Value)
+            {
                 Tag = tag == null ? Tag : tag,
             };
+
+            item.Attributes = Attributes;
+
+            return item;
+        }
+        public virtual void Clear()
+        {
+            Value = "";
         }
 
         public virtual bool Equals(ConfItem item)

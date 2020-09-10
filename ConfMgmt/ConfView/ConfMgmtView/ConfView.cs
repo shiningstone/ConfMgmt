@@ -176,18 +176,19 @@ namespace ConfViews
                     string path = GetPath(sender as DataGridView, e.RowIndex, colIdx);
                     SelectedItem = Conf.GetItem(path);
 
-                    if (SelectedItem is ConfTree)
+                    if (SelectedItem.Attributes.ContainsKey("allow"))
                     {
-                        if (SelectedItem.Attributes.ContainsKey("allow-edit"))
+                        switch (SelectedItem.Attributes["allow"])
                         {
-                            MNU_TreeOps.Show(MousePosition.X, MousePosition.Y);
-                        }
-                    }
-                    else
-                    {
-                        if (SelectedItem.Parent.Attributes.ContainsKey("allow-edit"))
-                        {
-                            MNU_ItemOps.Show(MousePosition.X, MousePosition.Y);
+                            case "both":
+                                MNU_BothOps.Show(MousePosition.X, MousePosition.Y);
+                                break;
+                            case "add":
+                                MNU_AddOps.Show(MousePosition.X, MousePosition.Y);
+                                break;
+                            case "remove":
+                                MNU_RemoveOps.Show(MousePosition.X, MousePosition.Y);
+                                break;
                         }
                     }
                 }
@@ -198,16 +199,19 @@ namespace ConfViews
             }
         }
 
-        private void TreeOp_AddSon_Click(object sender, EventArgs e)
+        private void Menu_AddSon_Click(object sender, EventArgs e)
         {
+            var form = new ConfEditForm(Conf, SelectedItem);
+            form.ShowDialog();
+
+            LoadConf(Builder.Xml.Generate(Conf.XmlDoc.BaseURI.Substring(@"file:///".Length)));
         }
 
-        private void TreeOp_RemoveThis_Click(object sender, EventArgs e)
+        private void Menu_RemoveThis_Click(object sender, EventArgs e)
         {
-        }
+            Conf.RemoveNode(SelectedItem);
 
-        private void ItemOp_RemoveThis_Click(object sender, EventArgs e)
-        {
+            LoadConf(Builder.Xml.Generate(Conf.XmlDoc.BaseURI.Substring(@"file:///".Length)));
         }
     }
 }

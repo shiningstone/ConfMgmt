@@ -44,6 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfMgmtView\ConfEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfMgmtView\ConfEditForm.Designer.cs">
+      <DependentUpon>ConfEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConfMgmtView\ConfEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ConfMgmtView\ConfEditor.Designer.cs">
+      <DependentUpon>ConfEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConfSelector.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -81,6 +93,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ConfMgmtView\ConfEditForm.resx">
+      <DependentUpon>ConfEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfMgmtView\ConfEditor.resx">
+      <DependentUpon>ConfEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ConfMgmtView\ConfView.resx">
       <DependentUpon>ConfView.cs</DependentUpon>
     </EmbeddedResource>

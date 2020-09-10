@@ -176,6 +176,7 @@ namespace JbConf
                 Source = Source,
                 Value = Value,
                 Tag = tag == null ? Tag : tag,
+                Attributes = Attributes,
 
                 Refer = this,
             };
@@ -187,6 +188,17 @@ namespace JbConf
 
             return conf;
         }
+
+        public override void Clear()
+        {
+            Name = "";
+
+            foreach (var son in Sons)
+            {
+                son.Clear();
+            }
+        }
+
         public override bool Equals(ConfItem tree)
         {
             var target = tree as ConfTree;

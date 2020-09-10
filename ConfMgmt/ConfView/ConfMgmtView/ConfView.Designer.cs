@@ -31,14 +31,17 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.DGV_ConfigItems = new System.Windows.Forms.DataGridView();
-            this.MNU_TreeOps = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.MNU_BothOps = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.TreeOp_Add = new System.Windows.Forms.ToolStripMenuItem();
             this.TreeOp_Remove = new System.Windows.Forms.ToolStripMenuItem();
-            this.MNU_ItemOps = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.MNU_RemoveOps = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ItemOp_Remove = new System.Windows.Forms.ToolStripMenuItem();
+            this.MNU_AddOps = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.添加子节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.DGV_ConfigItems)).BeginInit();
-            this.MNU_TreeOps.SuspendLayout();
-            this.MNU_ItemOps.SuspendLayout();
+            this.MNU_BothOps.SuspendLayout();
+            this.MNU_RemoveOps.SuspendLayout();
+            this.MNU_AddOps.SuspendLayout();
             this.SuspendLayout();
             // 
             // DGV_ConfigItems
@@ -71,43 +74,58 @@
             this.DGV_ConfigItems.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_ConfigItems_CellValueChanged);
             this.DGV_ConfigItems.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DGV_ConfigItems_DataBindingComplete);
             // 
-            // MNU_TreeOps
+            // MNU_BothOps
             // 
-            this.MNU_TreeOps.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.MNU_TreeOps.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MNU_BothOps.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.MNU_BothOps.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TreeOp_Add,
             this.TreeOp_Remove});
-            this.MNU_TreeOps.Name = "MNU_TreeOps";
-            this.MNU_TreeOps.Size = new System.Drawing.Size(211, 80);
+            this.MNU_BothOps.Name = "MNU_TreeOps";
+            this.MNU_BothOps.Size = new System.Drawing.Size(154, 52);
             // 
             // TreeOp_Add
             // 
             this.TreeOp_Add.Name = "TreeOp_Add";
-            this.TreeOp_Add.Size = new System.Drawing.Size(210, 24);
+            this.TreeOp_Add.Size = new System.Drawing.Size(153, 24);
             this.TreeOp_Add.Text = "添加子节点";
-            this.TreeOp_Add.Click += new System.EventHandler(this.TreeOp_AddSon_Click);
+            this.TreeOp_Add.Click += new System.EventHandler(this.Menu_AddSon_Click);
             // 
             // TreeOp_Remove
             // 
             this.TreeOp_Remove.Name = "TreeOp_Remove";
-            this.TreeOp_Remove.Size = new System.Drawing.Size(210, 24);
+            this.TreeOp_Remove.Size = new System.Drawing.Size(153, 24);
             this.TreeOp_Remove.Text = "删除本节点";
-            this.TreeOp_Remove.Click += new System.EventHandler(this.TreeOp_RemoveThis_Click);
+            this.TreeOp_Remove.Click += new System.EventHandler(this.Menu_RemoveThis_Click);
             // 
-            // MNU_ItemOps
+            // MNU_RemoveOps
             // 
-            this.MNU_ItemOps.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.MNU_ItemOps.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MNU_RemoveOps.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.MNU_RemoveOps.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ItemOp_Remove});
-            this.MNU_ItemOps.Name = "MNU_ItemOps";
-            this.MNU_ItemOps.Size = new System.Drawing.Size(109, 28);
+            this.MNU_RemoveOps.Name = "MNU_ItemOps";
+            this.MNU_RemoveOps.Size = new System.Drawing.Size(109, 28);
             // 
             // ItemOp_Remove
             // 
             this.ItemOp_Remove.Name = "ItemOp_Remove";
-            this.ItemOp_Remove.Size = new System.Drawing.Size(210, 24);
+            this.ItemOp_Remove.Size = new System.Drawing.Size(108, 24);
             this.ItemOp_Remove.Text = "删除";
-            this.ItemOp_Remove.Click += new System.EventHandler(this.ItemOp_RemoveThis_Click);
+            this.ItemOp_Remove.Click += new System.EventHandler(this.Menu_RemoveThis_Click);
+            // 
+            // MNU_AddOps
+            // 
+            this.MNU_AddOps.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.MNU_AddOps.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.添加子节点ToolStripMenuItem});
+            this.MNU_AddOps.Name = "MNU_AddOps";
+            this.MNU_AddOps.Size = new System.Drawing.Size(211, 56);
+            // 
+            // 添加子节点ToolStripMenuItem
+            // 
+            this.添加子节点ToolStripMenuItem.Name = "添加子节点ToolStripMenuItem";
+            this.添加子节点ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.添加子节点ToolStripMenuItem.Text = "添加子节点";
+            this.添加子节点ToolStripMenuItem.Click += new System.EventHandler(this.Menu_AddSon_Click);
             // 
             // ConfView
             // 
@@ -118,8 +136,9 @@
             this.Name = "ConfView";
             this.Size = new System.Drawing.Size(178, 116);
             ((System.ComponentModel.ISupportInitialize)(this.DGV_ConfigItems)).EndInit();
-            this.MNU_TreeOps.ResumeLayout(false);
-            this.MNU_ItemOps.ResumeLayout(false);
+            this.MNU_BothOps.ResumeLayout(false);
+            this.MNU_RemoveOps.ResumeLayout(false);
+            this.MNU_AddOps.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -127,10 +146,12 @@
         #endregion
 
         private System.Windows.Forms.DataGridView DGV_ConfigItems;
-        private System.Windows.Forms.ContextMenuStrip MNU_TreeOps;
-        private System.Windows.Forms.ContextMenuStrip MNU_ItemOps;
+        private System.Windows.Forms.ContextMenuStrip MNU_BothOps;
+        private System.Windows.Forms.ContextMenuStrip MNU_RemoveOps;
         private System.Windows.Forms.ToolStripMenuItem ItemOp_Remove;
         private System.Windows.Forms.ToolStripMenuItem TreeOp_Add;
         private System.Windows.Forms.ToolStripMenuItem TreeOp_Remove;
+        private System.Windows.Forms.ContextMenuStrip MNU_AddOps;
+        private System.Windows.Forms.ToolStripMenuItem 添加子节点ToolStripMenuItem;
     }
 }
