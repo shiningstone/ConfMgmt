@@ -115,7 +115,7 @@ namespace TestConfMgmt
             JbAssert.Equal(conf["DutsCount"], "40");
             JbAssert.Equal(conf["new:DutsCount"], "20");
 
-            conf.XmlDoc.Remove(conf.Find("DutsCount", new List<string>() { "new" }).Path);
+            conf.XmlDoc.RemoveNode(conf.Find("DutsCount", new List<string>() { "new" }).Path);
             conf.XmlDoc.Save($@"{GlobalVar.SamplePath}/ConfigFiles/Configs/SystemSetting.xml");
         }
 

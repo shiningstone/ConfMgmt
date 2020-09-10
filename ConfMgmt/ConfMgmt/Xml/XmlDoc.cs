@@ -1,27 +1,40 @@
-﻿using System.Xml;
+﻿using System.IO;
+using System.Xml;
 
 namespace JbConf
 {
     public class XmlDoc : XmlDocument
     {
-        public XmlDoc AddSibling(ConfTree refer, ConfTree tree)
+        private bool IsMatch(XmlNode node, string[] name_tag)
         {
-            XmlNode sibling = XmlOp.Find(this, tree.Name);
-            if (sibling == ChildNodes[ChildNodes.Count - 1])//非唯一
+            var ele = node as XmlElement;
+            if (ele != null)
             {
-                RemoveChild(sibling);
-
-                var parent = new ConfTree($"{tree.Name}s");
-                parent.Add(refer);
-                parent.Add(tree);
-                AppendChild(XmlConf.CreateNode(this, parent));
+                if (node.Name == name_tag[0])
+                {
+                    if (name_tag.Length == 1)
+                    {
+                        var eleTag = ele.GetAttribute("tag");
+                        if (string.IsNullOrEmpty(eleTag) || eleTag == node.Name || eleTag == "Default")
+                        {
+                            return true;
+                        }
+                        else if (ele.ParentNode is XmlDocument && eleTag == Path.GetFileNameWithoutExtension(BaseURI))
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (ele.GetAttribute("tag") == name_tag[1])
+                        {
+                            return true;
+                        }
+                    }
+                }
             }
-            else
-            {
-                sibling.ParentNode.AppendChild(XmlConf.CreateNode(this, tree));
-            }
 
-            return this;
+            return false;
         }
 
         public XmlNode[] Find(string[] item)
@@ -41,7 +54,7 @@ namespace JbConf
 
                 foreach (XmlNode son in temp.ChildNodes)
                 {
-                    if (son.Name == name_tag[0] && (name_tag.Length == 1 || (son as XmlElement).GetAttribute("tag") == name_tag[1]))
+                    if (IsMatch(son, name_tag))
                     {
                         nodes[i] = son;
                         temp = son;
@@ -57,13 +70,9 @@ namespace JbConf
             }
             foreach (XmlNode node in temp.ChildNodes)
             {
-                var element = node as XmlElement;
-                if (element != null)
+                if (IsMatch(node, name_tag))
                 {
-                    if (element.Name == name_tag[0] && (name_tag.Length == 1 || element.GetAttribute("tag") == name_tag[1]))
-                    {
-                        nodes[i] = node;
-                    }
+                    nodes[i] = node;
                 }
             }
 
@@ -86,7 +95,37 @@ namespace JbConf
                 (node as XmlElement).GetAttributeNode(attr).Value = value;
             }
         }
-        public void Remove(string path)
+
+        //添加同名节点
+        public XmlDoc AddSibling(ConfTree refer, ConfTree tree)
+        {
+            XmlNode sibling = XmlOp.Find(this, tree.Name);
+            if (sibling == ChildNodes[ChildNodes.Count - 1])//非唯一
+            {
+                RemoveChild(sibling);
+
+                var parent = new ConfTree($"{tree.Name}s");
+                parent.Add(refer);
+                parent.Add(tree);
+                AppendChild(XmlConf.CreateNode(this, parent));
+            }
+            else
+            {
+                sibling.ParentNode.AppendChild(XmlConf.CreateNode(this, tree));
+            }
+
+            return this;
+        }
+
+        //添加节点
+        public void AddNode(string parentPath, ConfItem item)
+        {
+            parentPath = parentPath.Substring(0, 1) == @"/" ? parentPath.Substring(1) : parentPath;
+            var nodes = Find(parentPath.Split('/'));
+            nodes[nodes.Length - 1].AppendChild(XmlConf.CreateNode(this, item));
+        }
+        //删除节点
+        public void RemoveNode(string path)
         {
             path = path.Substring(0, 1) == @"/" ? path.Substring(1) : path;
             var nodes = Find(path.Split('/'));

@@ -18,17 +18,46 @@ namespace TestConfMgmt
 
         private ConfMgmt ConfMgmt = new ConfMgmt();
         [TestMethod]
-        public void TestConfNodeEditor_AddNode()
+        public void TestConfNodeEditor_AddNode_ToDefaultTagParent()
         {
             ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/DefaultSpec.xml");
             conf.Save($@"{GlobalVar.ResultPath}\root.xml");
+            conf = Builder.Xml.Generate($@"{GlobalVar.ResultPath}\root.xml");
 
-            ConfTree node = new ConfTree("BR");
-            node.Add(new ConfItem("Max", "10"));
-            node.Add(new ConfItem("Min", "0"));
-            (conf.GetItem(@"Specs") as ConfTree).Add(node);
+            var node = conf.Find(@"Specs/BR");
+            Assert.IsTrue(node == null);
 
+            ConfTree newnode = new ConfTree("BR");
+            newnode.Add(new ConfItem("Max", "10"));
+            newnode.Add(new ConfItem("Min", "0"));
+            var tree = conf.GetItem(@"Specs") as ConfTree;
+            tree.AddNode(newnode);
             conf.Save();
+
+            conf = Builder.Xml.Generate($@"{GlobalVar.ResultPath}\root.xml");
+            node = conf.Find(@"Specs/BR");
+            Assert.IsTrue(node != null);
+        }
+        [TestMethod]
+        public void TestConfNodeEditor_AddNode_ToTagParent()
+        {
+            ConfTree conf = Builder.Xml.Generate($@"{GlobalVar.SamplePath}/DefaultSpec.xml");
+            conf.Save($@"{GlobalVar.ResultPath}\root.xml");
+            conf = Builder.Xml.Generate($@"{GlobalVar.ResultPath}\root.xml");
+
+            var node = conf.Find(@"Specs/BR", new List<string>() { "HighTemp" });
+            Assert.IsTrue(node == null);
+
+            ConfTree newnode = new ConfTree("BR");
+            newnode.Add(new ConfItem("Max", "10"));
+            newnode.Add(new ConfItem("Min", "0"));
+            var tree = conf.GetItem(@"HighTemp:Specs") as ConfTree;
+            tree.AddNode(newnode);
+            conf.Save();
+
+            conf = Builder.Xml.Generate($@"{GlobalVar.ResultPath}\root.xml");
+            node = conf.Find(@"Specs/BR", new List<string>() { "HighTemp" });
+            Assert.IsTrue(node != null);
         }
         [TestMethod]
         public void TestConfNodeEditor_RemoveNode()
@@ -40,7 +69,7 @@ namespace TestConfMgmt
             var node = conf.Find(@"Specs/Ith", new List<string>() { "HighTemp" });
             Assert.IsTrue(node != null);
 
-            conf.Remove(node);
+            conf.RemoveNode(node);
 
             conf = Builder.Xml.Generate($@"{GlobalVar.ResultPath}\root.xml");
             node = conf.Find(@"Specs/Ith", new List<string>() { "HighTemp" });

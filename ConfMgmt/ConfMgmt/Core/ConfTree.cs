@@ -83,13 +83,26 @@ namespace JbConf
             item.Parent = this;
             Sons.Add(item);
         }
-        public void Remove(ConfItem item)
+
+        public void AddNode(ConfItem item)
+        {
+            item.Parent = this;
+            Sons.Add(item);
+
+            if (XmlDoc != null)
+            {
+                XmlDoc.AddNode(item.Path, item);
+                Save();
+            }
+        }
+
+        public void RemoveNode(ConfItem item)
         {
             Sons.Remove(item);
 
             if (XmlDoc != null)
             {
-                XmlDoc.Remove(item.SelfPath);
+                XmlDoc.RemoveNode(item.SelfPath);
                 Save();
             }
         }
