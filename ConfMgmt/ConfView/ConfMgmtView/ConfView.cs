@@ -127,6 +127,7 @@ namespace ConfViews
             SetCellEditMode();
         }
 
+        private ConfItem SelectedItem;
         private int GetValidColIdx(int rowIdx, int colIdx)
         {
             var row = (DGV_ConfigItems.DataSource as DataTable).Rows[rowIdx];
@@ -147,8 +148,47 @@ namespace ConfViews
                 return row.Table.Columns.Count - 1;
             }
         }
+        private ConfItem GetSelectedItem(int rowIdx, int colIdx)
+        {
+            var validCol = GetValidColIdx(rowIdx, colIdx);
+            string path = GetPath(DGV_ConfigItems, rowIdx, validCol);
+            SelectedItem = Conf.GetItem(path);
 
-        private ConfItem SelectedItem;
+            return SelectedItem;
+        }
+
+        private void UpdateSelection(int rowIdx, int colIdx)
+        {
+            if (DGV_ConfigItems.Rows[rowIdx].Selected == false)//若行已是选中状态就不再进行设置
+            {
+                DGV_ConfigItems.ClearSelection();
+                DGV_ConfigItems.Rows[rowIdx].Selected = true;
+            }
+
+            if (DGV_ConfigItems.SelectedRows.Count == 1)//只选中一行时设置活动单元格
+            {
+                DGV_ConfigItems.CurrentCell = DGV_ConfigItems.Rows[rowIdx].Cells[colIdx];
+            }
+        }
+
+        private void DGV_ConfigItems_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                UpdateSelection(e.RowIndex, e.ColumnIndex);
+
+                SelectedItem = GetSelectedItem(e.RowIndex, e.ColumnIndex);
+                if (SelectedItem.Attributes.ContainsKey("comment"))
+                {
+                    DGV_ConfigItems.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = SelectedItem.Attributes["comment"];
+                }
+            }
+            catch (Exception ex)
+            {
+                //_log.Warn($"DGV_ConfigItems_CellMouseEnter({e.RowIndex},{e.ColumnIndex})", ex);
+            }
+        }
+
         private void DGV_ConfigItems_CellRightClicked(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -160,22 +200,9 @@ namespace ConfViews
 
                 try
                 {
-                    //若行已是选中状态就不再进行设置
-                    if (DGV_ConfigItems.Rows[e.RowIndex].Selected == false)
-                    {
-                        DGV_ConfigItems.ClearSelection();
-                        DGV_ConfigItems.Rows[e.RowIndex].Selected = true;
-                    }
-                    //只选中一行时设置活动单元格
-                    if (DGV_ConfigItems.SelectedRows.Count == 1)
-                    {
-                        DGV_ConfigItems.CurrentCell = DGV_ConfigItems.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                    }
+                    UpdateSelection(e.RowIndex, e.ColumnIndex);
 
-                    var colIdx = GetValidColIdx(e.RowIndex, e.ColumnIndex);
-                    string path = GetPath(sender as DataGridView, e.RowIndex, colIdx);
-                    SelectedItem = Conf.GetItem(path);
-
+                    SelectedItem = GetSelectedItem(e.RowIndex, e.ColumnIndex);
                     if (SelectedItem.Attributes.ContainsKey("allow"))
                     {
                         switch (SelectedItem.Attributes["allow"])
@@ -210,7 +237,6 @@ namespace ConfViews
         private void Menu_RemoveThis_Click(object sender, EventArgs e)
         {
             Conf.RemoveNode(SelectedItem);
-
             LoadConf(Builder.Xml.Generate(Conf.XmlDoc.BaseURI.Substring(@"file:///".Length)));
         }
     }
