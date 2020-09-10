@@ -56,6 +56,8 @@ namespace Utils.UI
 
         public void LoadFiles(string[] files)
         {
+            LV_FileInfos.Items.Clear();
+
             foreach (string path in files)
             {
                 var file = new FileInfo(path);

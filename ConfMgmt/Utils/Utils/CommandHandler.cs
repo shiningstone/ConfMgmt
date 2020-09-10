@@ -33,7 +33,7 @@ namespace Utils
                 }
                 else
                 {
-                    Param.ToString();
+                    str += Param.ToString();
                 }
             }
             return str;
@@ -63,7 +63,7 @@ namespace Utils
         {
             if (Id != "Ok" || showOk)
             {
-                SupportMessageBox.NoticeFailure(ToString());
+                Help.NoticeFailure(ToString());
             }
         }
     }

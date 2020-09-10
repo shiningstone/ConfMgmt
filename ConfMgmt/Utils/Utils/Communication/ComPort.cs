@@ -13,21 +13,18 @@ namespace Utils
         //share SerialPort with CommandPort
         public static Dictionary<string, object> lockDict = new Dictionary<string, object>();
 
-        private Logger _log = new Logger("ComPort");
+        public static bool IsSuccessiveMode = false;
+
+        private static Logger _log = new Logger("ComPort");
         private readonly SerialPort _serialPort;
         private bool IsRecv { get; set; }
         public string Name;
 
         static ComPort()
         {
-            try
-            {
-                FailCommandRepeat = Int32.Parse(ConfigurationManager.AppSettings["FailCommandRepeat"]);
-            }
-            catch (Exception ex)
-            {
-                new Logger("ComPort").Warn("Failed to read FailCommandRepeat", ex);
-            }
+            ProjectConfig.Read(nameof(FailCommandRepeat), ref FailCommandRepeat);
+            ProjectConfig.Read(nameof(IsSuccessiveMode), ref IsSuccessiveMode);
+            _log.Debug($"ComPort: FailCommandRepeat:{FailCommandRepeat}; IsSuccessiveMode: {IsSuccessiveMode}");
         }
         public ComPort(string name, int baudrate = 19200, StopBits stopBits = StopBits.One, Parity parity = Parity.None)
         {
@@ -119,7 +116,10 @@ namespace Utils
                 }
                 finally
                 {
-                    _serialPort?.Close();
+                    if (!IsSuccessiveMode)
+                    {
+                        _serialPort?.Close();
+                    }
                 }
             }
         }
@@ -186,7 +186,7 @@ namespace Utils
                 return true;
             }
 
-            const int waitStepMs = 20;
+            const int waitStepMs = 50;
             var silentTime = 0;
             var buffer = new List<byte>();
 

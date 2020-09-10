@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace Utils
 {
     public enum ErrCode
     {
         Ok,
+        Fail,
+
         UserCanceled,
         EventIgnored,
         ErrorParamValue,
@@ -25,38 +28,24 @@ namespace Utils
         WaterTempOverRange,
         TemperatureOverRange,
         #endregion
-        #region burn-in check
-        /* burn-in check */
+        #region spec check
         SpecViolation,
-
-        CouponColdWarn,
-        CouponHotWarn,
-        CouponColdError,
-        CouponHotError,
-
-        CurrentLowWarn,
-        CurrentHighWarn,
-        CurrentLowError,
-        CurrentHighError,
-
-        CouponDiffOverRange,
-        CouponTempTooHighToWater,
-        WaterTempTooHighToCoupon,
-        CouponTempRiseTooFast,
-        CouponTempUnstable,
-        WaterTempUnstable,
-
         TooHighError,
         TooHighWarn,
         TooLowWarn,
         TooLowError,
         #endregion
 
+        Abort,
+        Blocked,
         InvalidValue,
+
         UndefinedError,
     };
     public class ErrInfo
     {
+        public static ErrInfo Ok = new ErrInfo(ErrCode.Ok);
+
         public static string NullString = "";
         public static string FailString = "N/A";
 
@@ -87,6 +76,16 @@ namespace Utils
         public override string ToString()
         {
             return string.Format("{0}:{1}", Code, Info);
+        }
+
+        public ErrInfo ShowAnyAbnormal()
+        {
+            if (Code != ErrCode.Ok)
+            {
+                MessageBox.Show($"{Info}");
+            }
+
+            return this;
         }
     }
     public class BIException : Exception

@@ -27,23 +27,31 @@ namespace Utils
             _log.Error("Failed to " + action);
             return false;
         }
-        public static void Traverse(string path, Action<string> action)
+        public static void Traverse(string path, Action<string> a)
         {
             DirectoryInfo root = new DirectoryInfo(path);
             DirectoryInfo[] dirs = root.GetDirectories();
+
             if (dirs.Length == 0)
             {
                 var files = root.GetFiles();
-                foreach (var f in files)
+                try
                 {
-                    action(f.FullName);
+                    foreach (var file in files.ToList().Select(x => x.FullName))
+                    {
+                        a(file);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"Test {root.FullName} failed", ex);
                 }
             }
             else
             {
                 foreach (DirectoryInfo dir in dirs)
                 {
-                    Traverse(dir.FullName, action);
+                    Traverse(dir.FullName, a);
                 }
             }
         }

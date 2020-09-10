@@ -43,6 +43,26 @@ namespace Utils
             else
                 return config.AppSettings.Settings[key].Value;
         }
+        public static void Read(string itemName, ref string item)
+        {
+            string itemValue = "";
+            try
+            {
+                itemValue = Get(itemName);
+                if (!string.IsNullOrEmpty(itemValue))
+                {
+                    item = itemValue;
+                }
+                else
+                {
+                    item = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to read config({itemName}:{itemValue})");
+            }
+        }
         public static void Read(string itemName, ref int item)
         {
             string itemValue = "";
@@ -131,6 +151,22 @@ namespace Utils
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to read config({itemName}:{itemValue}) - {ex}");
+            }
+        }
+        public static void Read(string itemName, ref bool item)
+        {
+            string itemValue = "";
+            try
+            {
+                itemValue = Get(itemName);
+                if (!string.IsNullOrEmpty(itemValue))
+                {
+                    item = bool.Parse(itemValue);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to read config({itemName}:{itemValue})");
             }
         }
         public static void Write(string name, int item)

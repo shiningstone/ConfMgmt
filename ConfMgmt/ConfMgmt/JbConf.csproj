@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\ConfNodeEditor.cs" />
     <Compile Include="Core\ConfItem.cs" />
     <Compile Include="Core\ConfMgmt.cs" />
     <Compile Include="Core\ConfTreeFind.cs" />

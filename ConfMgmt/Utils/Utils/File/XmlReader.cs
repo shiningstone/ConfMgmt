@@ -65,7 +65,6 @@ namespace Utils
         public DataTable ToTable()
         {
             DataSet ds = new DataSet();
-            ds.ReadXml(@"D:\code\Backup\BurnInPlatform_IQM\BILib_IQMGenII\IQMGenII.xml");
 
             _configuration.IsNode = SimpleNode.IsSimpleNode;
             _configuration.Root = _configuration.Build(_xml);

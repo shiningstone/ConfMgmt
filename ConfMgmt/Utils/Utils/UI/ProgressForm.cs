@@ -70,7 +70,7 @@ namespace Utils.UI
         {
             if (PB_Percentage.Value != 100)
             {
-                SupportMessageBox.ConfirmAction("请确认是否取消当前运行的任务?", () =>
+                Help.ConfirmAction("请确认是否取消当前运行的任务?", () =>
                 {
                     _thread?.Abort();
                     return new ErrInfo(ErrCode.Ok);

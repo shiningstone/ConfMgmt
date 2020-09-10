@@ -1,9 +1,13 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 
 using log4net;
+using log4net.Appender;
 using log4net.Layout;
 using log4net.Layout.Pattern;
+using log4net.Repository.Hierarchy;
 
 [assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config", ConfigFileExtension = "config", Watch = true)]
 namespace Utils
@@ -52,6 +56,17 @@ namespace Utils
         {
             mLog.Error(new LogContent(mStation, mUser, msg), exception);
             Observer?.Invoke("ERROR", msg);
+        }
+
+        public static void CreateNewFile()
+        {
+            var rootAppender = ((Hierarchy)LogManager.GetRepository()).Root.Appenders.OfType<FileAppender>().FirstOrDefault();
+            string filename = rootAppender != null ? rootAppender.File : string.Empty;
+            if (!string.IsNullOrEmpty(filename))
+            {
+                File.Copy(filename, Calc.AddPostfix(filename, $"-{DateTime.Now.ToString("HHmmss")}"));
+                File.WriteAllText(filename, "");
+            }
         }
     }
     #region database log content

@@ -48,6 +48,42 @@ namespace Utils
             }
         }
     }
+    public class ByteOp
+    {
+        public static void Copy(byte[] dest, int desOffset, List<byte> src)
+        {
+            if (src == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < src.Count; i++)
+            {
+                dest[desOffset + i] = src[i];
+            }
+        }
+        public static void Copy(byte[] dest, int desOffset, List<ushort> src)
+        {
+            if (src == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < src.Count; i++)
+            {
+                dest[desOffset + 2 * i] = Calc.LowByte(src[i]);
+                dest[desOffset + 2 * i + 1] = Calc.HighByte(src[i]);
+            }
+        }
+        public static ushort HighWord(int value)
+        {
+            return (ushort)((value >> 16) & 0xffff);
+        }
+        public static ushort LowWord(int value)
+        {
+            return (ushort)(value & 0xffff);
+        }
+    }
     public class Calc
     {
         #region bits operations
@@ -131,6 +167,7 @@ namespace Utils
             }
         }
         #endregion
+
         public static int[] DivideByStep(int start, int stop, int step)
         {
             int distance = Math.Abs(stop - start);
@@ -156,6 +193,7 @@ namespace Utils
 
             return results;
         }
+
         public static string AddPostfix(string filePath, string postfix)
         {
             string path = Path.GetDirectoryName(filePath);
@@ -168,7 +206,7 @@ namespace Utils
             }
             else
             {
-                return path + @"/" + filename + postfix + fileExt;
+                return path + @"\" + filename + postfix + fileExt;
             }
         }
         public static string Combine(List<string> filters, string header, string combiner)
@@ -186,7 +224,6 @@ namespace Utils
 
             return ret;
         }
-
         public static string SqlValueString(List<KeyValuePair<string, string>> datas)
         {
             string keystr = "";
@@ -296,7 +333,7 @@ namespace Utils
 
             return ints;
         }
-        public static List<string> ToList(string info)
+        public static List<string> Split(string info)
         {
             var array = info.Split(new char[] { ',', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -307,6 +344,7 @@ namespace Utils
             }
             return ret;
         }
+
         public static bool VersionNewer(string s1, string s2)
         {
             string[] v1 = s1.Split('.');
@@ -326,12 +364,32 @@ namespace Utils
 
             return false;
         }
-
         public static string GetVersion(string path)
         {
             return FileVersionInfo.GetVersionInfo(path).ProductVersion.Split('+')[0];
         }
+        public static FileInfo GetLatestFile(string path)
+        {
+            var dir = Path.GetDirectoryName(path);
+            var filename = Path.GetFileNameWithoutExtension(path);
+            var ext = Path.GetExtension(path);
 
+            var di = new DirectoryInfo(dir);
+            FileInfo latest = null;
+            foreach (var file in di.GetFiles($"*{ext}"))
+            {
+                if (file.FullName.Contains(filename))
+                {
+                    if (latest == null || file.CreationTime > latest.CreationTime)
+                    {
+                        latest = file;
+                    }
+                }
+            }
+
+            return latest;
+        }
+        
         public static List<KeyValuePair<double, double>> GetRanges(string content)
         {
             List<KeyValuePair<double, double>> result = new List<KeyValuePair<double, double>>();
@@ -371,6 +429,39 @@ namespace Utils
 
             return frame.ToArray();
         }
+        public static List<int> ToBits(byte[] bytes)
+        {
+            List<int> bits = new List<int>();
+            for (int i = 0; i < 32; i++)
+            {
+                if ((bytes[i / 8] & (0x01 << i % 8)) != 0)
+                {
+                    bits.Add(i);
+                }
+            }
+            return bits;
+        }
+
+        public static byte[] ToBytes(List<int> bits/*starts from 0*/)
+        {
+            byte[] bytes = new byte[4];
+            for (int i = 0; i < bits.Count; i++)
+            {
+                bytes[bits[i] / 8] |= (byte)(0x80 >> bits[i] % 8);
+            }
+            return bytes;
+        }
+
+        public static List<int> CreateList(int count)
+        {
+            List<int> result = new List<int>();
+            for (int i = 0; i < count; i++)
+            {
+                result.Add(i + 1);
+            }
+            return result;
+        }
+
         private static Logger _log = new Logger("Utils");
     }
 }

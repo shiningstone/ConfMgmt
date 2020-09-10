@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Utils
@@ -79,6 +80,51 @@ namespace Utils
             {
                 _log.Error($"RmDir({dir})", ex);
                 return false;
+            }
+        }
+
+        public static List<string> Read(string path, bool ignoreBlank = true)
+        {
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+
+            var lines = new List<string>();
+            string line = "";
+
+            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (StreamReader reader = new StreamReader(fs))
+                {
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        lines.Add(line);
+                    }
+
+                    reader.Close();
+                }
+
+                fs.Close();
+            }
+
+            return lines.FindAll(x => x.Length > 0);
+        }
+        public static void Write(string path, List<string> lines)
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+            using (StreamWriter writer = new StreamWriter(path, false))
+            {
+                foreach (var line in lines)
+                {
+                    writer.WriteLine(line);
+                }
+
+                writer.Close();
             }
         }
     }

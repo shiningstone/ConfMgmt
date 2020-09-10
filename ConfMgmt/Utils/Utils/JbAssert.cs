@@ -4,11 +4,21 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Utils
 {
     public class JbAssert
     {
+        public static void WaitUntil(Func<bool> judge, int timeout = 1000)
+        {
+            int count = 0;
+            while (count < timeout && !judge())
+            {
+                Thread.Sleep(50);
+                count += 50;
+            }
+        }
         public static void Equal(string a, string b)
         {
             if (a != b)

@@ -6,13 +6,18 @@ using System.Text;
 
 namespace Utils
 {
-    public class CsvFile
+    public class LuaFile
     {
         FileStream _fileStream;
         StreamWriter _streamWriter;
 
-        public CsvFile(string path)
+        public LuaFile(string path)
         {
+            if (path == null)
+            {
+                return;
+            }
+
             if (!File.Exists(path))
             {
                 _fileStream = new FileStream(path, FileMode.Create);
@@ -24,16 +29,27 @@ namespace Utils
 
             _streamWriter = new StreamWriter(_fileStream, Encoding.UTF8);
         }
-        public void Write(List<string> data)
-        {
-            _streamWriter.Write(string.Join(",", data));
-            _streamWriter.Write(Environment.NewLine);
-            _streamWriter.Flush();
-        }
+
         public void Close()
         {
             _streamWriter.Close();
             _fileStream.Close();
+        }
+
+        public List<string> Load(string path)
+        {
+            var result = new List<string>();
+
+            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (StreamReader reader = new StreamReader(fs))
+            {
+                while (!reader.EndOfStream)
+                {
+                    result.Add(reader.ReadLine());
+                }
+            }
+
+            return result;
         }
     }
 }

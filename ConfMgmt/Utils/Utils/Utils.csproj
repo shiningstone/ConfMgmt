@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Utils</RootNamespace>
     <AssemblyName>Utils</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
@@ -53,24 +55,32 @@
   <ItemGroup>
     <Compile Include="Act.cs" />
     <Compile Include="CheckSum16.cs" />
+    <Compile Include="CircleMap.cs" />
     <Compile Include="CmdRecord.cs" />
     <Compile Include="CommandHandler.cs" />
-    <Compile Include="ComPort.cs" />
-    <Compile Include="CsvFile.cs" />
+    <Compile Include="Communication\ComPort.cs" />
+    <Compile Include="Communication\SocketClient.cs" />
+    <Compile Include="Communication\SocketServer.cs" />
+    <Compile Include="File\CsvFile.cs" />
+    <Compile Include="DictHelp.cs" />
     <Compile Include="ErrInfo.cs" />
-    <Compile Include="FileOp.cs" />
+    <Compile Include="File\FileOp.cs" />
+    <Compile Include="File\HexFile.cs" />
     <Compile Include="JbAssert.cs" />
     <Compile Include="JsonSerializer.cs" />
     <Compile Include="LinearFit.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Calc.cs" />
-    <Compile Include="ModBus.cs" />
-    <Compile Include="ProjectConfig.cs" />
+    <Compile Include="File\LuaFile.cs" />
+    <Compile Include="Communication\ModBus.cs" />
+    <Compile Include="File\ProjectConfig.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Spec.cs" />
+    <Compile Include="TaskWatch.cs" />
     <Compile Include="UI\ConfigurationEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,10 +123,11 @@
     <Compile Include="UI\ProgressForm.Designer.cs">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\SupportMessageBox.cs" />
-    <Compile Include="XmlSerializer.cs" />
+    <Compile Include="UI\Help.cs" />
+    <Compile Include="File\XmlSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XmlReader.cs" />
+    <Compile Include="File\XmlReader.cs" />
+    <Compile Include="UnitTransfer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Logo.jpg" />

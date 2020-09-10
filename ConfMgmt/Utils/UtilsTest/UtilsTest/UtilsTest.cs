@@ -7,12 +7,84 @@ using BiView;
 using Feedlitech;
 using System.Diagnostics;
 using System.Threading;
+using System.Linq;
+using Feedlitech.FlashEng;
 
 namespace UtilsTest
 {
     [TestClass]
     public class Utils_Test
     {
+        [TestMethod]
+        public void TestRegex()
+        {
+            var trueValue = DataConverter.ScientificNumToRaw("2.00E+15");
+            trueValue = DataConverter.ScientificNumToRaw("1.70E+05");
+            trueValue = DataConverter.ScientificNumToRaw("3.90E+10");
+            trueValue = DataConverter.ScientificNumToRaw("1.60E+09");
+        }
+        [TestMethod]
+        public void TestLoadCsv()
+        {
+            var file = Calc.GetLatestFile(@"D:\BurnIn\Version\Debug\EosTool\Data\电流源校准(单Chnl上电).csv");
+
+            var result = (ushort)Convert.ToInt32("ffffffaf", 16);
+            result = (ushort)Convert.ToInt32("91a0", 16);
+            result = (ushort)Convert.ToInt32("8080", 16);
+
+            var dir = @"D:\DailyWork\20200302-EosTool Upgrade\校准数据";
+            var csv = new CsvFile(null);
+            var table = csv.Load($@"{dir}\电流源板卡\FL0001A03-202002021\电流源校准(统一上电)_FL0001A03-202002021_200227120026.csv");
+            table = csv.Load($@"{dir}\全功能板卡\FLT804A05-202001196_电流源模式\电流源校准(统一上电)_FLT804A05-202001196_200116191030.csv");
+            table = csv.Load($@"{dir}\全功能板卡\FLT804A05-202001196_电压源模式\电压源校准(统一上电)_FLT804A05-202001196_200117161652.csv");
+        }
+        [TestMethod]
+        public void TestBits()
+        {
+            List<int> bits = new List<int>() { 0 };
+            Assert.IsTrue(Calc.ToBytes(bits)[0] == 0x80);
+            bits = new List<int>() { 7 };
+            Assert.IsTrue(Calc.ToBytes(bits)[0] == 0x01);
+            bits = new List<int>() { 8 };
+            Assert.IsTrue(Calc.ToBytes(bits)[1] == 0x80);
+            bits = new List<int>() { 31 };
+            Assert.IsTrue(Calc.ToBytes(bits)[3] == 0x01);
+            bits = new List<int>() { 0, 7 };
+            Assert.IsTrue(Calc.ToBytes(bits)[0] == 0x81);
+            bits = new List<int>() { 30, 31 };
+            Assert.IsTrue(Calc.ToBytes(bits)[3] == 0x03);
+
+            var result = Calc.ToBits(new byte[] { 0x80, 0x00, 0x00, 0x00 });
+            Assert.IsTrue(result.Count == 1);
+            Assert.IsTrue(result[0] == 7);
+
+            result = Calc.ToBits(new byte[] { 0xc0, 0x00, 0x00, 0x00 });
+            Assert.IsTrue(result.Count == 2);
+            Assert.IsTrue(result[0] == 6);
+            Assert.IsTrue(result[1] == 7);
+
+            result = Calc.ToBits(new byte[] { 0x00, 0x00, 0x00, 0x01 });
+            Assert.IsTrue(result.Count == 1);
+            Assert.IsTrue(result[0] == 24);
+
+            result = Calc.ToBits(new byte[] { 0x01, 0x00, 0x00, 0x00 });
+            Assert.IsTrue(result.Count == 1);
+            Assert.IsTrue(result[0] == 0);
+
+            result = Calc.ToBits(new byte[] { 0x03, 0x00, 0x00, 0x00 });
+            Assert.IsTrue(result.Count == 2);
+            Assert.IsTrue(result[0] == 0);
+            Assert.IsTrue(result[1] == 1);
+
+            result = Calc.ToBits(new byte[] { 0x00, 0x01, 0x00, 0x00 });
+            Assert.IsTrue(result.Count == 1);
+            Assert.IsTrue(result[0] == 8);
+
+            result = Calc.ToBits(new byte[] { 0x00, 0x03, 0x00, 0x00 });
+            Assert.IsTrue(result.Count == 2);
+            Assert.IsTrue(result[0] == 8);
+            Assert.IsTrue(result[1] == 9);
+        }
         private static void AssertArray(int[] a, int[] b)
         {
             if (a.Length != b.Length)
@@ -24,7 +96,7 @@ namespace UtilsTest
             {
                 if (a[i] != b[i])
                 {
-                    throw new Exception("");
+                    throw new Exception($"a:{string.Join(",", a)} vs b:{string.Join(",", b)}");
                 }
             }
         }
@@ -343,6 +415,47 @@ namespace UtilsTest
 
             Debug.WriteLine($"Chnl: {chnl}, Current: {current}, Reference: {reference}, Percentage: {VoltageSupplement}, Random: {percentage}, Result: {result}");
             return result;
+        }
+        [TestMethod]
+        public void TestStepValues()
+        {
+            //上电
+            AssertArray(GetStepValues("", 1000).ToArray(), new int[] { 250, 500, 750, 1000 });
+            AssertArray(GetStepValues("", 3000).ToArray(), new int[] { 750, 1500, 2250, 3000 });
+            AssertArray(GetStepValues("", 5000).ToArray(), new int[] { 1250, 2500, 3750, 5000 });
+            //下电
+            AssertArray(GetStepValues("", 0, 1000).ToArray(), new int[] { 750, 500, 250, 0 });
+            AssertArray(GetStepValues("", 0, 3000).ToArray(), new int[] { 2250, 1500, 750, 0 });
+            AssertArray(GetStepValues("", 0, 5000).ToArray(), new int[] { 3750, 2500, 1250, 0 });
+
+            AssertArray(GetStepValues("", 10).ToArray(), new int[] { 10 });
+            AssertArray(GetStepValues("", 0, 10).ToArray(), new int[] { 0 });
+        }
+        private List<int> GetStepValues(string board, double target, double fake = 0)
+        {
+            if (target > 0)//升电
+            {
+                if (target > 500)
+                {
+                    return Calc.DivideByStep(0, (int)target, (int)(target / 4)).ToList();
+                }
+                else
+                {
+                    return new List<int>() { (int)target };
+                }
+            }
+            else//降电
+            {
+                double curCurrent = fake;
+                if (curCurrent > 500)
+                {
+                    return Calc.DivideByStep((int)curCurrent, 0, (int)(curCurrent / 4)).ToList();
+                }
+                else
+                {
+                    return new List<int>() { 0 };
+                }
+            }
         }
     }
     [TestClass]
