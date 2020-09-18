@@ -45,6 +45,19 @@ namespace JbConf
         public Dictionary<string, string> Attributes = new Dictionary<string, string>();
         public string Tag;
 
+        public int OpLevel
+        {
+            get
+            {
+                if (Attributes.ContainsKey("oplevel"))
+                {
+                    return int.Parse(Attributes["oplevel"]);
+                }
+
+                return -1;
+            }
+        }
+
         public string Path
         {
             get

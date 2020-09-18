@@ -27,6 +27,7 @@ namespace ConfViews
         private bool IsBinded = false;
         private string InstName;
         private string RootPath;
+
         private List<string> Order = new List<string>();
         private List<string> ReOrder(List<string> names)
         {
@@ -73,7 +74,7 @@ namespace ConfViews
             CMB_ProductFileList.DataSource = names;
             OnChange?.Invoke(SelectedConf);
         }
-        public void SetOrder(List<string> names)
+        public void InitOrder(List<string> names)
         {
             Order = names;
         }

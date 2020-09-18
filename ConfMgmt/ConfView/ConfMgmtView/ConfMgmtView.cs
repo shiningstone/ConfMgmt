@@ -24,21 +24,38 @@ namespace ConfViews
             IsBinded = true;
             OnUpdate = onUpdate;
 
-            fileController.Bind(title, confType, path, Change);
+            fileController.Bind(title, confType, path, SwitchConf);
         }
-
-        public void SetOrder(List<string> names)
+        
+        public void InitOrder(List<string> names)
         {
-            fileController.SetOrder(names);
+            fileController.InitOrder(names);
         }
-
-        private void Change(ConfTree conf)
+        public void InitShowLevel(List<string> levels)
+        {
+            if (levels != null)
+            {
+                CMB_ShowLevel.DataSource = levels;
+                CMB_ShowLevel.SelectedIndex = 0;
+                LBL_Level.Visible = CMB_ShowLevel.Visible = true;
+            }
+            else
+            {
+                LBL_Level.Visible = CMB_ShowLevel.Visible = false;
+            }
+        }
+        private void SwitchConf(ConfTree conf)
         {
             if (IsBinded)
             {
-                confView1.LoadConf(conf);
+                confView1.LoadConf(conf, CMB_ShowLevel.Visible ? (CMB_ShowLevel.SelectedIndex + 1).ToString() : null);
                 OnUpdate?.Invoke();
             }
+        }
+
+        private void CMB_ShowLevel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            confView1.SetLevel((CMB_ShowLevel.SelectedIndex + 1).ToString());
         }
     }
 }
