@@ -9,8 +9,10 @@ namespace ConfViews
     /// </summary>
     public class ConfUC : UserControl
     {
+        private ConfTree CurrentConf;
         public void Apply(ConfTree conf)
         {
+            CurrentConf = conf;
             conf.Visit("Apply", (item, level) =>
             {
                 if (item is ConfItem)
@@ -61,6 +63,8 @@ namespace ConfViews
                     }
                 }
             });
+
+            CurrentConf = conf;
 
             return conf;
         }

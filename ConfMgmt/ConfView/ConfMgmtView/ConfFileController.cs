@@ -17,7 +17,7 @@ namespace ConfViews
     public partial class ConfFileController : UserControl
     {
         private Action<ConfTree> OnChange;
-        private Func<bool> OnSave;
+        private Func<string, bool> OnSave;
 
         public ConfFileController()
         {
@@ -52,12 +52,12 @@ namespace ConfViews
             return reorder;
         }
 
-        public void Bind(string title, string confType, string path, Action<ConfTree> onChange, Func<bool> onSave = null)
+        public void Bind(string title, string confType, string path, Action<ConfTree> onChange, Func<string, bool> onSave = null)
         {
             IsBinded = true;
 
             OnChange = onChange;
-            OnSave = onSave;
+            OnSave = onSave != null ? onSave : SaveCallback;
 
             if (path == null)
             {
@@ -102,12 +102,20 @@ namespace ConfViews
                 Utils.UI.Help.NoticeFailure($"当前配置文件（{file}）备份失败: {ex}");
             }
         }
-        private void Save()
+        private bool SaveCallback(string path)
         {
-            ConfMgmt.Inst(InstName).Root[SelectedPath].Save();
-            Backup(SelectedPath);
+            if (path == null)
+            {
+                ConfMgmt.Inst(InstName).Root[SelectedPath].Save();
+                Backup(SelectedPath);
+            }
+            else
+            {
+                (ConfMgmt.Inst(InstName).Root[SelectedPath].Clone() as ConfTree).Save(path);
+                Backup(path);
+            }
 
-            OnChange?.Invoke(SelectedConf);
+            return true;
         }
         private void SaveAs()
         {
@@ -117,17 +125,12 @@ namespace ConfViews
                 return;
             }
 
-            var path = SelectedPath.Replace(SelectedName, name);
-
-            var newconf = ConfMgmt.Inst(InstName).Root[SelectedPath].Clone() as ConfTree;
-            newconf.Save(path);
-            Backup(path);
+            var path = SelectedPath.Replace($"{SelectedName}.xml", $"{name}.xml");
+            OnSave(path);
 
             ConfMgmt.Inst(InstName).Generate(Path.GetDirectoryName(path), true);
             CMB_ProductFileList.DataSource = ConfMgmt.Inst(InstName).Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
             CMB_ProductFileList.Text = name;
-            
-            OnChange?.Invoke(SelectedConf);
         }
 
         private void CMB_ProductFileList_SelectedIndexChanged(object sender, EventArgs e)
@@ -139,17 +142,13 @@ namespace ConfViews
         }
         private void BTN_Save_Click(object sender, EventArgs e)
         {
-            if (OnSave == null || OnSave.Invoke())
-            {
-                Save();
-            }
+            OnSave(null);
+            OnChange?.Invoke(SelectedConf);
         }
         private void BTN_SaveAs_Click(object sender, EventArgs e)
         {
-            if (OnSave == null || OnSave.Invoke())
-            {
-                SaveAs();
-            }
+            SaveAs();
+            OnChange?.Invoke(SelectedConf);
         }
     }
 }
