@@ -79,7 +79,7 @@ namespace ConfViews
             Order = names;
         }
 
-        private string SelectedName => CMB_ProductFileList.Text;
+        public string SelectedName => CMB_ProductFileList.Text;
         private string SelectedPath => ConfMgmt.Inst(InstName).Root.Keys.ToList().Find(x => CMB_ProductFileList.Text == Path.GetFileNameWithoutExtension(x));
         public ConfTree SelectedConf => ConfMgmt.Inst(InstName).Root[SelectedPath];//jiangbo: dangerous
 
