@@ -26,6 +26,16 @@ namespace JbConf
             return CurrentLevels.Last().Key;
         }
 
+        private static readonly string CommentLabel = "`";
+        public static string DisplayName(ConfItem item)
+        {
+            return item.Name + (!item.Attributes.ContainsKey("comment") ? "" : CommentLabel)
+                            + (string.IsNullOrEmpty(item.Tag) ? "" : $"(tag: {item.Tag})");
+        }
+        public static string UnlableComment(string lableName)
+        {
+            return lableName.Replace(CommentLabel, "");
+        }
         public static DataTable ConvertToTable(ConfTree conf, string oplevel = null)
         {
             DataTable table = new DataTable();
@@ -50,7 +60,7 @@ namespace JbConf
                     else
                     {
                         var nodes = item.Path.Split('/');
-                        row[nodes.Length - 1] = item.Name + (string.IsNullOrEmpty(item.Tag) ? "" : $"(tag: {item.Tag})");
+                        row[nodes.Length - 1] = DisplayName(item);
                         row[table.Columns.Count - 1] = !string.IsNullOrEmpty(item.Value) ? item.Value : "";
                     }
 

@@ -98,6 +98,8 @@ namespace ConfViews
                     string nodeName = gridview[col, row].Value as string;
                     if (!string.IsNullOrEmpty(nodeName))
                     {
+                        nodeName = UiSupport.UnlableComment(nodeName);
+
                         if (Regex.IsMatch(nodeName, @"\(tag: (.*)\)"))
                         {
                             tags.Add(Regex.Match(nodeName, @"\(tag: (.*)\)", RegexOptions.Singleline).Groups[1].Value);

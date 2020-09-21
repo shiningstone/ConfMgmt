@@ -18,6 +18,13 @@ namespace JbConf
         public ConfTree(string name) : base(name, null)
         {
         }
+        public ConfTree(string name, Dictionary<string, double> values) : base(name, null)
+        {
+            foreach (var v in values)
+            {
+                Add(new ConfItem(v.Key, v.Value.ToString()));
+            }
+        }
 
         public string ShowAll(Logger log = null, bool compact = true)
         {
