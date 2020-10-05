@@ -102,6 +102,7 @@ namespace JbConf
         {
             if (item == null)
             {
+                RunningTag = new TagRecorder();
                 _depth = 0;
                 item = this;
             }
