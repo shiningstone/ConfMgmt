@@ -45,6 +45,7 @@ namespace JbConf
             }
 
             int userLevel = oplevel == null ? int.MaxValue : int.Parse(oplevel);
+            CurrentLevels = new List<KeyValuePair<int, int>>();
             conf.Visit("ToTable", (item, level) =>
             {
                 var currentLevel = ChangeOpLevel(item, level);
@@ -80,9 +81,9 @@ namespace JbConf
         private static bool IsFiltered(ConfTree conf, ConfItem item, int level)
         {
             if (FilterLevel >= 0 && level > FilterLevel)
-            {
-                return true;
-            }
+                {
+                    return true;
+                }
             else
             {
                 if (item.Attributes.ContainsKey("show-only"))
