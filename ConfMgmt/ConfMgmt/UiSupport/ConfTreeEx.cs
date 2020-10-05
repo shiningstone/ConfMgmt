@@ -50,27 +50,59 @@ namespace JbConf
                 var currentLevel = ChangeOpLevel(item, level);
                 if(userLevel >= currentLevel)
                 {
-                    var row = table.NewRow();
-
-                    if (string.IsNullOrEmpty(item.Path))
+                    if (!IsFiltered(conf, item, level))
                     {
-                        row[0] = item.Name;
-                        row[1] = !string.IsNullOrEmpty(item.Value) ? item.Value : "";
-                    }
-                    else
-                    {
-                        var nodes = item.Path.Split('/');
-                        row[nodes.Length - 1] = DisplayName(item);
-                        row[table.Columns.Count - 1] = !string.IsNullOrEmpty(item.Value) ? item.Value : "";
-                    }
+                        var row = table.NewRow();
 
-                    table.Rows.Add(row);
+                        if (string.IsNullOrEmpty(item.Path))
+                        {
+                            row[0] = item.Name;
+                            row[1] = !string.IsNullOrEmpty(item.Value) ? item.Value : "";
+                        }
+                        else
+                        {
+                            var nodes = item.Path.Split('/');
+                            row[nodes.Length - 1] = DisplayName(item);
+                            row[table.Columns.Count - 1] = !string.IsNullOrEmpty(item.Value) ? item.Value : "";
+                        }
+
+                        table.Rows.Add(row);
+                    }
                 }
 
                 return false;
             });
 
             return table;
+        }
+
+        private static int FilterLevel = -1;
+        private static bool IsFiltered(ConfTree conf, ConfItem item, int level)
+        {
+            if (FilterLevel >= 0 && level > FilterLevel)
+            {
+                return true;
+            }
+            else
+            {
+                if (item.Attributes.ContainsKey("show-only"))
+                {
+                    var filter = item.Attributes["show-only"].Split('=').Select(x => x.Trim()).ToList();
+                    if (conf[filter[0]] != filter[1])
+                    {
+                        FilterLevel = level;
+                        return true;
+                    }
+                    else
+                    {
+                        FilterLevel = -1;
+                        return false;
+                    }
+                }
+            }
+
+            FilterLevel = -1;
+            return false;
         }
     }
 }

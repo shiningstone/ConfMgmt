@@ -130,6 +130,7 @@ namespace ConfViews
         {
             string path = GetPath(sender as DataGridView, e.RowIndex, e.ColumnIndex);
             Conf[path] = DGV_ConfigItems[e.ColumnIndex, e.RowIndex].Value as string;
+            DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf);
         }
 
         private void DGV_ConfigItems_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
