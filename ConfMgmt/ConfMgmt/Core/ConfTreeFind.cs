@@ -7,7 +7,13 @@ namespace JbConf
 {
     public partial class ConfTree
     {
-        private static Logger _dbgLog = new Logger("ConfTreeVisit");
+        private void DbgLog(string content)
+        {
+#if JBCONF_DBG
+            _log.Debug(content);
+#endif
+        }
+
         //没有考虑重复的tag
         private class TagRecorder
         {
@@ -69,7 +75,7 @@ namespace JbConf
 
         private bool VisitTree(string func, Func<ConfItem, int, bool> executor, ConfTree tree)
         {
-            _dbgLog.Debug($@"Visit({func}) ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
+            DbgLog($@"Visit({func}) ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
             RunningTag.Register(tree);
 
             executor(tree, _depth);
@@ -111,7 +117,7 @@ namespace JbConf
             }
             else
             {
-                _dbgLog.Debug($"Visit({func}) ConfItem: {item.Name}({item.Value})");
+                DbgLog($"Visit({func}) ConfItem: {item.Name}({item.Value})");
                 if (executor(item, _depth))
                 {
                     return true;
@@ -131,7 +137,7 @@ namespace JbConf
                 {
                     if (item.Name == target && RunningTag.IsMatch(tags))
                     {
-                        _dbgLog.Debug($"Find {item.Path}/{item.Name}");
+                        DbgLog($"Find {item.Path}/{item.Name}");
                         items.Add(item);
                     }
 
@@ -171,7 +177,7 @@ namespace JbConf
                 {
                     if (item.Name == target && RunningTag.IsMatch(tags))
                     {
-                        _dbgLog.Debug($"Find {item.Path}/{item.Name}");
+                        DbgLog($"Find {item.Path}/{item.Name}");
                         items.Add(item);
                         if (!strict)
                         {
@@ -210,6 +216,7 @@ namespace JbConf
                 if (tags == null)
                 {
                     items = items.FindAll(x => string.IsNullOrEmpty(x.Tag));
+                    items = items.FindAll(x => !x.Attributes.ContainsKey("tag"));
                 }
 
                 if (items.Count == 1)
