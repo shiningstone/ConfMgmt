@@ -78,18 +78,23 @@ namespace JbConf
         }
 
         private static int FilterLevel = -1;
+        private static bool IsMatch(ConfTree conf, string key, string values)
+        {
+            var value = conf[key];
+            return values.Split('|').Select(x => x.Trim()).Contains(value);
+        }
         private static bool IsFiltered(ConfTree conf, ConfItem item, int level)
         {
-            if (FilterLevel >= 0 && level > FilterLevel)
-                {
-                    return true;
-                }
+            if (FilterLevel >= 0 && level > 0)//jiangbo: 这个level是相对level？
+            {
+                return true;
+            }
             else
             {
                 if (item.Attributes.ContainsKey("show-only"))
                 {
                     var filter = item.Attributes["show-only"].Split('=').Select(x => x.Trim()).ToList();
-                    if (conf[filter[0]] != filter[1])
+                    if (!IsMatch(conf, filter[0], filter[1]))
                     {
                         FilterLevel = level;
                         return true;
