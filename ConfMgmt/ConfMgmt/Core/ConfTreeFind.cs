@@ -202,6 +202,22 @@ namespace JbConf
                         return item;
                     }
                 }
+                else if(tags != null)
+                {
+                    _log.Warn($"No tree({(string.Join("&", tags))}) found, use no tag tree");
+                    var trees = FindClassify(head_tail[0], null).Select(x => x as ConfTree);
+                    foreach (var t in trees)
+                    {
+                        if (t != null)
+                        {
+                            var item = t.Find(head_tail[1], tags);
+                            if (item != null)
+                            {
+                                return item;
+                            }
+                        }
+                    }
+                }
             }
 
             if (items.Count == 0)

@@ -19,12 +19,12 @@ namespace ConfViews
         private bool IsBinded = false;
         private Action OnUpdate;
 
-        public void Bind(string title, string confType, string path, Action onUpdate = null)
+        public void Bind(string title, string confType, string path, Action onUpdate = null, Func<string, bool> saveEvtHandler = null)
         {
             IsBinded = true;
             OnUpdate = onUpdate;
 
-            fileController.Bind(title, confType, path, SwitchConf);
+            fileController.Bind(title, confType, path, SwitchConf, saveEvtHandler);
         }
         
         public void InitOrder(List<string> names)

@@ -17,7 +17,7 @@ namespace ConfViews
     public partial class ConfFileController : UserControl
     {
         private Action<ConfTree> OnChange;
-        private Func<string, bool> OnSave;
+        private Func<string, bool> SaveEvtHandler;//返回值: true - 执行本模块内部保存流程; false - 自定义保存流程或者进行内容检查
 
         public ConfFileController()
         {
@@ -57,7 +57,7 @@ namespace ConfViews
             IsBinded = true;
 
             OnChange = onChange;
-            OnSave = onSave != null ? onSave : SaveCallback;
+            SaveEvtHandler = onSave;
 
             if (path == null)
             {
@@ -78,20 +78,27 @@ namespace ConfViews
         {
             Order = names;
         }
+        private void CMB_ProductFileList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (IsBinded)
+            {
+                OnChange?.Invoke(SelectedConf);
+            }
+        }
 
+        private Dictionary<string, ConfTree> ConfTrees => ConfMgmt.Inst(InstName).Root;
         public string SelectedName => CMB_ProductFileList.Text;
-        private string SelectedPath => ConfMgmt.Inst(InstName).Root.Keys.ToList().Find(x => CMB_ProductFileList.Text == Path.GetFileNameWithoutExtension(x));
-        public ConfTree SelectedConf => ConfMgmt.Inst(InstName).Root[SelectedPath];//jiangbo: dangerous
+        private string SelectedFile => ConfTrees.Keys.ToList().Find(x => CMB_ProductFileList.Text == Path.GetFileNameWithoutExtension(x));
+        public ConfTree SelectedConf => ConfTrees[SelectedFile];//jiangbo: dangerous
 
         private void Backup(string file)
         {
-            var dir = $@"{Path.GetDirectoryName(file)}\";
             var backdir = $@"{RootPath}History";
             if (!Directory.Exists(backdir))
             {
                 Directory.CreateDirectory(backdir);
             }
-
+            
             var backup = $@"{backdir}\{Calc.AddPostfix(Path.GetFileName(file), "_" + DateTime.Now.ToString("yyyyMMdd-HHmmss"))}";
             try
             {
@@ -102,22 +109,29 @@ namespace ConfViews
                 Utils.UI.Help.NoticeFailure($"当前配置文件（{file}）备份失败: {ex}");
             }
         }
-        private bool SaveCallback(string path)
+        private void Save(string path)
         {
+            Backup(path == null ? SelectedFile : path);
+
             if (path == null)
             {
-                ConfMgmt.Inst(InstName).Root[SelectedPath].Save();
-                Backup(SelectedPath);
+                ConfTrees[SelectedFile].Save();
             }
             else
             {
-                (ConfMgmt.Inst(InstName).Root[SelectedPath].Clone() as ConfTree).Save(path);
-                Backup(path);
+                (ConfTrees[SelectedFile].Clone() as ConfTree).Save(path);
             }
-
-            return true;
         }
-        private void SaveAs()
+
+        private void BTN_Save_Click(object sender, EventArgs e)
+        {
+            if (SaveEvtHandler == null ||  SaveEvtHandler(null))
+            {
+                Save(null);
+                OnChange?.Invoke(SelectedConf);
+            }
+        }
+        private void BTN_SaveAs_Click(object sender, EventArgs e)
         {
             var name = Interaction.InputBox("", "配置名称", "", 100, 200);
             if (string.IsNullOrEmpty(name))
@@ -125,30 +139,17 @@ namespace ConfViews
                 return;
             }
 
-            var path = SelectedPath.Replace($"{SelectedName}.xml", $"{name}.xml");
-            OnSave(path);
-
-            ConfMgmt.Inst(InstName).Generate(Path.GetDirectoryName(path), true);
-            CMB_ProductFileList.DataSource = ConfMgmt.Inst(InstName).Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
-            CMB_ProductFileList.Text = name;
-        }
-
-        private void CMB_ProductFileList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (IsBinded)
+            var path = SelectedFile.Replace($"{SelectedName}.xml", $"{name}.xml");
+            if (SaveEvtHandler == null || SaveEvtHandler(null))
             {
+                Save(path);
+
+                ConfMgmt.Inst(InstName).Generate(Path.GetDirectoryName(path), true);
+                CMB_ProductFileList.DataSource = ConfTrees.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList();
+                CMB_ProductFileList.Text = name;
+
                 OnChange?.Invoke(SelectedConf);
             }
-        }
-        private void BTN_Save_Click(object sender, EventArgs e)
-        {
-            OnSave(null);
-            OnChange?.Invoke(SelectedConf);
-        }
-        private void BTN_SaveAs_Click(object sender, EventArgs e)
-        {
-            SaveAs();
-            OnChange?.Invoke(SelectedConf);
         }
     }
 }
