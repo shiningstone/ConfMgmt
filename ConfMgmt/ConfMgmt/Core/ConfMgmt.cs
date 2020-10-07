@@ -89,6 +89,15 @@ namespace JbConf
 
             return null;
         }
+        public string GetItem(string key, string defValue)
+        {
+            var result = GetItem(key, false);
+            if (string.IsNullOrEmpty(result))
+            {
+                result = defValue;
+            }
+            return result;
+        }
         public string GetItem(string key, bool strict = true)
         {
             var tags_key = key.Split(':');

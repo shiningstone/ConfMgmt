@@ -90,12 +90,20 @@ namespace ConfViews
             List<string> nodePath = new List<string>();
             List<string> tags = new List<string>();
 
+            //删除key/value之间的空白单元
+            var blankCol = 0;
+            while (gridview[colIdx - 1 - blankCol, rowIdx] == null || string.IsNullOrEmpty(gridview[colIdx - 1 - blankCol, rowIdx].Value as string))
+            {
+                blankCol++;
+            }
+
+            colIdx = colIdx - blankCol;
             int scanedRow = rowIdx;
             for (int col = colIdx - 1; col >= 0; col--)
             {
                 for (int row = scanedRow; row >= 0; row--)
                 {
-                    string nodeName = gridview[col, row].Value as string;
+                    var nodeName = gridview[col, row].Value as string;
                     if (!string.IsNullOrEmpty(nodeName))
                     {
                         nodeName = UiSupport.UnlableComment(nodeName);
