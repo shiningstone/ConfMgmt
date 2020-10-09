@@ -22,6 +22,7 @@ namespace ConfViews
             InitializeComponent();
         }
         public ConfTree Conf;
+        private string Level;
         public ConfView(ConfTree conf)
         {
             InitializeComponent();
@@ -47,6 +48,7 @@ namespace ConfViews
         }
         public void SetLevel(string oplevel)
         {
+            Level = oplevel;
             LoadConf(Conf, oplevel);
         }
         private bool IsValueOfItem(int row, int col)
@@ -138,7 +140,7 @@ namespace ConfViews
         {
             string path = GetPath(sender as DataGridView, e.RowIndex, e.ColumnIndex);
             Conf[path] = DGV_ConfigItems[e.ColumnIndex, e.RowIndex].Value as string;
-            DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf);
+            DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf, Level);
         }
 
         private void DGV_ConfigItems_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
