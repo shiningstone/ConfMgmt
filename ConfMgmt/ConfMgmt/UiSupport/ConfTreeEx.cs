@@ -80,8 +80,14 @@ namespace JbConf
         private static int FilterLevel = -1;
         private static bool IsMatch(ConfTree conf, string key, string values)
         {
-            var value = conf[key];
-            return values.Split('|').Select(x => x.Trim()).Contains(value);
+            var item = conf.Find(key);
+            if (item != null)
+            {
+                var value = item.Value;
+                return values.Split('|').Select(x => x.Trim()).Contains(value);
+            }
+
+            return false;
         }
         private static bool IsFiltered(ConfTree conf, ConfItem item, int level)
         {

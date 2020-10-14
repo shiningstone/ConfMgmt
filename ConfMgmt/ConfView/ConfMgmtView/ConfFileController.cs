@@ -27,6 +27,7 @@ namespace ConfViews
         private bool IsBinded = false;
         private string InstName;
         private string RootPath;
+        public string BackPath => $@"{RootPath}History";
 
         private List<string> Order = new List<string>();
         private List<string> ReOrder(List<string> names)
@@ -82,24 +83,48 @@ namespace ConfViews
         {
             if (IsBinded)
             {
+                Backup();
                 OnChange?.Invoke(SelectedConf);
             }
         }
 
         private Dictionary<string, ConfTree> ConfTrees => ConfMgmt.Inst(InstName).Root;
         public string SelectedName => CMB_ProductFileList.Text;
+        private string Version;
         private string SelectedFile => ConfTrees.Keys.ToList().Find(x => CMB_ProductFileList.Text == Path.GetFileNameWithoutExtension(x));
         public ConfTree SelectedConf => ConfTrees[SelectedFile];//jiangbo: dangerous
+        private void Backup()
+        {
+            if (!Directory.Exists(BackPath))
+            {
+                Directory.CreateDirectory(BackPath);
+            }
 
+            var version = SelectedConf.Find("Version");
+            if (version != null)
+            {
+                Version = version.Value;
+
+                var backFile = Calc.AddPostfix(SelectedFile, $"_{Version}");
+                backFile = $"{BackPath}/{Path.GetFileName(backFile)}";
+                if (!File.Exists($"{backFile}"))
+                {
+                    File.Copy(SelectedFile, $"{backFile}");
+                }
+            }
+            else
+            {
+                Version = null;
+            }
+        }
         private void Backup(string file)
         {
-            var backdir = $@"{RootPath}History";
-            if (!Directory.Exists(backdir))
+            if (!Directory.Exists(BackPath))
             {
-                Directory.CreateDirectory(backdir);
+                Directory.CreateDirectory(BackPath);
             }
-            
-            var backup = $@"{backdir}\{Calc.AddPostfix(Path.GetFileName(file), "_" + DateTime.Now.ToString("yyyyMMdd-HHmmss"))}";
+
+            var backup = $@"{BackPath}\{Calc.AddPostfix(Path.GetFileName(file), "_" + DateTime.Now.ToString("yyyyMMdd-HHmmss"))}";
             try
             {
                 File.Copy(file, backup);
@@ -111,7 +136,16 @@ namespace ConfViews
         }
         private void Save(string path)
         {
-            Backup(path == null ? SelectedFile : path);
+            if (Version != null)
+            {
+                var curVer = SelectedConf["Version"];
+                if (Version == curVer)
+                {
+                    var values = Version.Split('.');
+                    var newVer = int.Parse(values.Last()) + 1;
+                    SelectedConf["Version"] = string.Join(".", values.Skip(0).Take(values.Length - 1)) + $".{newVer}";
+                }
+            }
 
             if (path == null)
             {
@@ -121,6 +155,8 @@ namespace ConfViews
             {
                 (ConfTrees[SelectedFile].Clone() as ConfTree).Save(path);
             }
+
+            CMB_ProductFileList_SelectedIndexChanged(null, null);
         }
 
         private void BTN_Save_Click(object sender, EventArgs e)
