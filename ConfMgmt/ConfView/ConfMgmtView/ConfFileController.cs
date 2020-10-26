@@ -95,6 +95,11 @@ namespace ConfViews
         public ConfTree SelectedConf => ConfTrees[SelectedFile];//jiangbo: dangerous
         private void Backup()
         {
+            if (SelectedConf == null)
+            {
+                return;
+            }
+
             if (!Directory.Exists(BackPath))
             {
                 Directory.CreateDirectory(BackPath);
@@ -154,6 +159,7 @@ namespace ConfViews
             else
             {
                 (ConfTrees[SelectedFile].Clone() as ConfTree).Save(path);
+                ConfTrees[SelectedFile] = OrigConf;
             }
 
             CMB_ProductFileList_SelectedIndexChanged(null, null);
@@ -167,6 +173,8 @@ namespace ConfViews
                 OnChange?.Invoke(SelectedConf);
             }
         }
+
+        private ConfTree OrigConf;
         private void BTN_SaveAs_Click(object sender, EventArgs e)
         {
             var name = Interaction.InputBox("", "配置名称", "", 100, 200);
@@ -175,6 +183,7 @@ namespace ConfViews
                 return;
             }
 
+            OrigConf = ConfTrees[SelectedFile].Clone() as ConfTree;
             var path = SelectedFile.Replace($"{SelectedName}.xml", $"{name}.xml");
             if (SaveEvtHandler == null || SaveEvtHandler(null))
             {

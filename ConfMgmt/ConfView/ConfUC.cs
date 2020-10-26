@@ -10,7 +10,7 @@ namespace ConfViews
     public class ConfUC : UserControl
     {
         private ConfTree CurrentConf;
-        public void Apply(ConfTree conf)
+        public virtual void Apply(ConfTree conf)
         {
             CurrentConf = conf;
             conf.Visit("Apply", (item, level) =>
@@ -19,7 +19,7 @@ namespace ConfViews
                 {
                     if (item.Attributes.ContainsKey("guitype") && item.Attributes["guitype"] == "RadioButton")
                     {
-                        var control = Controls.Find($"{item.Name}{item.Value}", true);
+                        var control = Controls.Find($"{item.Name}_{item.Value}", true);
                         if (control.Length > 0)
                         {
                             (control[0] as RadioButton).Checked = true;
@@ -39,7 +39,7 @@ namespace ConfViews
             });
         }
         //收集各个item（TextBox/RadioButton）的值生成ConfTree
-        public ConfTree Generate(string tag = null)
+        public virtual ConfTree Generate(string tag = null)
         {
             var conf = new ConfTree(GetType().Name);
 
@@ -55,8 +55,9 @@ namespace ConfViews
                     var rb = control as RadioButton;
                     if (rb.Checked)
                     {
-                        var name = rb.Name.Substring(0, rb.Name.Length - 1);//同组最多10个radiobutton
-                        var value = rb.Name.Substring(rb.Name.Length - 1, 1);
+                        var values = rb.Name.Split('_');
+                        var name = values[0];
+                        var value = values[1];
                         var item = new ConfItem(name, value);
                         item.Attributes.Add("guitype", "RadioButton");
                         conf.Add(item);

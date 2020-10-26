@@ -258,7 +258,7 @@ namespace JbConf
             return this;
         }
 
-        //tree覆盖this
+        //tree覆盖this, 注意：Merge没有修改xml文件的内容
         public ConfTree Merge(ConfTree tree, List<string> targets = null)
         {
             foreach (var item in tree.Items)
