@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using JbConf;
+using Utils;
 
 namespace ConfViews
 {
@@ -9,6 +10,8 @@ namespace ConfViews
     /// </summary>
     public class ConfUC : UserControl
     {
+        protected Logger _log = new Logger("ConfUC");
+
         private ConfTree CurrentConf;
         public virtual void Apply(ConfTree conf)
         {
@@ -49,6 +52,11 @@ namespace ConfViews
                 {
                     var tb = control as TextBox;
                     conf.Add(new ConfItem(tb.Name, tb.Text));
+                }
+                else if (control is ComboBox)
+                {
+                    var cb = control as ComboBox;
+                    conf.Add(new ConfItem(cb.Name, cb.Text));
                 }
                 else if (control is RadioButton)
                 {
