@@ -72,7 +72,7 @@ namespace ConfViews
 
         private bool IsContainer(Control c)
         {
-            return c is GroupBox;
+            return c is GroupBox || c is TableLayoutPanel;
         }
         private void Traverse(ControlCollection container, Action<Control> action)
         {
