@@ -63,7 +63,7 @@ namespace JbConf
             {
                 Act.Traverse(path, (file) =>
                 {
-                    if (file.Contains(".xml"))
+                    if (Path.GetExtension(file) == ".xml")
                     {
                         Root[file] = Builder.Xml.Generate(file);
                     }
