@@ -81,7 +81,7 @@ namespace JbConf
         {
             foreach (var kv in Root)
             {
-                if (kv.Key.Contains(file))
+                if (Path.GetFileNameWithoutExtension(kv.Key) == file)
                 {
                     return kv.Value;
                 }
