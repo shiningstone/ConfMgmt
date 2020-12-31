@@ -31,6 +31,10 @@ namespace ConfViews
         {
             fileController.InitOrder(names);
         }
+        public void Enable(List<string> names)
+        {
+            fileController.Enable(names);
+        }
         public void InitShowLevel(List<string> levels)
         {
             if (levels != null)

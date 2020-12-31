@@ -30,6 +30,7 @@ namespace ConfViews
         public string BackPath => $@"{RootPath}History";
 
         private List<string> Order = new List<string>();
+        private List<string> IsShow = null;
         private List<string> ReOrder(List<string> names)
         {
             var reorder = new List<string>();
@@ -72,12 +73,16 @@ namespace ConfViews
             ConfMgmt.Inst(InstName).Generate(path, true);
             var names = ReOrder(ConfMgmt.Inst(InstName).Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList());
             
-            CMB_ProductFileList.DataSource = names;
+            CMB_ProductFileList.DataSource = IsShow == null ? names : IsShow;
             OnChange?.Invoke(SelectedConf);
         }
         public void InitOrder(List<string> names)
         {
             Order = names;
+        }
+        public void Enable(List<string> names)
+        {
+            IsShow = names;
         }
         private void CMB_ProductFileList_SelectedIndexChanged(object sender, EventArgs e)
         {
