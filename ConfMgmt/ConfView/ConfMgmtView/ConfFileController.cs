@@ -68,7 +68,7 @@ namespace ConfViews
 
             LBL_Title.Text = title;
             InstName = confType;
-            RootPath = path;
+            RootPath = path.Last() == '\\' ? path.Substring(0, path.Length - 1) : path;
 
             ConfMgmt.Inst(InstName).Generate(path, true);
             var names = ReOrder(ConfMgmt.Inst(InstName).Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList());
