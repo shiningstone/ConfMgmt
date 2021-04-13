@@ -39,10 +39,10 @@
             // BTN_SaveAs
             // 
             this.BTN_SaveAs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BTN_SaveAs.Location = new System.Drawing.Point(539, 4);
-            this.BTN_SaveAs.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BTN_SaveAs.Location = new System.Drawing.Point(454, 4);
+            this.BTN_SaveAs.Margin = new System.Windows.Forms.Padding(4);
             this.BTN_SaveAs.Name = "BTN_SaveAs";
-            this.BTN_SaveAs.Size = new System.Drawing.Size(108, 28);
+            this.BTN_SaveAs.Size = new System.Drawing.Size(162, 28);
             this.BTN_SaveAs.TabIndex = 22;
             this.BTN_SaveAs.Text = "另存为";
             this.BTN_SaveAs.UseVisualStyleBackColor = true;
@@ -51,10 +51,10 @@
             // BTN_Save
             // 
             this.BTN_Save.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BTN_Save.Location = new System.Drawing.Point(420, 4);
-            this.BTN_Save.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BTN_Save.Location = new System.Drawing.Point(354, 4);
+            this.BTN_Save.Margin = new System.Windows.Forms.Padding(4);
             this.BTN_Save.Name = "BTN_Save";
-            this.BTN_Save.Size = new System.Drawing.Size(111, 28);
+            this.BTN_Save.Size = new System.Drawing.Size(92, 28);
             this.BTN_Save.TabIndex = 21;
             this.BTN_Save.Text = "保存";
             this.BTN_Save.UseVisualStyleBackColor = true;
@@ -68,7 +68,7 @@
             this.LBL_Title.Margin = new System.Windows.Forms.Padding(4, 0, 4, 4);
             this.LBL_Title.Name = "LBL_Title";
             this.LBL_Title.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
-            this.LBL_Title.Size = new System.Drawing.Size(77, 19);
+            this.LBL_Title.Size = new System.Drawing.Size(92, 19);
             this.LBL_Title.TabIndex = 19;
             this.LBL_Title.Text = "配置文件";
             // 
@@ -76,20 +76,21 @@
             // 
             this.CMB_ProductFileList.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.CMB_ProductFileList.FormattingEnabled = true;
-            this.CMB_ProductFileList.Location = new System.Drawing.Point(89, 9);
-            this.CMB_ProductFileList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CMB_ProductFileList.Location = new System.Drawing.Point(104, 9);
+            this.CMB_ProductFileList.Margin = new System.Windows.Forms.Padding(4);
             this.CMB_ProductFileList.Name = "CMB_ProductFileList";
-            this.CMB_ProductFileList.Size = new System.Drawing.Size(323, 23);
+            this.CMB_ProductFileList.Size = new System.Drawing.Size(242, 23);
             this.CMB_ProductFileList.TabIndex = 20;
             this.CMB_ProductFileList.SelectedIndexChanged += new System.EventHandler(this.CMB_ProductFileList_SelectedIndexChanged);
             // 
             // tableLayoutPanel1
             // 
+            this.tableLayoutPanel1.AutoSize = true;
             this.tableLayoutPanel1.ColumnCount = 4;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.54993F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 79.45007F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 119F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 115F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 250F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel1.Controls.Add(this.LBL_Title, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.BTN_SaveAs, 3, 0);
             this.tableLayoutPanel1.Controls.Add(this.CMB_ProductFileList, 1, 0);
@@ -99,8 +100,8 @@
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(651, 36);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(620, 36);
             this.tableLayoutPanel1.TabIndex = 23;
             // 
             // ConfFileController
@@ -108,12 +109,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ConfFileController";
-            this.Size = new System.Drawing.Size(651, 36);
+            this.Size = new System.Drawing.Size(620, 36);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

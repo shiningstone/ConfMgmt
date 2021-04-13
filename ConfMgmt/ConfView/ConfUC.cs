@@ -15,6 +15,11 @@ namespace ConfViews
         private ConfTree CurrentConf;
         public virtual void Apply(ConfTree conf)
         {
+            if (conf == null)
+            {
+                return;
+            }
+
             CurrentConf = conf;
             conf.Visit("Apply", (item, level) =>
             {
@@ -26,6 +31,25 @@ namespace ConfViews
                         if (control.Length > 0)
                         {
                             (control[0] as RadioButton).Checked = true;
+                        }
+                    }
+                    else if (item.Attributes.ContainsKey("guitype") && item.Attributes["guitype"].Contains("ComboBox"))
+                    {
+                        var control = Controls.Find($"{item.Name}", true);
+                        if (control.Length > 0)
+                        {
+                            var cb = (control[0] as ComboBox);
+
+                            var type_value = item.Attributes["guitype"].Split(':');
+                            if (type_value.Length > 1)
+                            {
+                                cb.DataSource = type_value[1].Split(',');
+                                cb.SelectedIndex = cb.Items.IndexOf(item.Value);
+                            }
+                            else
+                            {
+                                control[0].Text = item.Value;
+                            }
                         }
                     }
                     else

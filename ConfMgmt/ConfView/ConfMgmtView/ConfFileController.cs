@@ -24,6 +24,14 @@ namespace ConfViews
             InitializeComponent();
         }
 
+        public void Select(string value)
+        {
+            if (CMB_ProductFileList.Items.Contains(value))
+            {
+                CMB_ProductFileList.SelectedIndex = CMB_ProductFileList.Items.IndexOf(value);
+            }
+        }
+
         private bool IsBinded = false;
         private string InstName;
         private string RootPath;
@@ -56,6 +64,7 @@ namespace ConfViews
 
         public void Bind(string title, string confType, string path, Action<ConfTree> onChange, Func<string, bool> onSave = null)
         {
+            Name = $"{title}Controller";
             IsBinded = true;
 
             OnChange = onChange;
