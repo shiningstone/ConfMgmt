@@ -17,11 +17,20 @@ namespace ConfViews
     public partial class ConfFileController : UserControl
     {
         private Action<ConfTree> OnChange;
+        private Action ExtraAction;
         private Func<string, bool> SaveEvtHandler;//返回值: true - 执行本模块内部保存流程; false - 自定义保存流程或者进行内容检查
 
         public ConfFileController()
         {
             InitializeComponent();
+            BTN_Extra.Visible = false;
+        }
+
+        public void EnableExtra(string tag = "删除", Action extraAction = null)
+        {
+            BTN_Extra.Text = tag;
+            BTN_Extra.Visible = true;
+            ExtraAction = extraAction ?? Remove;
         }
 
         public void Select(string value)
@@ -84,6 +93,25 @@ namespace ConfViews
             
             CMB_ProductFileList.DataSource = IsShow == null ? names : IsShow;
             OnChange?.Invoke(SelectedConf);
+        }
+
+        private void Remove()
+        {
+            Utils.UI.Help.ConfirmAction($"是否确定删除产品档({SelectedName})?", () => {
+                File.Delete($@"{RootPath}\{SelectedName}.xml");
+
+                ConfMgmt.Inst(InstName).Generate(RootPath, true);
+                var names = ReOrder(ConfMgmt.Inst(InstName).Root.Keys.Select(x => Path.GetFileNameWithoutExtension(x)).ToList());
+
+                CMB_ProductFileList.DataSource = IsShow == null ? names : IsShow;
+                OnChange?.Invoke(SelectedConf);
+
+                return ErrInfo.Ok;
+            });
+        }
+        private void BTN_Extra_Click(object sender, EventArgs e)
+        {
+            ExtraAction?.Invoke();
         }
         public void InitOrder(List<string> names)
         {

@@ -61,6 +61,8 @@ namespace JbConf
         {
             if (forceUpdate || Root.Count == 0)
             {
+                Clear();
+
                 Act.Traverse(path, (file) =>
                 {
                     if (Path.GetExtension(file) == ".xml")
