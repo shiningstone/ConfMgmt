@@ -280,7 +280,7 @@ namespace JbConf
                 }
                 else
                 {
-                    Add(new ConfItem(item.Name, item.Value));
+                    Add(item.Clone());
                 }
             }
 
