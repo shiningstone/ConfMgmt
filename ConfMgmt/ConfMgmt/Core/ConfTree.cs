@@ -286,5 +286,18 @@ namespace JbConf
 
             return this;
         }
+        //将this的ConItem值更新到tree
+        public void OverWrite(ConfTree target)
+        {
+            Visit("OverWrite", (item, level) =>
+            {
+                var conf = target.Find(item.Name);
+                if (conf != null && ((conf as ConfTree) == null))
+                {
+                    target[item.Name] = item.Value;
+                }
+                return false;
+            });
+        }
     }
 }
