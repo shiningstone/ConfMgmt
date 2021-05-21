@@ -258,7 +258,30 @@ namespace JbConf
             return this;
         }
 
-        //tree覆盖this, 注意：Merge没有修改xml文件的内容
+        public List<ConfItem> AllItems
+        {
+            get
+            {
+                var items = new List<ConfItem>();
+                Visit("GetItem", (item, level) => {
+                    if (!(item is ConfTree))
+                    {
+                        items.Add(item);
+                    }
+
+                    return false;
+                });
+
+                return items;
+            }
+        }
+
+        /// <summary>
+        /// tree覆盖this, 注意：Merge没有修改xml文件的内容
+        /// </summary>
+        /// <param name="tree"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
         public ConfTree Merge(ConfTree tree, List<string> targets = null)
         {
             foreach (var item in tree.Items)
@@ -286,7 +309,10 @@ namespace JbConf
 
             return this;
         }
-        //将this的ConItem值更新到tree
+        /// <summary>
+        /// 将this的ConItem值更新到tree
+        /// </summary>
+        /// <param name="target">被修改的Conf文件(XML)</param>
         public void OverWrite(ConfTree target)
         {
             Visit("OverWrite", (item, level) =>
