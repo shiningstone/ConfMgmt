@@ -56,6 +56,12 @@
     <Compile Include="ConfMgmtView\ConfEditor.Designer.cs">
       <DependentUpon>ConfEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConfPropertyGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ConfPropertyGrid.Designer.cs">
+      <DependentUpon>ConfPropertyGrid.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConfSelector.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -119,6 +125,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ConfMgmtView\ConfMgmtView.resx">
       <DependentUpon>ConfMgmtView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfPropertyGrid.resx">
+      <DependentUpon>ConfPropertyGrid.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ConfUpgrade\PFileUpgradeForm.resx">
       <DependentUpon>PFileUpgradeForm.cs</DependentUpon>
