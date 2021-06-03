@@ -57,8 +57,11 @@ namespace JbConf
             Root = new Dictionary<string, ConfTree>();
         }
 
+        public string Dir;
         public void Generate(string path, bool forceUpdate = false)
         {
+            Dir = path;
+
             if (forceUpdate || Root.Count == 0)
             {
                 Clear();
