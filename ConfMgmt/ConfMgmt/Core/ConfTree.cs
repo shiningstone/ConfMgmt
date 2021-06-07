@@ -275,7 +275,17 @@ namespace JbConf
                 return items;
             }
         }
+        public Dictionary<string, string> ToDict()
+        {
+            var result = new Dictionary<string, string>();
 
+            foreach (var item in AllItems)
+            {
+                result[item.Name] = item.Value;
+            }
+
+            return result;
+        }
         /// <summary>
         /// tree覆盖this, 注意：Merge没有修改xml文件的内容
         /// </summary>
