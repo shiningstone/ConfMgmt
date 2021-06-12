@@ -40,11 +40,14 @@ namespace ConfViews
         }
         public void LoadConf(ConfTree conf, string oplevel)
         {
-            _log.Debug($"Load ConfTree({(oplevel != null ? "" : "null")})");
+            if (Conf == null || !Conf.Equals(conf))
+            {
+                _log.Debug($"Load ConfTree({conf.Name},{(oplevel != null ? "" : "null")})");
 
-            Conf = conf;
-            DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf, oplevel);
-            DGV_ConfigItems.Columns[DGV_ConfigItems.ColumnCount - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                Conf = conf;
+                DGV_ConfigItems.DataSource = UiSupport.ConvertToTable(Conf, oplevel);
+                DGV_ConfigItems.Columns[DGV_ConfigItems.ColumnCount - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
         }
         public void SetLevel(string oplevel)
         {

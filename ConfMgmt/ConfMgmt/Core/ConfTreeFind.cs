@@ -7,12 +7,7 @@ namespace JbConf
 {
     public partial class ConfTree
     {
-        private void DbgLog(string content)
-        {
-#if JBCONF_DBG
-            _log.Debug(content);
-#endif
-        }
+        private Logger _vlog = new Logger("ConfTreeVisit");
 
         //没有考虑重复的tag
         private class TagRecorder
@@ -65,17 +60,14 @@ namespace JbConf
         {
             get
             {
-                if (_maxDepth == 0)
-                {
-                    Visit("Walk", (item, level) => { return false; });
-                }
+                Visit("Walk", (item, level) => { return false; });
                 return _maxDepth + 1;
             }
         }
 
         private bool VisitTree(string func, Func<ConfItem, int, bool> executor, ConfTree tree)
         {
-            DbgLog($@"Visit({func}) ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
+            _vlog.Debug($@"Visit({func}) ConfTree: {tree.Path}/{tree.Name}({tree.Tag})");
             RunningTag.Register(tree);
 
             executor(tree, _depth);
@@ -118,7 +110,7 @@ namespace JbConf
             }
             else
             {
-                DbgLog($"Visit({func}) ConfItem: {item.Name}({item.Value})");
+                _vlog.Debug($"Visit({func}) ConfItem: {item.Name}({item.Value})");
                 if (executor(item, _depth))
                 {
                     return true;
@@ -138,7 +130,7 @@ namespace JbConf
                 {
                     if (item.Name == target && RunningTag.IsMatch(tags))
                     {
-                        DbgLog($"Find {item.Path}/{item.Name}");
+                        _vlog.Debug($"Find {item.Path}/{item.Name}");
                         items.Add(item);
                     }
 
@@ -178,7 +170,7 @@ namespace JbConf
                 {
                     if (item.Name == target && RunningTag.IsMatch(tags))
                     {
-                        DbgLog($"Find {item.Path}/{item.Name}");
+                        _vlog.Debug($"Find {item.Path}/{item.Name}");
                         items.Add(item);
                         if (!strict)
                         {
