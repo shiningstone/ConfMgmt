@@ -68,33 +68,41 @@ namespace ConfViews.Upgrade
             var news = conf.AllItems;
 
             string first = null;
+            ConfTree firstconf = null;
             List<string> except = new List<string>();
-            List<string> additions = null, missings = null;
+            List<string> ADDITION = null, MISSING = null;
             var origfiles = DirOp.GetFiles(tbOrigDir.Text, "*.xml");
             foreach (var file in origfiles)
             {
                 var oldconf = Builder.Xml.Generate($"{tbOrigDir.Text}/{file}");
                 var olds = oldconf.AllItems;
 
-                if (additions == null && missings == null)
+                if (ADDITION == null && MISSING == null)
                 {
                     first = file;
-                    additions = news.Select(x => x.Name).Except(olds.Select(x => x.Name)).ToList();
-                    missings = olds.Select(x => x.Name).Except(news.Select(x => x.Name)).ToList();
-                    _log.Debug($"废弃项:{string.Join(",", missings)}{Environment.NewLine}新增项:{string.Join(",", additions)}");
+                    firstconf = oldconf;
 
-                    var form = new PFileUpgradeRuleEditor(missings, news.FindAll(x => additions.Contains(x.Name)));
+                    MISSING = olds.Select(x => x.Name).Except(news.Select(x => x.Name)).ToList();
+                    ADDITION = news.Select(x => x.Name).Except(olds.Select(x => x.Name)).ToList();
+                    _log.Debug($"废弃项:{string.Join(",", MISSING)}{Environment.NewLine}新增项:{string.Join(",", ADDITION)}");
+
+                    var form = new PFileUpgradeRuleEditor(MISSING, news.FindAll(x => ADDITION.Contains(x.Name)));
                     form.ShowDialog();
 
                     try
                     {
-                        foreach (var m in missings.Except(form.Missings))
+                        var reserves = MISSING.Except(form.Missings).ToList();
+                        if (reserves.Count > 0)
                         {
-                            var node = olds.Find(x => x.Name == m);
-                            var parent = conf.Find(node.Parent.Name) as ConfTree;
-                            parent.AddNode(node.Clone());
+                            _log.Debug($"保留项:{string.Join(",", reserves)}");
+                            foreach (var r in reserves)
+                            {
+                                var node = olds.Find(x => x.Name == r);
+                                var parent = conf.Find(node.Parent.Name) as ConfTree;
+                                parent.AddNode(node.Clone());
+                            }
                         }
-                        missings = form.Missings;
+                        MISSING = form.Missings;
 
                         foreach (var item in form.Additions)
                         {
@@ -107,13 +115,16 @@ namespace ConfViews.Upgrade
                     }
                 }
                 else
-                { 
-                    var add = news.Select(x => x.Name).Except(olds.Select(x => x.Name)).ToList();
-                    var miss = news.Select(x => x.Name).Except(olds.Select(x => x.Name)).ToList();
-                    if (add.Intersect(additions).ToList().Count != additions.Count || miss.Intersect(missings).ToList().Count != missings.Count)
+                {
+                    var miss = firstconf.AllItems.Select(x => x.Name).Except(oldconf.AllItems.Select(x => x.Name));
+                    var add = oldconf.AllItems.Select(x => x.Name).Except(firstconf.AllItems.Select(x => x.Name));
+
+                    if (miss.Count() > 0 || add.Count() > 0)
                     {
                         except.Add(file);
-                        _log.Warn($"{file}升级取消");
+                        _log.Warn($"{file}与{first}存在差异，升级取消: {(add.Count() > 0 ? $"多{string.Join(", ", add)}" : "")};" +
+                            $"{(miss.Count() > 0 ? $"少{string.Join(", ", miss)}" : "")}");
+                        
                         continue;
                     }
                 }
