@@ -16,6 +16,8 @@ namespace ConfViews.Upgrade
     public partial class PFileUpgradeForm : Form
     {
         private static Logger _log = new Logger("PFileUpgradeForm");
+        public Dictionary<string, double> ItemMultiply = new Dictionary<string, double>();
+
         public PFileUpgradeForm()
         {
             InitializeComponent();
@@ -130,6 +132,16 @@ namespace ConfViews.Upgrade
                 }
 
                 oldconf.OverWrite(conf);
+                foreach (var item in ItemMultiply)
+                {
+                    conf.Visit("Multiply", (i, level) => {
+                        if (i.Name.Contains(item.Key))
+                        {
+                            i.Value = $"{i.Value.DVal() * item.Value}";
+                        }
+                        return false;
+                    });
+                }
 
                 var target = $@"{tbNewDir.Text}/{Path.GetFileName(file)}";
                 conf.Save(target);
