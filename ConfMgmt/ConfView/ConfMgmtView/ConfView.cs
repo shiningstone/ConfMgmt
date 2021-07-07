@@ -17,10 +17,13 @@ namespace ConfViews
     public partial class ConfView : UserControl
     {
         private static Logger _log = new Logger("ConfView");
+        private bool IsQuickSelect;
         public ConfView()
         {
             InitializeComponent();
+            ProjectConfig.Read("ConfView.IsQuickSelect", ref IsQuickSelect);
         }
+
         public ConfTree Conf;
         private string Level;
         public ConfView(ConfTree conf)
@@ -199,7 +202,10 @@ namespace ConfViews
         {
             try
             {
-                UpdateSelection(e.RowIndex, e.ColumnIndex);
+                if (IsQuickSelect)
+                {
+                    UpdateSelection(e.RowIndex, e.ColumnIndex);
+                }
 
                 SelectedItem = GetSelectedItem(e.RowIndex, e.ColumnIndex);
                 if (SelectedItem.Attributes.ContainsKey("comment"))
